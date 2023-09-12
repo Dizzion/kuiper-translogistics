@@ -1,9 +1,7 @@
-import React from "react";
+import React from 'react'
 
-const Translogistics = () => {
-    return (
-        <div>Translogistics Forms</div>
-    );
-};
-
-export default Translogistics;
+export default async function TranslogisticsTeam() {
+  return (
+    <div>Translogistics Team Dashboard</div>
+  )
+}
