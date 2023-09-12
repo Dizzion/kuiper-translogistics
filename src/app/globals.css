@@ -17,6 +17,10 @@ html {
   background-color: #5d5f63;
 }
 
+main {
+  background-color: #5d5f63;
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1);
