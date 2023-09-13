@@ -22,7 +22,6 @@ export const dynamic = 'auto',
 async function getAssociates() {
 
   const data = await pb.collection('WarehouseAssociates').getFullList();
-  console.log(data);
   
   return data;
 }
