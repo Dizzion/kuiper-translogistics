@@ -50,6 +50,13 @@ interface Truck {
   ArrivalAA?: string;
 }
 
+export const dynamic = 'auto',
+  dynamicParams = true,
+  revalidate = 0,
+  fetchCache = 'auto',
+  runtime = 'nodejs',
+  preferredRegion = 'auto'
+
 // Tracking Number Routing
 export const TNGetAll = async (): Promise<RecordModel[]> => {
   const res = await pb.collection("TrackingNumbers").getFullList();
@@ -180,6 +187,11 @@ export const UpdateTruck = async (
 // Employee Routing
 
 // Associate Routing
+export const getAssociates =async (): Promise<RecordModel[]> => {
+    const res = await pb.collection('WarehouseAssociate').getFullList();
+
+    return res;
+}
 
 // Handling Unit Routing
 export const HUCreate = async (
