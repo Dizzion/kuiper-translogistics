@@ -37,6 +37,14 @@ const SearchTrackingNumberCustomer: React.FC<SearchProps> = ({ trackingNumbers }
             inbound99: trackingNumbers[existingTrackingNumberIndex].Inbound99
         });
     } else {
+      setTrackingNumberdata({
+        outbound99: '',
+        inbound133: '',
+        delivered: '',
+        received133: '',
+        outbound133: '',
+        inbound99: ''
+      });  
       setShowAlert(true);
     }
     

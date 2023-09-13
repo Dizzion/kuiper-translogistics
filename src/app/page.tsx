@@ -12,7 +12,6 @@ export const dynamic = 'auto',
 async function getTrackingNumbers() {
 
   const data = await pb.collection('TrackingNumbers').getFullList();
-  console.log(data);
   return data;
 }
 
