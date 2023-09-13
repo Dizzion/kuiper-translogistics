@@ -3,7 +3,7 @@ import Pocketbase, { RecordModel } from 'pocketbase';
 const pb = new Pocketbase(process.env.APP_SERVER);
 
 interface TrackingNumber {
-    TrackingNumber: string;
+    TrackingNumber?: string;
     Outbound99?: string;
     Inbound133?: string;
     Delivered?: string;
@@ -25,6 +25,16 @@ interface SapTote {
     StartLoading: Date;
     UnloadTime?: Date;
     HU: string[];
+    alias: string;
+}
+
+interface Container {
+    ContainerID: string;
+    StartTime: Date;
+    StagedTime: Date;
+    UnloadFinished?: Date;
+    TrackingNumbers: string[];
+    SapTotes: string[];
     alias: string;
 }
 
@@ -54,6 +64,29 @@ export const TNUpdate = async (id: string, trackingNumber: TrackingNumber): Prom
 }
 
 // Container Routing
+export const ContGetAll = async (): Promise<RecordModel[]> => {
+    const res = await pb.collection('Containers').getFullList();
+
+    return res;
+}
+
+export const ContGetOne = async (id: string): Promise<RecordModel> => {
+    const res = await pb.collection('Containers').getOne(id);
+
+    return res;
+}
+
+export const ContCreate = async (container: Container): Promise<RecordModel> => {
+    const res = await pb.collection('Container').create(container);
+
+    return res;
+}
+
+export const ContUpdate = async (id: string, timestamp: Date): Promise<RecordModel> => {
+    const res = await pb.collection('Container').update(id, {UnloadFinish: timestamp});
+
+    return res;
+}
 
 // SapTote Routing
 export const STGetAll = async (): Promise<RecordModel[]> => {
