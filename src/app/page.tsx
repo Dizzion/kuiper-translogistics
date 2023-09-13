@@ -1,6 +1,6 @@
 import pb from '@/utils/pocketbase';
 import styles from './page.module.css'
-import SearchTrackingNumberCustomer from './_components/TrackingNumberDashboard';
+import SearchTrackingNumberCustomer from '../_components/TrackingNumberDashboard';
 
 export const dynamic = 'auto',
   dynamicParams = true,

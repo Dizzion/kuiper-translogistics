@@ -3,15 +3,14 @@ import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
+import pb from "@/utils/pocketbase";
 
 interface DeliveryFormProps {
   trackingNumbers: RecordModel[];
-  createOnDelivered: (enteredTrackingNumber: string) => void;
 }
 
 const DeliveryForm: React.FC<DeliveryFormProps> = ({
   trackingNumbers,
-  createOnDelivered,
 }) => {
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [trackingNumberList, setTrackingNumberList] = useState<string[]>([]);
@@ -30,6 +29,18 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
     createOnDelivered(enteredTrackingNumber);
     setTrackingNumberList([...trackingNumberList, enteredTrackingNumber]);
     setEnteredTrackingNumber("");
+  };
+
+  const createOnDelivered = async (enteredTrackingNumber: string) => {
+    const timestamp = new Date().toLocaleString();
+    try {
+      await pb.collection("TrackingNumbers").create({
+        TrackingNumber: enteredTrackingNumber,
+        Delivered: timestamp,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

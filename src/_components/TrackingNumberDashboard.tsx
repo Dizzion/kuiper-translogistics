@@ -20,7 +20,14 @@ export interface TrackingNumberData {
 const SearchTrackingNumberCustomer: React.FC<SearchProps> = ({ trackingNumbers }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
-  const [trackingNumberData, setTrackingNumberdata] = useState<TrackingNumberData>();
+  const [trackingNumberData, setTrackingNumberdata] = useState<TrackingNumberData>({
+    outbound99: '',
+    inbound133: '',
+    delivered: '',
+    received133: '',
+    outbound133: '',
+    inbound99: ''
+  });
 
   const searchTrackingNumbers = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +77,7 @@ const SearchTrackingNumberCustomer: React.FC<SearchProps> = ({ trackingNumbers }
           Check to see where your package is at in the receiving process.
         </Form.Text>
       </Form.Group>
-      <Button type="submit">Check your package!</Button>
+      <Button type="submit" variant='outline-light'>Check your package!</Button>
     </Form>
     <Modal centered show={showAlert} onHide={handleClose}>
       <Modal.Header closeButton>

@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { RecordModel } from "pocketbase";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Form, InputGroup, Navbar } from "react-bootstrap";
@@ -8,6 +9,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ associates }) => {
+  const router = useRouter();
   const [alias, setAlias] = useState("");
   const [isUserIdInArray, setIsUserIdInArray] = useState(false);
 
@@ -31,17 +33,19 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
     setAlias("");
     setIsUserIdInArray(false);
     localStorage.clear();
+    router.push('/');
   };
 
   return (
     <Navbar className="navbar navbar-dark bg-dark">
       <Container>
-        <Navbar.Brand className="text-white">
+        <Navbar.Brand href="/" className="text-white">
           Amazon <span style={{ color: "#5f90f1" }}>Kuiper</span> Translogistics
         </Navbar.Brand>
         {isUserIdInArray ? (
           <>
-            <Navbar.Text className="justify-content-end text-white">
+            <Navbar.Brand href="/Translogistics" className="text-white" style={{justifyContent: 'center'}}>Warehouse Forms</Navbar.Brand>
+            <Navbar.Text style={{justifyContent: 'end'}} className="text-white">
               Alias: {alias}
             </Navbar.Text>
             <Button
@@ -49,6 +53,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
               onClick={onLogout}
               variant="outline-light"
               className="justify-content-end"
+              style={{justifyContent: 'end'}}
             >
               Logout
             </Button>

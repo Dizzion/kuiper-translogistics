@@ -1,21 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import { usePathname } from "next/navigation";
+import React from "react";
 import { Nav } from "react-bootstrap";
 
 const TranslogisticsNav = () => {
-  const [navMemory, setNavMemory] = useState("/Translogistics");
+  const pathname = usePathname();
   return (
     <Nav
       variant="pills"
       className="text-center flex-column"
-      defaultActiveKey={navMemory}
+      style={{ backgroundColor: "#5d5f63" }}
     >
       <Nav.Item>
         <Nav.Link
           href="/Translogistics"
-          eventKey="/Translogistics"
-          onClick={() => setNavMemory("/Translogistics")}
-          className="text-white"
+          className={pathname == "/Translogistics" ? "active" : ""}
+          style={{ color: "white" }}
         >
           Warehouse Metrics Dashboard
         </Nav.Link>
@@ -23,9 +23,10 @@ const TranslogisticsNav = () => {
       <Nav.Item>
         <Nav.Link
           href="/Translogistics/Transportation"
-          eventKey="/Translogistics/Transportation"
-          onClick={() => setNavMemory("/Translogistics/Transportation")}
-          className="text-white"
+          style={{color: 'white'}}
+          className={
+            pathname == "/Translogistics/Transportation" ? "active" : ""
+          }
         >
           Transportation
         </Nav.Link>
@@ -33,9 +34,8 @@ const TranslogisticsNav = () => {
       <Nav.Item>
         <Nav.Link
           href="/Translogistics/Outbound"
-          eventKey="/Translogistics/Outbound"
-          onClick={() => setNavMemory("/Translogistics/Outbound")}
-          className="text-white"
+          style={{ color: "white" }}
+          className={pathname == "/Translogistics/Outbound" ? "active" : ""}
         >
           Outbound
         </Nav.Link>
@@ -43,9 +43,8 @@ const TranslogisticsNav = () => {
       <Nav.Item>
         <Nav.Link
           href="/Translogistics/Inbound"
-          eventKey="/Translogistics/Inbound"
-          onClick={() => setNavMemory("/Translogistics/Inbound")}
-          className="text-white"
+          style={{ color: "white" }}
+          className={pathname == "/Translogistics/Inbound" ? "active" : ""}
         >
           Inbound
         </Nav.Link>
@@ -53,9 +52,8 @@ const TranslogisticsNav = () => {
       <Nav.Item>
         <Nav.Link
           href="/Translogistics/Receiving"
-          eventKey="/Translogistics/Receiving"
-          onClick={() => setNavMemory("/Translogistics/Receiving")}
-          className="text-white"
+          style={{ color: "white" }}
+          className={pathname == "/Translogistics/Receiving" ? "active" : ""}
         >
           Receiving
         </Nav.Link>
@@ -63,9 +61,8 @@ const TranslogisticsNav = () => {
       <Nav.Item>
         <Nav.Link
           href="/Translogistics/SapTote"
-          eventKey="/Translogistics/SapTote"
-          onClick={() => setNavMemory("/Translogistics/SapTote")}
-          className="text-white"
+          style={{ color: "white" }}
+          className={pathname == "/Translogistics/SapTote" ? "active" : ""}
         >
           SAP Tote
         </Nav.Link>
@@ -73,9 +70,8 @@ const TranslogisticsNav = () => {
       <Nav.Item>
         <Nav.Link
           href="/Translogistics/Delivery"
-          eventKey="/Translogistics/Delivery"
-          onClick={() => setNavMemory("/Translogistics/Delivery")}
-          className="text-white"
+          style={{ color: "white" }}
+          className={pathname == "/Translogistics/Delivery" ? "active" : ""}
         >
           Delivery
         </Nav.Link>

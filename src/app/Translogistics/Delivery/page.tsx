@@ -1,4 +1,4 @@
-import DeliveryForm from "@/app/_components/DeliveryForm";
+import DeliveryForm from "@/_components/DeliveryForm";
 import pb from "@/utils/pocketbase";
 import React from "react";
 
@@ -17,23 +17,10 @@ async function getTrackingNumbers() {
 async function Delivery() {
   const trackingNumbers = await getTrackingNumbers();
 
-  const createOnDelivered = async (enteredTrackingNumber: string) => {
-    const timestamp = new Date().toLocaleString();
-    try {
-      await pb.collection("TrackingNumbers").create({
-        TrackingNumber: enteredTrackingNumber,
-        Delivered: timestamp,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div style={{ backgroundColor: "#5d5f63" }}>
       <DeliveryForm
         trackingNumbers={trackingNumbers}
-        createOnDelivered={createOnDelivered}
       />
     </div>
   );
