@@ -97,9 +97,18 @@ export const TNUpdate = async (
   id: string,
   trackingNumber: TrackingNumber
 ): Promise<RecordModel> => {
-  const res = await pb.collection("TrackingNumbers").update(id, trackingNumber);
-
-  return res;
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(trackingNumber),
+    }
+  );
+  const updatedTrackingNumber = await res.json();
+  return updatedTrackingNumber;
 };
 
 // Container Routing
@@ -199,10 +208,10 @@ export const UpdateTruck = async (
 
 // Employee Routing
 export const getEmployees = async (): Promise<RecordModel[]> => {
-    const res = await pb.collection('Employees').getFullList();
+  const res = await pb.collection("Employees").getFullList();
 
-    return res;
-}
+  return res;
+};
 
 // Associate Routing
 export const getAssociates = async (): Promise<RecordModel[]> => {
