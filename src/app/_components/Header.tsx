@@ -1,6 +1,6 @@
 "use client";
 import { RecordModel } from "pocketbase";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Form, InputGroup, Navbar } from "react-bootstrap";
 
 interface HeaderProps {
@@ -10,6 +10,13 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ associates }) => {
   const [alias, setAlias] = useState("");
   const [isUserIdInArray, setIsUserIdInArray] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("alias") !== null && typeof associates !== 'undefined') {
+      setAlias(localStorage.getItem('alias'));
+      setIsUserIdInArray(associates.some((obj) => obj.alias === alias));
+    }
+  }, [alias]);
 
   const handleAliasSubmit = (e: React.FormEvent) => {
     e.preventDefault();

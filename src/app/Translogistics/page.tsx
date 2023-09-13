@@ -1,7 +1,8 @@
 import React from 'react'
+import styles from './page.module.css'
 
 export default async function TranslogisticsTeam() {
   return (
-    <div>Translogistics Team Dashboard</div>
+    <main className={styles.main}>Translogistics Team Dashboard</main>
   )
 }

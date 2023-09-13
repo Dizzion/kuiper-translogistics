@@ -2,7 +2,7 @@ import React from 'react'
 
 const TranslogisticsNav = () => {
   return (
-    <div>TranslogisticsNav</div>
+    <div style={{backgroundColor: '#5d5f63'}}>TranslogisticsNav</div>
   )
 }
 
