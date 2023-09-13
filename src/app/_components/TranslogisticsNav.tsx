@@ -3,7 +3,7 @@ import { Nav } from "react-bootstrap";
 
 const TranslogisticsNav = () => {
   return (
-    <Nav variant="pills" className="tabs text-center flex-column" defaultActiveKey={'/Translogistics'}>
+    <Nav variant="pills" className="text-center flex-column" defaultActiveKey={'/Translogistics'}>
       <Nav.Item>
         <Nav.Link href="/Translogistics" className="text-white">
           Warehouse Metrics Dashboard
