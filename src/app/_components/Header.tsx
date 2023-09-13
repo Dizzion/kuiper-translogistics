@@ -1,41 +1,49 @@
-'use client'
-import React, { useState } from 'react'
-import pb from '../utils/pocketbase';
-import { Button, Container, Form, InputGroup, Navbar } from 'react-bootstrap';
+"use client";
+import { RecordModel } from "pocketbase";
+import React, { useState } from "react";
+import { Button, Container, Form, InputGroup, Navbar } from "react-bootstrap";
 
-const Header: React.FC = () => {
-  const [alias, setAlias] = useState('');
+interface HeaderProps {
+  associates: RecordModel[] | undefined;
+}
+
+const Header: React.FC<HeaderProps> = ({ associates }) => {
+  const [alias, setAlias] = useState("");
   const [isUserIdInArray, setIsUserIdInArray] = useState(false);
 
-  const handleAliasSubmit = async (e: React.FormEvent) => {
+  const handleAliasSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const collection = await pb
-      .collection("WarehouseAssociates")
-      .getFullList();
-    setIsUserIdInArray(collection.some((obj) => obj.alias === alias));
-    if (isUserIdInArray) {
+    if (typeof associates !== "undefined") {
+      setIsUserIdInArray(associates.some((obj) => obj.alias === alias));
       localStorage.setItem("alias", alias);
-    } else {
-      setAlias('');
     }
   };
 
-  const onLogout = async () => {
+  const onLogout = () => {
     setAlias("");
     setIsUserIdInArray(false);
+    localStorage.clear();
   };
 
   return (
     <Navbar className="navbar navbar-dark bg-dark">
       <Container>
         <Navbar.Brand className="text-white">
-          Amazon {' '}
-          <span style={{ color: "#5f90f1" }}>Kuiper</span> {' '}
-          Translogistics</Navbar.Brand>
+          Amazon <span style={{ color: "#5f90f1" }}>Kuiper</span> Translogistics
+        </Navbar.Brand>
         {isUserIdInArray ? (
           <>
-            <Navbar.Text className="justify-content-end text-white">Alias: {alias}</Navbar.Text>
-            <Button type="button" onClick={onLogout} variant="outline-light" className="justify-content-end">Logout</Button>
+            <Navbar.Text className="justify-content-end text-white">
+              Alias: {alias}
+            </Navbar.Text>
+            <Button
+              type="button"
+              onClick={onLogout}
+              variant="outline-light"
+              className="justify-content-end"
+            >
+              Logout
+            </Button>
           </>
         ) : (
           <Form onSubmit={handleAliasSubmit} className="justify-content-end">
@@ -48,15 +56,13 @@ const Header: React.FC = () => {
                 value={alias}
                 onChange={(e) => setAlias(e.target.value)}
                 required
-              >
-              </Form.Control>
+              ></Form.Control>
             </InputGroup>
           </Form>
         )}
-        
       </Container>
     </Navbar>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

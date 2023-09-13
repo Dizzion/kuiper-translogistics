@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css"
 import styles from './page.module.css'
 
 
