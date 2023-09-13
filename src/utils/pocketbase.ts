@@ -68,11 +68,11 @@ export const TNGetAll = async (): Promise<Object> => {
 };
 
 export const TNGetOne = async (id: string): Promise<Object> => {
-    const res = await fetch(
-        `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
-        { cache: "no-store" }
-      );
-    const tn = await res.json();
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
+    { cache: "no-store" }
+  );
+  const tn = await res.json();
   return tn;
 };
 
@@ -198,6 +198,11 @@ export const UpdateTruck = async (
 };
 
 // Employee Routing
+export const getEmployees = async (): Promise<RecordModel[]> => {
+    const res = await pb.collection('Employees').getFullList();
+
+    return res;
+}
 
 // Associate Routing
 export const getAssociates = async (): Promise<RecordModel[]> => {

@@ -25,16 +25,16 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
       setEnteredTrackingNumber("");
       return;
     }
-      const timestamp = new Date().toLocaleString();
-      const aliasid = localStorage.getItem("id");
-      const createRecord = {
-        TrackingNumber: enteredTrackingNumber,
-        Delivered: timestamp,
-        alias: aliasid as string,
-      };
-      const record = await TNCreate(createRecord);
-      setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
-      setEnteredTrackingNumber("");
+    const timestamp = new Date().toLocaleString();
+    const aliasid = localStorage.getItem("id");
+    const createRecord = {
+      TrackingNumber: enteredTrackingNumber,
+      Delivered: timestamp,
+      alias: aliasid as string,
+    };
+    const record = await TNCreate(createRecord);
+    setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
+    setEnteredTrackingNumber("");
   };
 
   return (
