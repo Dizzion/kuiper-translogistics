@@ -42,15 +42,22 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   });
 
   function pullRequestorBuilding(e: string) {
+    if (e === "") {
+      setRequestor({ ...requestor, name: e , building: ''});
+    }
     const requestorName = e;
     const requestorIndex = employees.findIndex(
       (employee) => employee.Full_Name === requestorName
     );
-    setRequestor({
-      ...requestor,
-      name: requestorName,
-      building: employees[requestorIndex].default_location,
-    });
+    if (requestorIndex !== -1) {
+      setRequestor({
+        ...requestor,
+        name: requestorName,
+        building: employees[requestorIndex].default_location,
+      });
+    } else {
+      setRequestor({ ...requestor, name: e , building: ''});
+    }
   }
 
   const updateHandlingUnitList = async (e: React.FormEvent) => {
@@ -83,7 +90,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     const newTimestamp = new Date().toLocaleString();
 
     const existingTrackingNumberIndex = trackingNumbers.findIndex(
-      (trackingNumber) => trackingNumber.TrackingNumber === enteredTrackingNumber
+      (trackingNumber) =>
+        trackingNumber.TrackingNumber === enteredTrackingNumber
     );
     if (
       existingTrackingNumberIndex !== -1 &&
@@ -119,7 +127,10 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         HU: requestor.handlingUnits,
         alias: localStorage.getItem("id") as string,
       };
-      await TNUpdate(trackingNumbers[existingTrackingNumberIndex].id, updatedTrackingNumber);
+      await TNUpdate(
+        trackingNumbers[existingTrackingNumberIndex].id,
+        updatedTrackingNumber
+      );
     } else {
       const newTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
