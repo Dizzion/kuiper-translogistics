@@ -4,7 +4,7 @@ import pb from '../utils/pocketbase';
 import { RecordModel } from 'pocketbase';
 
 const Header: React.FC = () => {
-  const [associate, setAssociate] = useState<RecordModel>();
+  const [associate, setAssociate] = useState('');
   const [isUserIdInArray, setIsUserIdInArray] = useState(false);
 
   const handleUserIdEntered = async (enteredUserId: string) => {
@@ -16,7 +16,7 @@ const Header: React.FC = () => {
       const aliasIndex = collection.findIndex(
         (record) => record.alias === enteredUserId
       );
-      setAssociate(collection[aliasIndex]);
+      setAssociate(collection[aliasIndex].alias);
     }
   };
 
