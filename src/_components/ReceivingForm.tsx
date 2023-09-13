@@ -83,7 +83,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     const newTimestamp = new Date().toLocaleString();
 
     const existingTrackingNumberIndex = trackingNumbers.findIndex(
-      (trackingNumber) => trackingNumber.id === enteredTrackingNumber
+      (trackingNumber) => trackingNumber.TrackingNumber === enteredTrackingNumber
     );
     if (
       existingTrackingNumberIndex !== -1 &&
