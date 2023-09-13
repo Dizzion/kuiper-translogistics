@@ -1,8 +1,10 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css"
+import styles from './page.module.css'
+
 
 export default function Home() {
   return (
-    <main>
+    <main className={styles.main}>
       <p>stuff</p>
     </main>
   )
