@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
   const [isUserIdInArray, setIsUserIdInArray] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("alias") !== null && typeof associates !== 'undefined') {
+    if (localStorage.getItem("alias") !== null && typeof associates !== 'undefined' ) {
       const newValue: string | null = localStorage.getItem('alias')
       setAlias(newValue as string);
       setIsUserIdInArray(associates.some((obj) => obj.alias === alias));

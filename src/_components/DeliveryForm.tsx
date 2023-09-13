@@ -9,9 +9,7 @@ interface DeliveryFormProps {
   trackingNumbers: RecordModel[];
 }
 
-const DeliveryForm: React.FC<DeliveryFormProps> = ({
-  trackingNumbers,
-}) => {
+const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [trackingNumberList, setTrackingNumberList] = useState<string[]>([]);
 
@@ -27,21 +25,13 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
       setEnteredTrackingNumber("");
       return;
     }
-    await createOnDelivered(enteredTrackingNumber);
-    setTrackingNumberList([...trackingNumberList, enteredTrackingNumber]);
-    setEnteredTrackingNumber("");
-  };
-
-  const createOnDelivered = async (enteredTrackingNumber: string) => {
     const timestamp = new Date().toLocaleString();
-    try {
-      await pb.collection("TrackingNumbers").create({
-        TrackingNumber: enteredTrackingNumber,
-        Delivered: timestamp,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const record = await pb.collection("TrackingNumbers").create({
+      'TrackingNumber': enteredTrackingNumber,
+      'Delivered': timestamp,
+    });
+    setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
+    setEnteredTrackingNumber("");
   };
 
   return (
