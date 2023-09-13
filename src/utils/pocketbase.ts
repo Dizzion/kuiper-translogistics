@@ -50,18 +50,24 @@ interface Truck {
   ArrivalAA?: string;
 }
 
-export const dynamic = 'auto',
+export const dynamic = "auto",
   dynamicParams = true,
   revalidate = 0,
-  fetchCache = 'auto',
-  runtime = 'nodejs',
-  preferredRegion = 'auto'
+  fetchCache = "auto",
+  runtime = "nodejs",
+  preferredRegion = "auto";
 
 // Tracking Number Routing
-export const TNGetAll = async (): Promise<RecordModel[]> => {
-  const res = await pb.collection("TrackingNumbers").getFullList();
+export const TNGetAll = async (): Promise<Object> => {
+  //   const res = await pb.collection("TrackingNumbers").getFullList();
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records`,
+    { cache: "no-store" }
+  );
+  const tns = await res.json();
+  return tns;
 
-  return res;
+  //   return res;
 };
 
 export const TNGetOne = async (id: string): Promise<RecordModel> => {
@@ -73,17 +79,18 @@ export const TNGetOne = async (id: string): Promise<RecordModel> => {
 export const TNCreate = async (
   trackingNumber: TrackingNumber
 ): Promise<RecordModel> => {
-//   const res = await pb.collection("TrackingNumbers").create(trackingNumber);
-  const res = await fetch(`${process.env.APP_SERVER}/collections/TrackingNumbers/records`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(trackingNumber)
-  })
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(trackingNumber),
+    }
+  );
   const newTN = await res.json();
   return newTN;
-//   return res;
 };
 
 export const TNUpdate = async (
@@ -180,14 +187,12 @@ export const UpdateTruck = async (
   id: string,
   truck: Truck
 ): Promise<RecordModel> => {
-  const res = await pb
-    .collection("Trucks")
-    .update(id, {
-      ArrivalTime: truck.ArrivalTime,
-      UnloadProcessing: truck.UnloadProcessing,
-      UnloadTime: truck.UnloadTime,
-      ArrivalAA: truck.ArrivalAA,
-    });
+  const res = await pb.collection("Trucks").update(id, {
+    ArrivalTime: truck.ArrivalTime,
+    UnloadProcessing: truck.UnloadProcessing,
+    UnloadTime: truck.UnloadTime,
+    ArrivalAA: truck.ArrivalAA,
+  });
 
   return res;
 };
@@ -195,11 +200,11 @@ export const UpdateTruck = async (
 // Employee Routing
 
 // Associate Routing
-export const getAssociates =async (): Promise<RecordModel[]> => {
-    const res = await pb.collection('WarehouseAssociates').getFullList();
+export const getAssociates = async (): Promise<RecordModel[]> => {
+  const res = await pb.collection("WarehouseAssociates").getFullList();
 
-    return res;
-}
+  return res;
+};
 
 // Handling Unit Routing
 export const HUCreate = async (

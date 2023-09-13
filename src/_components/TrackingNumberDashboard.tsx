@@ -1,12 +1,11 @@
 'use client'
 import { RecordModel } from 'pocketbase';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import TrackingNumberDashboard from './SearchDashboard';
+import { TNGetAll } from '@/utils/pocketbase';
 
-interface SearchProps {
-    trackingNumbers: RecordModel[]
-}
+
 
 export interface TrackingNumberData {
     outbound99: string;
@@ -17,8 +16,9 @@ export interface TrackingNumberData {
     inbound99: string;
 }
 
-const SearchTrackingNumberCustomer: React.FC<SearchProps> = ({ trackingNumbers }) => {
+const SearchTrackingNumberCustomer: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const [trackingNumbers, setTrackingNumbers] = useState<Object[]>([]);
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [trackingNumberData, setTrackingNumberdata] = useState<TrackingNumberData>({
     outbound99: '',
@@ -28,6 +28,17 @@ const SearchTrackingNumberCustomer: React.FC<SearchProps> = ({ trackingNumbers }
     outbound133: '',
     inbound99: ''
   });
+
+  async function getTNs() {
+    const res = await TNGetAll();
+    console.log(res.items)
+    setTrackingNumbers(res.items);
+  }
+
+  useEffect(() => {
+    getTNs();
+    
+  }, [])
 
   const searchTrackingNumbers = (e: React.FormEvent) => {
     e.preventDefault();

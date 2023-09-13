@@ -1,12 +1,11 @@
 "use client";
-import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import { TNCreate } from "@/utils/pocketbase";
 
 interface DeliveryFormProps {
-  trackingNumbers: RecordModel[];
+  trackingNumbers: Object[];
 }
 
 const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {

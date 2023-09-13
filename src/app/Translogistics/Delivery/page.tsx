@@ -9,7 +9,7 @@ async function Delivery() {
   return (
     <div style={{ backgroundColor: "#5d5f63" }}>
       <DeliveryForm
-        trackingNumbers={trackingNumbers}
+        trackingNumbers={trackingNumbers.items}
       />
     </div>
   );
