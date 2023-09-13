@@ -3,7 +3,7 @@ import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
-import pb from "@/utils/pocketbase";
+import pb, { TNCreate } from "@/utils/pocketbase";
 
 interface DeliveryFormProps {
   trackingNumbers: RecordModel[];
@@ -25,11 +25,16 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
       setEnteredTrackingNumber("");
       return;
     }
-    const timestamp = new Date().toLocaleString();
-    const createRecord = { TrackingNumber: enteredTrackingNumber, Delivered: timestamp, alias: localStorage.getItem('id') };
-    const record = await pb.collection("TrackingNumbers").create(createRecord);
-    setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
-    setEnteredTrackingNumber("");
+      const timestamp = new Date().toLocaleString();
+      const aliasid = localStorage.getItem("id");
+      const createRecord = {
+        TrackingNumber: enteredTrackingNumber,
+        Delivered: timestamp,
+        alias: aliasid as string,
+      };
+      const record = await TNCreate(createRecord);
+      setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
+      setEnteredTrackingNumber("");
   };
 
   return (

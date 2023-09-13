@@ -188,7 +188,7 @@ export const UpdateTruck = async (
 
 // Associate Routing
 export const getAssociates =async (): Promise<RecordModel[]> => {
-    const res = await pb.collection('WarehouseAssociate').getFullList();
+    const res = await pb.collection('WarehouseAssociates').getFullList();
 
     return res;
 }
