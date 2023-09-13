@@ -26,10 +26,8 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
       return;
     }
     const timestamp = new Date().toLocaleString();
-    const record = await pb.collection("TrackingNumbers").create({
-      'TrackingNumber': enteredTrackingNumber,
-      'Delivered': timestamp,
-    });
+    const createRecord = { TrackingNumber: enteredTrackingNumber, Delivered: timestamp, alias: localStorage.getItem('id') };
+    const record = await pb.collection("TrackingNumbers").create(createRecord);
     setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
     setEnteredTrackingNumber("");
   };
