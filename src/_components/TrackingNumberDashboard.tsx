@@ -18,7 +18,7 @@ export interface TrackingNumberData {
 
 const SearchTrackingNumberCustomer: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [trackingNumbers, setTrackingNumbers] = useState<Object[]>([]);
+  const [trackingNumbers, setTrackingNumbers] = useState<RecordModel[]>([]);
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [trackingNumberData, setTrackingNumberdata] = useState<TrackingNumberData>({
     outbound99: '',
@@ -30,7 +30,7 @@ const SearchTrackingNumberCustomer: React.FC = () => {
   });
 
   async function getTNs() {
-    const res = await TNGetAll();
+    const res = await TNGetAll() as RecordModel;
     console.log(res.items)
     setTrackingNumbers(res.items);
   }

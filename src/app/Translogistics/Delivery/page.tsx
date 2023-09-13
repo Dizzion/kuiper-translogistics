@@ -1,10 +1,11 @@
 import DeliveryForm from "@/_components/DeliveryForm";
 import { TNGetAll } from "@/utils/pocketbase";
+import { RecordModel } from "pocketbase";
 import React from "react";
 
 
 async function Delivery() {
-  const trackingNumbers = await TNGetAll();
+  const trackingNumbers = await TNGetAll() as RecordModel;
 
   return (
     <div style={{ backgroundColor: "#5d5f63" }}>

@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import { TNCreate } from "@/utils/pocketbase";
+import { RecordModel } from "pocketbase";
 
 interface DeliveryFormProps {
-  trackingNumbers: Object[];
+  trackingNumbers: RecordModel[];
 }
 
 const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {

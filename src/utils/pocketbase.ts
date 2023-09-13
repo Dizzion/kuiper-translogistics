@@ -59,21 +59,21 @@ export const dynamic = "auto",
 
 // Tracking Number Routing
 export const TNGetAll = async (): Promise<Object> => {
-  //   const res = await pb.collection("TrackingNumbers").getFullList();
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/TrackingNumbers/records`,
     { cache: "no-store" }
   );
   const tns = await res.json();
   return tns;
-
-  //   return res;
 };
 
-export const TNGetOne = async (id: string): Promise<RecordModel> => {
-  const res = await pb.collection("TrackingNumbers").getOne(id);
-
-  return res;
+export const TNGetOne = async (id: string): Promise<Object> => {
+    const res = await fetch(
+        `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
+        { cache: "no-store" }
+      );
+    const tn = await res.json();
+  return tn;
 };
 
 export const TNCreate = async (
