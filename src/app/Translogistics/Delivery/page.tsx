@@ -30,10 +30,12 @@ async function Delivery() {
   };
 
   return (
-    <DeliveryForm
-      trackingNumbers={trackingNumbers}
-      createOnDelivered={createOnDelivered}
-    />
+    <div style={{ backgroundColor: "#5d5f63" }}>
+      <DeliveryForm
+        trackingNumbers={trackingNumbers}
+        createOnDelivered={createOnDelivered}
+      />
+    </div>
   );
 }
 
