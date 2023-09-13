@@ -3,6 +3,7 @@ import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HanldingUnitList";
+import { HUCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
 
 interface ReceivingFormProps {
   employees: RecordModel[];
@@ -14,7 +15,7 @@ export interface Requestor {
   inventory: boolean;
   freight: boolean;
   jira: string;
-  handlingUnits: number[];
+  handlingUnits: string[];
   coupaPoLines: string;
 }
 
@@ -52,8 +53,9 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     });
   }
 
-  const updateHandlingUnitList = (e: React.FormEvent): void => {
+  const updateHandlingUnitList = async (e: React.FormEvent) => {
     e.preventDefault();
+    const timestamp = new Date();
     if (enteredHUs.includes(Number(enteredHU))) {
       setEnteredHU("");
       return;
@@ -61,14 +63,23 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       setShowAlert(true);
       return;
     }
-    setEnteredHUs([...enteredHUs, Number(enteredHU)]);
+    const createdHU = await HUCreate(
+      Number(enteredHU),
+      timestamp,
+      localStorage.getItem("id") as string
+    );
+    setEnteredHUs([...enteredHUs, createdHU.HU]);
+    setRequestor({
+      ...requestor,
+      handlingUnits: [...requestor.handlingUnits, createdHU.id],
+    });
     setEnteredHU("");
   };
 
-  function updateAsReceived(
+  async function updateAsReceived(
     enteredTrackingNumber: string,
     requestor: Requestor
-  ): void {
+  ) {
     const newTimestamp = new Date().toLocaleString();
 
     const existingTrackingNumberIndex = trackingNumbers.findIndex(
@@ -92,29 +103,54 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         requestor.coupaPoLines;
       trackingNumbers[existingTrackingNumberIndex].handlingUnits =
         requestor.handlingUnits;
+      const updatedTrackingNumber = {
+        TrackingNumber: enteredTrackingNumber,
+        Outbound99: trackingNumbers[existingTrackingNumberIndex].Outbound99,
+        Inbound133: trackingNumbers[existingTrackingNumberIndex].Inbound133,
+        Received133: newTimestamp,
+        Outbound133: trackingNumbers[existingTrackingNumberIndex].Outbound133,
+        Inbound99: trackingNumbers[existingTrackingNumberIndex].Inbound99,
+        full_name: requestor.name,
+        default_building: requestor.building,
+        CoupaPoLines: requestor.coupaPoLines,
+        SAP: requestor.inventory,
+        Freight: requestor.freight,
+        Jira: requestor.jira,
+        HU: requestor.handlingUnits,
+        alias: localStorage.getItem("id") as string,
+      };
+      await TNUpdate(trackingNumbers[existingTrackingNumberIndex].id, updatedTrackingNumber);
     } else {
       const newTrackingNumber = {
-        id: enteredTrackingNumber,
-        outbound99: "",
-        inbound133: "",
-        received133: newTimestamp,
-        outbound133: "",
-        inbound99: "",
-        handlingUnits: requestor.handlingUnits,
-        coupaPoLines: requestor.coupaPoLines,
-        requestorName: requestor.name,
-        requestorBuilding: requestor.building,
-        inventory: requestor.inventory,
-        freight: requestor.freight,
-        jira: requestor.jira,
+        TrackingNumber: enteredTrackingNumber,
+        Outbound99: "",
+        Inbound133: "",
+        Received133: newTimestamp,
+        Outbound133: "",
+        Inbound99: "",
+        full_name: requestor.name,
+        default_building: requestor.building,
+        CoupaPoLines: requestor.coupaPoLines,
+        SAP: requestor.inventory,
+        Freight: requestor.freight,
+        Jira: requestor.jira,
+        HU: requestor.handlingUnits,
+        alias: localStorage.getItem("id") as string,
       };
+      await TNCreate(newTrackingNumber);
     }
   }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (requestor.name !== "") {
-      setRequestor({...requestor, inventory: Boolean(Number(freightInventory.inventory))});
-      setRequestor({...requestor, freight: Boolean(Number(freightInventory.freight))});
+      setRequestor({
+        ...requestor,
+        inventory: Boolean(Number(freightInventory.inventory)),
+      });
+      setRequestor({
+        ...requestor,
+        freight: Boolean(Number(freightInventory.freight)),
+      });
       updateAsReceived(enteredTrackingNumber, requestor);
       setEnteredTrackingNumber("");
       setRequestor({
@@ -256,11 +292,11 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       <HandlingUnitList handlingUnits={enteredHUs} />
       <Modal centered show={showAlert} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Tracking Number Not Found</Modal.Title>
+          <Modal.Title>Handling Unit Invalid</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          The tracking number that you have entered has not been scanned into
-          the system.
+          The Handling Unit you scanned is not valid make sure you scanning the
+          correct barcode.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
