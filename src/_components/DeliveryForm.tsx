@@ -15,18 +15,19 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [trackingNumberList, setTrackingNumberList] = useState<string[]>([]);
 
-  const updateTrackingNumber = (e: React.FormEvent) => {
+  const updateTrackingNumber = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
       trackingNumbers.some(
         (obj) => obj.TrackingNumber === enteredTrackingNumber
       ) ||
-      enteredTrackingNumber === ""
+      enteredTrackingNumber === "" ||
+      trackingNumberList.includes(enteredTrackingNumber)
     ) {
       setEnteredTrackingNumber("");
       return;
     }
-    createOnDelivered(enteredTrackingNumber);
+    await createOnDelivered(enteredTrackingNumber);
     setTrackingNumberList([...trackingNumberList, enteredTrackingNumber]);
     setEnteredTrackingNumber("");
   };

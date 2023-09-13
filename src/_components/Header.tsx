@@ -25,7 +25,9 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
     e.preventDefault();
     if (typeof associates !== "undefined") {
       setIsUserIdInArray(associates.some((obj) => obj.alias === alias));
-      localStorage.setItem("alias", alias);
+      const aliasIndex = associates.findIndex((obj) => obj.alias === alias);
+      localStorage.setItem("alias", associates[aliasIndex].alias);
+      localStorage.setItem("id", associates[aliasIndex].id);
     }
   };
 
