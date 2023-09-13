@@ -3,7 +3,7 @@ import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
-import pb, { TNCreate } from "@/utils/pocketbase";
+import { TNCreate } from "@/utils/pocketbase";
 
 interface DeliveryFormProps {
   trackingNumbers: RecordModel[];

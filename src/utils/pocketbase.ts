@@ -73,9 +73,17 @@ export const TNGetOne = async (id: string): Promise<RecordModel> => {
 export const TNCreate = async (
   trackingNumber: TrackingNumber
 ): Promise<RecordModel> => {
-  const res = await pb.collection("TrackingNumbers").create(trackingNumber);
-
-  return res;
+//   const res = await pb.collection("TrackingNumbers").create(trackingNumber);
+  const res = await fetch(`${process.env.APP_SERVER}/collections/TrackingNumbers/records`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(trackingNumber)
+  })
+  const newTN = await res.json();
+  return newTN;
+//   return res;
 };
 
 export const TNUpdate = async (
