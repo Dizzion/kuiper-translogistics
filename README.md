@@ -1,34 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Concept
+This Concept would allow for associates to have less pain on entry of data and less points of failure for the associate when trying to complete data entry tasks. Alternitavely this would also allow for readablility ease while looking at trends and metrics within the translogistics system. 
 
-## Getting Started
+# Customer Focus
+This application would also provide live customer data rather than our current once every 24 hour updates. Our process flow is much faster than once every 24 hours by about a third that time. One package on average takes only about 3 hours to get through the system and be ready for customer pick up. Currently it is a manual process to notify and follow up with packages that have been staged for customer pick-up. This would eliminate that need and create an eco system in which the customer has the power to have a live view of where their package is in the process; as well as, when the last time the package was scanned.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
