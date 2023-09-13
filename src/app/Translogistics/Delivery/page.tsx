@@ -17,9 +17,13 @@ async function getTrackingNumbers() {
 async function Delivery() {
   const trackingNumbers = await getTrackingNumbers();
 
-  const updateAsDelivered = async (enteredTrackingNumber: string) => {
+  const createOnDelivered = async (enteredTrackingNumber: string) => {
+    const timestamp = new Date().toLocaleString();
     try {
-      await pb.collection('TrackingNumbers').update()
+      await pb.collection('TrackingNumbers').create({
+        TrackingNumber: enteredTrackingNumber,
+        Delivered: timestamp
+      });
     } catch (error) {
       console.log(error);
     }
