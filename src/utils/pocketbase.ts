@@ -75,7 +75,7 @@ export const TNGetAll = async (): Promise<Object> => {
   return tns;
 };
 
-export const TNGetOne = async (id: string): Promise<Object> => {
+export const TNGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
     { cache: "no-store" }
@@ -120,24 +120,36 @@ export const TNUpdate = async (
 };
 
 // Container Routing
-export const ContGetAll = async (): Promise<RecordModel[]> => {
-  const res = await pb.collection("Containers").getFullList();
-
-  return res;
+export const ContGetAll = async (): Promise<Object> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Containers/records/`,
+    { cache: "no-store"}
+  )
+    const containers = await res.json();
+  return containers;
 };
 
 export const ContGetOne = async (id: string): Promise<RecordModel> => {
-  const res = await pb.collection("Containers").getOne(id);
-
-  return res;
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Containers/records/${id}`,
+    { cache: "no-store"}
+  )
+    const container = await res.json();
+  return container;
 };
 
 export const ContCreate = async (
   container: Container
-): Promise<Object> => {
+): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Containers/records`,
-    { cache: "no-store"}
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(container),
+    }
   );
   const newCont = await res.json();
 
@@ -175,7 +187,7 @@ export const STGetAll = async (): Promise<Object> => {
   return STs;
 };
 
-export const STGetOne = async (id: string): Promise<Object> => {
+export const STGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}`,
     { cache: "no-store" }
