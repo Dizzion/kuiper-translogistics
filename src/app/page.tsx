@@ -1,4 +1,3 @@
-import { TNGetAll } from '@/utils/pocketbase';
 import styles from './page.module.css'
 import SearchTrackingNumberCustomer from '../_components/TrackingNumberDashboard';
 
