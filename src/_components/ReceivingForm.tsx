@@ -27,10 +27,6 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   const [showAlert, setShowAlert] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
-  const [freightInventory, setFreightInventory] = useState({
-    inventory: "",
-    freight: "",
-  });
   const [requestor, setRequestor] = useState<Requestor>({
     name: "",
     building: "",
@@ -154,14 +150,6 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (requestor.name !== "") {
-      setRequestor({
-        ...requestor,
-        inventory: Boolean(Number(freightInventory.inventory)),
-      });
-      setRequestor({
-        ...requestor,
-        freight: Boolean(Number(freightInventory.freight)),
-      });
       updateAsReceived(enteredTrackingNumber, requestor);
       setEnteredTrackingNumber("");
       setRequestor({
@@ -233,15 +221,15 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 size="sm"
                 required
                 onChange={(e) =>
-                  setFreightInventory({
-                    ...freightInventory,
-                    inventory: e.target.value,
+                  setRequestor({
+                    ...requestor,
+                    inventory: Boolean(e.target.value),
                   })
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={0}>Non-Inventory</option>
-                <option value={1}>SAP Inventory</option>
+                <option value={'false'}>Non-Inventory</option>
+                <option value={'true'}>SAP Inventory</option>
               </Form.Select>
             </Col>
             <Col>
@@ -250,15 +238,15 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 size="sm"
                 required
                 onChange={(e) =>
-                  setFreightInventory({
-                    ...freightInventory,
-                    freight: e.target.value,
+                  setRequestor({
+                    ...requestor,
+                    freight: Boolean(e.target.value),
                   })
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={0}>Yes</option>
-                <option value={1}>No</option>
+                <option value={'true'}>Yes</option>
+                <option value={'false'}>No</option>
               </Form.Select>
             </Col>
           </Row>

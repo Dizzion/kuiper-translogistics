@@ -69,7 +69,7 @@ export const TNGetAll = async (): Promise<Object> => {
 
 export const TNGetOne = async (id: string): Promise<Object> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/:${id}`,
     { cache: "no-store" }
   );
   const tn = await res.json();
@@ -100,7 +100,7 @@ export const TNUpdate = async (
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
