@@ -2,6 +2,8 @@
 import { ContCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
+import { Form, Button, Modal } from "react-bootstrap";
+import TrackingNumberList from "./TrackingNumberList";
 
 interface OutboundFormProps {
   sapTotes: RecordModel[];
@@ -88,7 +90,74 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setEnteredSapTotes([]);
   }
 
-  return <div>OutboundForm</div>;
+  function handleClose(): void {
+    setShowAlert(false);
+    setEnteredTracking("");
+  }
+
+  return (
+    <>
+      <Form>
+        <Form.Group className="text-center">
+          <Form.Label className="text-white">Location</Form.Label>
+          <Form.Control
+            type="location"
+            size="lg"
+            placeholder="99 or 133?"
+            required
+            value={locationTag}
+            onChange={(e) => handleLocationChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+              }
+            }}
+          />
+          <Form.Label className="text-white">Container ID</Form.Label>
+          <Form.Control
+            type="containterID"
+            size="lg"
+            placeholder="Which Container are you loading?"
+            disabled
+            value={containerId}
+          />
+        </Form.Group>
+
+        <Button variant="outline-light" type="button" onClick={submitContainer}>
+          Submit Container
+        </Button>
+      </Form>
+      <Form onSubmit={changeTrackingNumberData} className="text-center">
+        <Form.Label className="text-white">Tracking Number</Form.Label>
+        <Form.Control
+          type="trackingNumber"
+          placeholder="Enter Tracking Number"
+          value={enteredTracking}
+          onChange={(e) => setEnteredTracking(e.target.value)}
+        />
+      </Form>
+      {from99To133 ? (
+        <></>
+      ): (
+        <></>
+      )}
+      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
+      <Modal centered show={showAlert} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tracking Number Not Valid</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          The tracking number that you have entered has an error please make sure you are 
+          scanning the correct code.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
 };
 
 export default OutboundForm;
