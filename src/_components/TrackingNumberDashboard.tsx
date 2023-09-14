@@ -30,7 +30,6 @@ const SearchTrackingNumberCustomer: React.FC = () => {
 
   async function getTNs() {
     const res = (await TNGetAll()) as RecordModel;
-    console.log(res.items);
     setTrackingNumbers(res.items);
   }
 

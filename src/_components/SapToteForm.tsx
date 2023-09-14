@@ -27,8 +27,8 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         if (enteredHandlingUnits.length === 0) {
             setStartTime(new Date());
         }
-        const enteredIndex = handlingUnits.findIndex((obj) => obj.HU === enteredHandlingUnit);
-        if ((enteredIndex === -1) || (/^(199|133|299|233)/.test(enteredHandlingUnit))) {
+        const enteredIndex = handlingUnits.findIndex((obj) => obj.HU === Number(enteredHandlingUnit));
+        if ((enteredIndex === -1) || !(/^(199|133|299|233)/.test(enteredHandlingUnit))) {
             setShowAlert(true);
             return;
         } 

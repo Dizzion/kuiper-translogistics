@@ -77,7 +77,7 @@ export const TNGetAll = async (): Promise<Object> => {
 
 export const TNGetOne = async (id: string): Promise<Object> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/:${id}`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
     { cache: "no-store" }
   );
   const tn = await res.json();
@@ -270,7 +270,7 @@ export const HUUpdate = async (
   handlingUnit: HandlingUnit
 ) : Promise<RecordModel> => {
   const res = await fetch(
-    `http://127.0.0.1/api/collections/HandlingUnits/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records/${id}`,
     {
       method: "PATCH",
       headers: {
