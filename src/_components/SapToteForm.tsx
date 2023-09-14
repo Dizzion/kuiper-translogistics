@@ -56,7 +56,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
             HU: HUids,
             alias: localStorage.getItem("id") as string
         }
-        const created = await STCreate(SapToteCreated);
+        await STCreate(SapToteCreated);
         setUid(`SAP_${Date.now()}-${Math.floor(Math.random() * 10000)}`);
         setHUids([]);
         setEnteredHandlingUnit('');
