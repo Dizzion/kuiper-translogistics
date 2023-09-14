@@ -30,6 +30,7 @@ interface HandlingUnit {
 interface SapTote {
   ToteID: string;
   StartLoading: Date;
+  StagedTime: Date;
   UnloadTime?: Date;
   HU: string[];
   alias: string;
@@ -164,9 +165,19 @@ export const STGetOne = async (id: string): Promise<RecordModel> => {
 };
 
 export const STCreate = async (tote: SapTote): Promise<RecordModel> => {
-  const res = await pb.collection("SapTotes").create(tote);
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/SapTotes/records`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tote),
+    }
+  );
+  const newSapTote = await res.json();
 
-  return res;
+  return newSapTote;
 };
 
 export const STUpdate = async (
