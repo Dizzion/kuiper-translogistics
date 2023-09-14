@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { Form, Button, Modal, ListGroup } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
-import EmptyToteList from "./EmptyList";
 
 interface OutboundFormProps {
   sapTotes: RecordModel[];
