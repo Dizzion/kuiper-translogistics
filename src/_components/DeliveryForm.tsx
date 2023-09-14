@@ -11,7 +11,7 @@ interface DeliveryFormProps {
 
 const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
-  const [trackingNumberList, setTrackingNumberList] = useState<string[]>([]);
+  const [trackingNumberList, setTrackingNumberList] = useState<RecordModel[]>([]);
 
   const updateTrackingNumber = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +20,9 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
         (obj) => obj.TrackingNumber === enteredTrackingNumber
       ) ||
       enteredTrackingNumber === "" ||
-      trackingNumberList.includes(enteredTrackingNumber)
+      trackingNumberList.some(
+        (obj) => obj.TrackingNumber === enteredTrackingNumber
+      )
     ) {
       setEnteredTrackingNumber("");
       return;
@@ -33,7 +35,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
       alias: aliasid as string,
     };
     const record = await TNCreate(createRecord);
-    setTrackingNumberList([...trackingNumberList, record.TrackingNumber]);
+    setTrackingNumberList([...trackingNumberList, record]);
     setEnteredTrackingNumber("");
   };
 

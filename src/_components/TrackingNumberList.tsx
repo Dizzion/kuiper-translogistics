@@ -1,8 +1,9 @@
+import { RecordModel } from "pocketbase";
 import React from "react";
 import { Col, Container, ListGroup, Row } from "react-bootstrap";
 
 interface TrackingNumberListProps {
-  trackingNumbersList: string[];
+  trackingNumbersList: RecordModel[];
 }
 
 const TrackingNumberList: React.FC<TrackingNumberListProps> = ({
@@ -18,8 +19,8 @@ const TrackingNumberList: React.FC<TrackingNumberListProps> = ({
           <Col>
             <ListGroup>
               {column1.map((trackingNumber) => (
-                <ListGroup.Item variant="dark" key={trackingNumber}>
-                  {trackingNumber}
+                <ListGroup.Item variant="dark" key={trackingNumber.id}>
+                  {trackingNumber.TrackingNumber}
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -27,8 +28,8 @@ const TrackingNumberList: React.FC<TrackingNumberListProps> = ({
           <Col>
             <ListGroup>
               {column2.map((trackingNumber) => (
-                <ListGroup.Item variant="dark" key={trackingNumber}>
-                  {trackingNumber}
+                <ListGroup.Item variant="dark" key={trackingNumber.id}>
+                  {trackingNumber.TrackingNumber}
                 </ListGroup.Item>
               ))}
             </ListGroup>
