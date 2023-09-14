@@ -2,7 +2,7 @@
 import { HUUpdate, STCreate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
-import HandlingUnitList from "./HanldingUnitList";
+import HandlingUnitList from "./HandlingUnitList";
 import { Modal, Button, Form } from "react-bootstrap";
 
 interface SapToteFormProps {

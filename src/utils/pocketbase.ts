@@ -1,4 +1,3 @@
-import { METHODS } from "http";
 import Pocketbase, { RecordModel } from "pocketbase";
 
 const pb = new Pocketbase(process.env.APP_SERVER);

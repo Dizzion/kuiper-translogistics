@@ -2,8 +2,10 @@
 import { ContCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
-import { Form, Button, Modal } from "react-bootstrap";
+import { Form, Button, Modal, ListGroup } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
+import DisplaySapTote from "./SapToteDisplay";
+import EmptyToteList from "./EmptyList";
 
 interface OutboundFormProps {
   sapTotes: RecordModel[];
@@ -50,6 +52,11 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       setTnIds([...tnIds, createdTn.id]);
     } else if (locationTag === "133" && !/^(SAP_)/.test(enteredTracking)) {
         const tnIndex = trackingNumbers.findIndex((obj) => obj.TrackingNumber === enteredTracking);
+        if (tnIndex === -1) {
+            setShowAlert(true);
+            setEnteredTracking('');
+            return;
+        }
         const updateRecord = {
             TrackingNumber: trackingNumbers[tnIndex].TrackingNumber,
             Outbound133: new Date().toLocaleString(),
@@ -63,6 +70,11 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         setEmptyTotes([...emptyTotes, enteredTracking]);
     } else if (locationTag === "133" && /^(SAP_)/.test(enteredTracking)) {
         const stIndex = sapTotes.findIndex((obj) => obj.ToteID === enteredTracking);
+        if(stIndex === -1) {
+            setShowAlert(true);
+            setEnteredTracking('');
+            return;
+        }
         setStIds([...stIds, sapTotes[stIndex].id]);
         setEnteredSapTotes([...enteredSapTotes, sapTotes[stIndex]]);
     } else {
@@ -136,10 +148,16 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           onChange={(e) => setEnteredTracking(e.target.value)}
         />
       </Form>
-      {from99To133 ? (
-        <></>
+      {!from99To133 ? (
+        <ListGroup>
+            {enteredSapTotes.map((SapTote) => (
+                <ListGroup.Item variant="dark" key={SapTote.id}>
+                    <DisplaySapTote SapTote={SapTote}/>
+                </ListGroup.Item>
+            ))}
+        </ListGroup>
       ): (
-        <></>
+        <EmptyToteList emptyTotes={emptyTotes}/>
       )}
       <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
       <Modal centered show={showAlert} onHide={handleClose}>

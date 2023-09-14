@@ -2,7 +2,7 @@
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Row, Col, Button, Modal } from "react-bootstrap";
-import HandlingUnitList from "./HanldingUnitList";
+import HandlingUnitList from "./HandlingUnitList";
 import { HUCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
 
 interface ReceivingFormProps {
