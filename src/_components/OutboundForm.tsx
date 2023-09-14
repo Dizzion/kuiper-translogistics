@@ -29,7 +29,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const [startTime, setStartTime] = useState(new Date());
 
   function handleLocationChange(value: string): void {
-    if (locationTag === "99" || locationTag === "133") {
+    if (locationTag !== "99" && locationTag !== "133") {
       setContainerId(`SEA_${Date.now()}-${Math.floor(Math.random() * 10000)}`);
     }
     setLocationTag(value);
@@ -113,19 +113,17 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       <Form>
         <Form.Group className="text-center">
           <Form.Label className="text-white">Location</Form.Label>
-          <Form.Control
-            type="location"
+          <Form.Select
             size="lg"
             placeholder="99 or 133?"
             required
             value={locationTag}
             onChange={(e) => handleLocationChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-              }
-            }}
-          />
+          >
+            <option>Select Your Location</option>
+            <option value="99">SEA99</option>
+            <option value="133">SEA133</option>
+          </Form.Select>
           <Form.Label className="text-white">Container ID</Form.Label>
           <Form.Control
             type="containterID"
