@@ -119,8 +119,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         Outbound133: trackingNumbers[existingTrackingNumberIndex].Outbound133,
         Inbound99: trackingNumbers[existingTrackingNumberIndex].Inbound99,
         full_name: requestor.name,
-        default_building: requestor.building,
-        CoupaPoLines: requestor.coupaPoLines,
+        default_location: requestor.building,
+        CoupaPOLines: requestor.coupaPoLines,
         SAP: requestor.inventory,
         Freight: requestor.freight,
         Jira: requestor.jira,
@@ -140,8 +140,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         Outbound133: "",
         Inbound99: "",
         full_name: requestor.name,
-        default_building: requestor.building,
-        CoupaPoLines: requestor.coupaPoLines,
+        default_location: requestor.building,
+        CoupaPOLines: requestor.coupaPoLines,
         SAP: requestor.inventory,
         Freight: requestor.freight,
         Jira: requestor.jira,
@@ -205,6 +205,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
               <Form.Control
                 type="name"
                 size="sm"
+                placeholder="Full Name"
                 required
                 value={requestor.name}
                 onChange={(e) => pullRequestorBuilding(e.target.value)}
@@ -217,6 +218,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
               <Form.Control
                 type="location"
                 size="sm"
+                placeholder="Auto-Generates from Name"
                 disabled
                 value={requestor.building}
               />
@@ -237,7 +239,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                   })
                 }
               >
-                <option></option>
+                <option>Dropdown Options</option>
                 <option value={0}>Non-Inventory</option>
                 <option value={1}>SAP Inventory</option>
               </Form.Select>
@@ -254,7 +256,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                   })
                 }
               >
-                <option></option>
+                <option>Dropdown Options</option>
                 <option value={0}>Yes</option>
                 <option value={1}>No</option>
               </Form.Select>
@@ -266,6 +268,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
               <Form.Control
                 type="jira"
                 size="sm"
+                placeholder="PUR-XXXX"
                 value={requestor.jira}
                 onChange={(e) =>
                   setRequestor({ ...requestor, jira: e.target.value })
@@ -296,6 +299,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         <Form.Control
           type="Handling Unit"
           required
+          placeholder="199XXXXXXX, 299XXXXXXX, 133XXXXXXX, 233XXXXXXX"
           value={enteredHU}
           onChange={(e) => setEnteredHU(e.target.value)}
         />
