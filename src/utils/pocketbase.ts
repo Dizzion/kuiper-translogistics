@@ -228,7 +228,7 @@ export const getAssociates = async (): Promise<RecordModel[]> => {
 };
 
 // Handling Unit Routing
-export const HUGetAll = async (): Promise<RecordModel[]> => {
+export const HUGetAll = async (): Promise<Object> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/HandlingUnits/records`,
     { cache: "no-store" }
