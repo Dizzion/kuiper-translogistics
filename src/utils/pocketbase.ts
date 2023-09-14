@@ -152,16 +152,22 @@ export const ContUpdate = async (
 };
 
 // SapTote Routing
-export const STGetAll = async (): Promise<RecordModel[]> => {
-  const res = await pb.collection("SapTotes").getFullList();
-
-  return res;
+export const STGetAll = async (): Promise<Object> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/SapTotes/records`,
+    { cache: "no-store" }
+  );
+  const STs = await res.json();
+  return STs;
 };
 
-export const STGetOne = async (id: string): Promise<RecordModel> => {
-  const res = await pb.collection("SapTotes").getOne(id);
-
-  return res;
+export const STGetOne = async (id: string): Promise<Object> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}`,
+    { cache: "no-store" }
+  );
+  const ST = await res.json();
+  return ST;
 };
 
 export const STCreate = async (tote: SapTote): Promise<RecordModel> => {
@@ -246,7 +252,7 @@ export const HUGetAll = async (): Promise<Object> => {
   );
   const HUs = res.json();
   return HUs;
-}
+};
 
 export const HUGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
@@ -255,7 +261,7 @@ export const HUGetOne = async (id: string): Promise<RecordModel> => {
   );
   const HU = res.json();
   return HU;
-}
+};
 
 export const HUCreate = async (
   handlingUnit: HandlingUnit
@@ -277,7 +283,7 @@ export const HUCreate = async (
 export const HUUpdate = async (
   id: string,
   handlingUnit: HandlingUnit
-) : Promise<RecordModel> => {
+): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/HandlingUnits/records/${id}`,
     {
@@ -290,4 +296,4 @@ export const HUUpdate = async (
   );
   const updatedHandlingUnit = await res.json();
   return updatedHandlingUnit;
-}
+};
