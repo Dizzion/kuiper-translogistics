@@ -95,19 +95,6 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       typeof requestor.inventory === "boolean" &&
       typeof requestor.freight === "boolean"
     ) {
-      trackingNumbers[existingTrackingNumberIndex].received133 = newTimestamp;
-      trackingNumbers[existingTrackingNumberIndex].requestorName =
-        requestor.name;
-      trackingNumbers[existingTrackingNumberIndex].requestorBuilding =
-        requestor.building;
-      trackingNumbers[existingTrackingNumberIndex].inventory =
-        requestor.inventory;
-      trackingNumbers[existingTrackingNumberIndex].freight = requestor.freight;
-      trackingNumbers[existingTrackingNumberIndex].jira = requestor.jira;
-      trackingNumbers[existingTrackingNumberIndex].coupaPoLines =
-        requestor.coupaPoLines;
-      trackingNumbers[existingTrackingNumberIndex].handlingUnits =
-        requestor.handlingUnits;
       const updatedTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
         Outbound99: trackingNumbers[existingTrackingNumberIndex].Outbound99,
