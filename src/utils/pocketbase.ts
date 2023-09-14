@@ -20,6 +20,13 @@ interface TrackingNumber {
   alias: string;
 }
 
+interface HandlingUnit {
+  HU?: number;
+  ToQI?: Date;
+  StagedTime?: Date;
+  alias?: string;
+}
+
 interface SapTote {
   ToteID: string;
   StartLoading: Date;
@@ -109,8 +116,6 @@ export const TNUpdate = async (
   );
   const updatedTrackingNumber = await res.json();
   return updatedTrackingNumber;
-    // const res = await pb.collection('TrackingNumbers').update(id, trackingNumber);
-    // return res;
 };
 
 // Container Routing
@@ -224,17 +229,36 @@ export const getAssociates = async (): Promise<RecordModel[]> => {
 
 // Handling Unit Routing
 export const HUCreate = async (
-  handlingUnit: number,
-  timestamp: Date,
-  alias: string
+  handlingUnit: HandlingUnit
 ): Promise<RecordModel> => {
-  const res = await pb.collection("HandlingUnits").create({
-    HU: handlingUnit,
-    StagedTime: timestamp,
-    alias: alias,
-  });
-
-  return res;
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(handlingUnit),
+    }
+  );
+  const newHandlingUnit = await res.json();
+  return newHandlingUnit;
 };
 
-export default pb;
+export const HUUpdate = async (
+  id: string,
+  handlingUnit: HandlingUnit
+) : Promise<RecordModel> => {
+  const res = await fetch(
+    `http://127.0.0.1/api/collections/HandlingUnits/records/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(handlingUnit),
+    }
+  );
+  const updatedHandlingUnit = await res.json();
+  return updatedHandlingUnit;
+}

@@ -66,11 +66,12 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       setShowAlert(true);
       return;
     }
-    const createdHU = await HUCreate(
-      Number(enteredHU),
-      timestamp,
-      localStorage.getItem("id") as string
-    );
+    const HU = {
+      HU: Number(enteredHU),
+      ToQI: timestamp,
+      alias: localStorage.getItem("id") as string
+    }
+    const createdHU = await HUCreate(HU);
     setEnteredHUs([...enteredHUs, createdHU.HU]);
     setRequestor({
       ...requestor,
