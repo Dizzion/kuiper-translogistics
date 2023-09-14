@@ -18,7 +18,6 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const [stIds, setStIds] = useState<string[]>([]);
   const [tnIds, setTnIds] = useState<string[]>([]);
   const [enteredSapTotes, setEnteredSapTotes] = useState<RecordModel[]>([]);
-  const [emptyTotes, setEmptyTotes] = useState<string[]>([]);
   const [enteredTrackingNumbers, setEnteredTrackingNumbers] = useState<
     RecordModel[]
   >([]);
@@ -36,7 +35,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   }
 
   const changeTrackingNumberData = async (e: React.FormEvent) => {
-    if (emptyTotes.length === 0 && stIds.length === 0 && tnIds.length === 0) {
+    if (stIds.length === 0 && tnIds.length === 0) {
       setStartTime(new Date());
     }
     if (locationTag === "99" && !/^(SAP_)/.test(enteredTracking)) {
@@ -99,7 +98,6 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setStIds([]);
     setTnIds([]);
     setEnteredTrackingNumbers([]);
-    setEmptyTotes([]);
     setEnteredSapTotes([]);
   };
 
