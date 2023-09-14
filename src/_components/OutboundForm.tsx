@@ -52,6 +52,10 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         setTnIds([...tnIds, updatedTn.id]);
     } else if (locationTag === "99" && /^(SAP_)/.test(enteredTracking)) {
         //Empty Tote
+    } else if (locationTag === "133" && /^(SAP_)/.test(enteredTracking)) {
+        const stIndex = sapTotes.findIndex((obj) => obj.ToteID === enteredTracking);
+        setStIds([...stIds, sapTotes[stIndex].id]);
+        setEnteredSapTotes([...enteredSapTotes, sapTotes[stIndex]]);
     }
   };
 
