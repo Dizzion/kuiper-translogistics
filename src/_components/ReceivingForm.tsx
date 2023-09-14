@@ -39,7 +39,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
 
   function pullRequestorBuilding(e: string) {
     if (e === "") {
-      setRequestor({ ...requestor, name: e , building: ''});
+      setRequestor({ ...requestor, name: e, building: "" });
     }
     const requestorName = e;
     const requestorIndex = employees.findIndex(
@@ -52,7 +52,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         building: employees[requestorIndex].default_location,
       });
     } else {
-      setRequestor({ ...requestor, name: e , building: ''});
+      setRequestor({ ...requestor, name: e, building: "" });
     }
   }
 
@@ -69,8 +69,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     const HU = {
       HU: Number(enteredHU),
       ToQI: timestamp,
-      alias: localStorage.getItem("id") as string
-    }
+      alias: localStorage.getItem("id") as string,
+    };
     const createdHU = await HUCreate(HU);
     setEnteredHUs([...enteredHUs, createdHU.HU]);
     setRequestor({
@@ -217,8 +217,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={'false'}>Non-Inventory</option>
-                <option value={'true'}>SAP Inventory</option>
+                <option value={"false"}>Non-Inventory</option>
+                <option value={"true"}>SAP Inventory</option>
               </Form.Select>
             </Col>
             <Col>
@@ -234,8 +234,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={'true'}>Yes</option>
-                <option value={'false'}>No</option>
+                <option value={"true"}>Yes</option>
+                <option value={"false"}>No</option>
               </Form.Select>
             </Col>
           </Row>
