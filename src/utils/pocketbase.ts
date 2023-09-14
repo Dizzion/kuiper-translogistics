@@ -1,3 +1,4 @@
+import { METHODS } from "http";
 import Pocketbase, { RecordModel } from "pocketbase";
 
 const pb = new Pocketbase(process.env.APP_SERVER);
@@ -134,21 +135,35 @@ export const ContGetOne = async (id: string): Promise<RecordModel> => {
 
 export const ContCreate = async (
   container: Container
-): Promise<RecordModel> => {
-  const res = await pb.collection("Container").create(container);
+): Promise<Object> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Containers/records`,
+    { cache: "no-store"}
+  );
+  const newCont = await res.json();
 
-  return res;
+  return newCont;
 };
 
 export const ContUpdate = async (
   id: string,
   timestamp: Date
 ): Promise<RecordModel> => {
-  const res = await pb
-    .collection("Container")
-    .update(id, { UnloadFinish: timestamp });
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Containers/records/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ 
+        UnloadFinished: timestamp
+      })
+    }
+  );
+  const updatedCont = await res.json();
 
-  return res;
+  return updatedCont;
 };
 
 // SapTote Routing
