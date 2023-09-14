@@ -28,10 +28,10 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const [startTime, setStartTime] = useState(new Date());
 
   function handleLocationChange(value: string): void {
+    setLocationTag(value);
     if (locationTag !== "99" && locationTag !== "133") {
       setContainerId(`SEA_${Date.now()}-${Math.floor(Math.random() * 10000)}`);
     }
-    setLocationTag(value);
   }
 
   const changeTrackingNumberData = async (e: React.FormEvent) => {
@@ -84,6 +84,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   };
 
   const submitContainer = async (e: React.FormEvent) => {
+    e.preventDefault();
     const enteredContainer = {
       ContainerID: containerId,
       StartTime: startTime,
@@ -108,7 +109,14 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
 
   return (
     <>
-      <Form>
+      <Form
+        onSubmit={submitContainer}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); // Prevent form submission on Enter key press
+          }
+        }}
+      >
         <Form.Group className="text-center">
           <Form.Label className="text-white">Location</Form.Label>
           <Form.Select
@@ -131,8 +139,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
             value={containerId}
           />
         </Form.Group>
-
-        <Button variant="outline-light" type="button" onClick={submitContainer}>
+        <Button variant="outline-light" type="submit">
           Submit Container
         </Button>
       </Form>
