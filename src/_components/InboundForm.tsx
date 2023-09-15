@@ -22,7 +22,6 @@ const InboundForm: React.FC<InboundFormProps> = ({
   const [disabledEntry, setDisabledEntry] = useState(true);
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
   const [enteredTrackingNumbers, setEnteredTrackingNumbers] = useState<
     RecordModel[]
   >([]);
@@ -36,13 +35,10 @@ const InboundForm: React.FC<InboundFormProps> = ({
     if (contindex !== -1) {
       setDisabledEntry(false);
       const cont = await ContGetOne(containers[contindex].id);
-      console.log(cont);
       setWorkingCont(cont);
       if (cont.expand) {
-        setEnteredSapTotes(cont.expand.SapTotes);
-        console.log(enteredSapTotes);
-        setEnteredTrackingNumbers(cont.expand.TrackingNumbers);
-        console.log(enteredTrackingNumbers);
+        setEnteredSapTotes(cont.expand.SapTotes || []);
+        setEnteredTrackingNumbers(cont.expand.TrackingNumbers || []);
       }
       return;
     }
@@ -51,6 +47,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
     setEnteredSapTotes([]);
     setWorkingCont({} as RecordModel);
   };
+
   const changeTrackingNumberData = async (e: React.FormEvent) => {
     e.preventDefault();
     const timestamp = new Date();
@@ -61,13 +58,15 @@ const InboundForm: React.FC<InboundFormProps> = ({
       (obj) => obj.ToteID === enteredTracking
     );
     if (isInETN !== -1) {
+      const updatedEnteredTrackingNumbers = [...enteredTrackingNumbers];
       if (locationTag === "99") {
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
           Inbound99: timestamp.toLocaleString(),
           alias: localStorage.getItem("id") as string,
         };
-        setEnteredTrackingNumbers(enteredTrackingNumbers.splice(isInETN, 1));
+        updatedEnteredTrackingNumbers.splice(isInETN, 1);
+        setEnteredTrackingNumbers(updatedEnteredTrackingNumbers);
         await TNUpdate(enteredTrackingNumbers[isInETN].id, record);
         setEnteredTracking("");
       } else if (locationTag === "133") {
@@ -78,18 +77,19 @@ const InboundForm: React.FC<InboundFormProps> = ({
         };
         const recordid = enteredTrackingNumbers[isInETN].id;
         await TNUpdate(recordid, record);
-        setEnteredTrackingNumbers(enteredTrackingNumbers.splice(isInETN, 1));
+        updatedEnteredTrackingNumbers.splice(isInETN, 1);
+        setEnteredTrackingNumbers(updatedEnteredTrackingNumbers);
         setEnteredTracking("");
       }
     }
     if (isInEST !== -1) {
+      const updatedEnteredSapTotes = [...enteredSapTotes];
       const recordid = enteredSapTotes[isInEST].id;
       await STUpdate(recordid, timestamp);
       setEnteredTracking("");
-      setEnteredSapTotes(enteredSapTotes.splice(isInEST, 1));
-    } else {
-      setShowAlert(true);
-    }
+      updatedEnteredSapTotes.splice(isInEST, 1);
+      setEnteredSapTotes(updatedEnteredSapTotes);
+    } 
   };
 
   const submitContainer = async () => {
@@ -105,11 +105,6 @@ const InboundForm: React.FC<InboundFormProps> = ({
     setLocationTag("");
     setWorkingCont({} as RecordModel);
   };
-
-  function handleClose(): void {
-    setShowAlert(false);
-    setEnteredTracking("");
-  }
 
   return (
     <>
@@ -159,20 +154,6 @@ const InboundForm: React.FC<InboundFormProps> = ({
         ))}
       </ListGroup>
       <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
-      <Modal centered show={showAlert} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Tracking Info Not Valid</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          The tracking info that you have entered has an error please make sure
-          you are scanning the correct code.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 };
