@@ -132,7 +132,7 @@ export const ContGetAll = async (): Promise<Object> => {
 
 export const ContGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/Containers/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/Containers/records/${id}?expand=TrackingNumbers,SapTotes`,
     { cache: "no-store" }
   );
   const container = await res.json();

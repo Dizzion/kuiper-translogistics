@@ -1,5 +1,5 @@
 "use client";
-import { ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
+import { ContGetOne, ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Button, ListGroup, Modal } from "react-bootstrap";
@@ -34,22 +34,15 @@ const InboundForm: React.FC<InboundFormProps> = ({
       (cont) => cont.ContainerID === enteredContId
     );
     if (contindex !== -1) {
-      setWorkingCont(containers[contindex]);
-      console.log(workingCont);
       setDisabledEntry(false);
-      if (workingCont !== undefined) {
-        const res = await fetch(
-          `http://127.0.0.1:8090/api/collections/Containers/records/${workingCont.id}?expand=TrackingNumbers,SapTotes`,
-          { cache: "no-store" }
-        );
-        const cont = await res.json();
-        console.log(cont);
-        if (cont.expand) {
-          setEnteredSapTotes(cont.expand.SapTotes);
-          console.log(enteredSapTotes);
-          setEnteredTrackingNumbers(cont.expand.TrackingNumbers);
-          console.log(enteredTrackingNumbers);
-        }
+      const cont = await ContGetOne(containers[contindex].id);
+      console.log(cont);
+      setWorkingCont(cont);
+      if (cont.expand) {
+        setEnteredSapTotes(cont.expand.SapTotes);
+        console.log(enteredSapTotes);
+        setEnteredTrackingNumbers(cont.expand.TrackingNumbers);
+        console.log(enteredTrackingNumbers);
       }
       return;
     }
