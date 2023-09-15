@@ -54,6 +54,7 @@ interface Truck {
   LoadProcessing?: string;
   LoadTime?: string;
   DepartureTime?: Date;
+  Containers?: string[];
   DepartureAA?: string;
   ArrivalAA?: string;
 }
