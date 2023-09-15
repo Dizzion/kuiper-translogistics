@@ -216,11 +216,21 @@ export const STUpdate = async (
   id: string,
   timestamp: Date
 ): Promise<RecordModel> => {
-  const res = await pb
-    .collection("SapTotes")
-    .update(id, { UnloadTime: timestamp });
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        UnloadTime: timestamp
+      }),
+    }
+  );
+  const updatedST = res.json();
 
-  return res;
+  return updatedST;
 };
 
 // TODO: Truck Routing

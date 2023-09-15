@@ -1,5 +1,5 @@
 "use client";
-import { TNUpdate } from "@/utils/pocketbase";
+import { STUpdate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 
@@ -31,6 +31,10 @@ const InboundForm: React.FC<InboundFormProps> = ({
       (cont) => cont.ContainerID === enteredContId
     );
     if (contindex === -1) {
+      setDisabledEntry(true);
+      setEnteredTrackingNumbers([]);
+      setEnteredSapTotes([]);
+      setWorkingCont({} as RecordModel);
       return;
     }
     setWorkingCont(containers[contindex]);
@@ -47,7 +51,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
       });
       workingCont.SapTotes.forEach((st: string) => {
         const index = sapTotes.findIndex((ist) => ist.ToteID === st);
-        setEnteredSapTotes([...enteredTrackingNumbers, sapTotes[index]]);
+        setEnteredSapTotes([...enteredSapTotes, sapTotes[index]]);
       });
     }
   };
@@ -75,10 +79,17 @@ const InboundForm: React.FC<InboundFormProps> = ({
           Inbound133: timestamp.toLocaleString(),
           alias: localStorage.getItem("id") as string,
         };
+        const recordid = enteredTrackingNumbers[isInETN].id;
+        await TNUpdate(recordid, record);
         setEnteredTrackingNumbers(enteredTrackingNumbers.splice(isInETN, 1));
-        await TNUpdate(enteredTrackingNumbers[isInETN].id, record);
         setEnteredTracking("");
       }
+    }
+    if (isInEST !== -1) {
+      const recordid = enteredSapTotes[isInEST].id;
+      await STUpdate(recordid, timestamp);
+      setEnteredTracking('');
+      setEnteredSapTotes(enteredSapTotes.splice(isInEST, 1));
     }
   };
   return <></>;
