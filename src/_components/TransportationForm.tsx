@@ -2,7 +2,15 @@
 import { CreateTruck, UpdateTruck } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
-import { Form, Row, Col, Button, Modal, Card, CardGroup } from "react-bootstrap";
+import {
+  Form,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Card,
+  CardGroup,
+} from "react-bootstrap";
 import ContainerList from "./ContainerList";
 
 interface TransportationFormProps {
@@ -110,8 +118,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         UnloadProcessing: timers[3].elapsedTime.toLocaleString(),
         ArrivalAA: localStorage.getItem("id") as string,
       };
-      const truckIndex = trucks.findIndex((obj) => obj.Containers === containerIds);
-      if( truckIndex === -1) {
+      const truckIndex = trucks.findIndex(
+        (obj) => obj.Containers === containerIds
+      );
+      if (truckIndex === -1) {
         return;
       }
       await UpdateTruck(trucks[truckIndex].id, record);
@@ -147,7 +157,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           elapsedTime: 0,
         },
       ]);
-      setTruckId('');
+      setTruckId("");
     } else if (loadOrUnload === "load") {
       const record = {
         TruckID: truckId,
@@ -189,7 +199,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           elapsedTime: 0,
         },
       ]);
-      setTruckId('');
+      setTruckId("");
     }
   };
 
@@ -198,7 +208,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     const contIndex = containers.findIndex(
       (obj) => obj.ContainerID === enteredContainer
     );
-    if (contIndex !== -1 && !(containerList.some((cont) => cont.ContainerID === enteredContainer))) {
+    if (
+      contIndex !== -1 &&
+      !containerList.some((cont) => cont.ContainerID === enteredContainer)
+    ) {
       setContainerList([...containerList, containers[contIndex]]);
       return;
     }
@@ -217,15 +230,15 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Col>
               <Form.Label>Location</Form.Label>
               <Form.Select
-            size="lg"
-            required
-            value={locationTag}
-            onChange={(e) => setLocationTag(e.target.value)}
-          >
-            <option>Select Your Location</option>
-            <option value="99">SEA99</option>
-            <option value="133">SEA133</option>
-          </Form.Select>
+                size="lg"
+                required
+                value={locationTag}
+                onChange={(e) => setLocationTag(e.target.value)}
+              >
+                <option>Select Your Location</option>
+                <option value="99">SEA99</option>
+                <option value="133">SEA133</option>
+              </Form.Select>
             </Col>
             <Col>
               <Form.Label>Truck ID</Form.Label>
@@ -234,7 +247,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
                 size="lg"
                 value={truckId}
                 required
-                onChange={(e) => setTruckId(e.target.value)}
+                onChange={(e) => startTruck(e.target.value)}
               >
                 <option>Select Truck ID</option>
                 <option value="A">A</option>
@@ -265,55 +278,126 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         )}
       </Form>
       <Modal centered show={showAlert} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Double Scan</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        Make sure you aren't scanning the same Container twice.
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant='secondary' onClick={handleClose}>Close</Button>
-      </Modal.Footer>
-    </Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Double Scan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Make sure you aren't scanning the same Container twice.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {loadOrUnload === "load" ? (
         <>
-        <CardGroup>
-          <Card bg="secondary" style={{ width: "18rem" }}>
-            <Card.Header className="text-white">Processing</Card.Header>
-            <Card.Body key={timers[1].id}>
-            Elapsed Time {timers[1].id}: {timers[1].elapsedTime} seconds
-            <Button variant="outline-light" onClick={() => startTimer(timers[1].id)}>Start</Button>
-            <Button variant="outline-light" onClick={() => stopTimer(timers[1].id)}>Stop</Button>
-            </Card.Body>
-          </Card>
-          <Card bg="secondary" style={{ width: "18rem" }}>
-            <Card.Header className="text-white">Loading</Card.Header>
-            <Card.Body key={timers[0].id}>
-            Elapsed Time {timers[0].id}: {timers[0].elapsedTime} seconds
-            <Button variant="outline-light" onClick={() => startTimer(timers[0].id)}>Start</Button>
-            <Button variant="outline-light" onClick={() => stopTimer(timers[0].id)}>Stop</Button>
-            </Card.Body>
-          </Card>
-        </CardGroup>
-        <Form onSubmit={updateEnteredContainer}>
-          <Form.Label>Enter Containers</Form.Label>
-          <Form.Control
-            placeholder="Container ID"
-            size="lg"
-            value={enteredContainer}
-            onChange={(e) => setEnteredContainer(e.target.value)}
-          />
-        </Form>
-      </>
+          <CardGroup>
+            <Card bg="secondary" style={{ width: "18rem" }}>
+              <Card.Header className="text-white">Processing</Card.Header>
+              <Card.Body key={timers[1].id}>
+                Elapsed Time {timers[1].id}: {timers[1].elapsedTime} seconds
+                <Button
+                  variant="outline-light"
+                  onClick={() => startTimer(timers[1].id)}
+                >
+                  Start
+                </Button>
+                <Button
+                  variant="outline-light"
+                  onClick={() => stopTimer(timers[1].id)}
+                >
+                  Stop
+                </Button>
+              </Card.Body>
+            </Card>
+            <Card bg="secondary" style={{ width: "18rem" }}>
+              <Card.Header className="text-white">Loading</Card.Header>
+              <Card.Body key={timers[0].id}>
+                Elapsed Time {timers[0].id}: {timers[0].elapsedTime} seconds
+                <Button
+                  variant="outline-light"
+                  onClick={() => startTimer(timers[0].id)}
+                >
+                  Start
+                </Button>
+                <Button
+                  variant="outline-light"
+                  onClick={() => stopTimer(timers[0].id)}
+                >
+                  Stop
+                </Button>
+              </Card.Body>
+            </Card>
+          </CardGroup>
+          <Form onSubmit={updateEnteredContainer}>
+            <Form.Label>Enter Containers</Form.Label>
+            <Form.Control
+              placeholder="Container ID"
+              size="lg"
+              value={enteredContainer}
+              onChange={(e) => setEnteredContainer(e.target.value)}
+            />
+          </Form>
+        </>
       ) : (
-        <UnloadingForm
-          bins={enteredBins}
-          onChangeEnteredBin={handleChangeEnteredBin}
-        />
+        <>
+          <CardGroup>
+            <Card bg="secondary" style={{ width: "18rem" }}>
+              <Card.Header className="text-white">Unloading</Card.Header>
+              <Card.Body key={timers[2].id}>
+                Elapsed Time {timers[2].id}: {timers[2].elapsedTime} seconds
+                <Button
+                  variant="outline-light"
+                  onClick={() => startTimer(timers[2].id)}
+                >
+                  Start
+                </Button>
+                <Button
+                  variant="outline-light"
+                  onClick={() => stopTimer(timers[2].id)}
+                >
+                  Stop
+                </Button>
+              </Card.Body>
+            </Card>
+            <Card bg="secondary" style={{ width: "18rem" }}>
+              <Card.Header className="text-white">Processing</Card.Header>
+              <Card.Body key={timers[3].id}>
+                Elapsed Time {timers[3].id}: {timers[3].elapsedTime} seconds
+                <Button
+                  variant="outline-light"
+                  onClick={() => startTimer(timers[3].id)}
+                >
+                  Start
+                </Button>
+                <Button
+                  variant="outline-light"
+                  onClick={() => stopTimer(timers[3].id)}
+                >
+                  Stop
+                </Button>
+              </Card.Body>
+            </Card>
+          </CardGroup>
+          <Form onSubmit={updateEnteredContainer}>
+            <Form.Label>Enter Containers</Form.Label>
+            <Form.Control
+              placeholder="Container ID"
+              size="lg"
+              value={enteredContainer}
+              onChange={(e) => setEnteredContainer(e.target.value)}
+            />
+          </Form>
+        </>
       )}
-      <ContainerList containers={containerList} trackingNumbers={trackingNumbers} sapTotes={sapTotes} />
+      <ContainerList
+        containers={containerList}
+        trackingNumbers={trackingNumbers}
+        sapTotes={sapTotes}
+      />
     </>
-  );;
+  );
 };
 
 export default TransportationForm;
