@@ -3,6 +3,7 @@ import { CreateTruck, UpdateTruck } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Row, Col, Button, Modal, Card, CardGroup } from "react-bootstrap";
+import ContainerList from "./ContainerList";
 
 interface TransportationFormProps {
   trucks: RecordModel[];
@@ -280,15 +281,17 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           <Card bg="secondary" style={{ width: "18rem" }}>
             <Card.Header className="text-white">Processing</Card.Header>
             <Card.Body key={timers[1].id}>
-            Elapsed Time for Timer {timers[1].id}: {timers[1].elapsedTime} seconds
+            Elapsed Time {timers[1].id}: {timers[1].elapsedTime} seconds
             <Button variant="outline-light" onClick={() => startTimer(timers[1].id)}>Start</Button>
             <Button variant="outline-light" onClick={() => stopTimer(timers[1].id)}>Stop</Button>
             </Card.Body>
           </Card>
           <Card bg="secondary" style={{ width: "18rem" }}>
             <Card.Header className="text-white">Loading</Card.Header>
-            <Card.Body>
-              
+            <Card.Body key={timers[0].id}>
+            Elapsed Time {timers[0].id}: {timers[0].elapsedTime} seconds
+            <Button variant="outline-light" onClick={() => startTimer(timers[0].id)}>Start</Button>
+            <Button variant="outline-light" onClick={() => stopTimer(timers[0].id)}>Stop</Button>
             </Card.Body>
           </Card>
         </CardGroup>
@@ -308,7 +311,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           onChangeEnteredBin={handleChangeEnteredBin}
         />
       )}
-      <BinList bins={enteredBins} />
+      <ContainerList containers={containerList} trackingNumbers={trackingNumbers} sapTotes={sapTotes} />
     </>
   );;
 };
