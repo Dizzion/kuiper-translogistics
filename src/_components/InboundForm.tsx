@@ -2,7 +2,7 @@
 import { ContGetOne, ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
-import { Form, Button, ListGroup, Modal } from "react-bootstrap";
+import { Form, Button, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
 import TrackingNumberList from "./TrackingNumberList";
 
