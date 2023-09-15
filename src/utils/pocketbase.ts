@@ -65,7 +65,7 @@ export const dynamic = "auto",
   runtime = "nodejs",
   preferredRegion = "auto";
 
-// Tracking Number Routing
+// * Tracking Number Routing
 export const TNGetAll = async (): Promise<Object> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/TrackingNumbers/records`,
@@ -119,22 +119,22 @@ export const TNUpdate = async (
   return updatedTrackingNumber;
 };
 
-// Container Routing
+// * Container Routing
 export const ContGetAll = async (): Promise<Object> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Containers/records/`,
-    { cache: "no-store"}
-  )
-    const containers = await res.json();
+    { cache: "no-store" }
+  );
+  const containers = await res.json();
   return containers;
 };
 
 export const ContGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Containers/records/${id}`,
-    { cache: "no-store"}
-  )
-    const container = await res.json();
+    { cache: "no-store" }
+  );
+  const container = await res.json();
   return container;
 };
 
@@ -165,11 +165,11 @@ export const ContUpdate = async (
     {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
-        UnloadFinished: timestamp
-      })
+      body: JSON.stringify({
+        UnloadFinished: timestamp,
+      }),
     }
   );
   const updatedCont = await res.json();
@@ -177,7 +177,7 @@ export const ContUpdate = async (
   return updatedCont;
 };
 
-// SapTote Routing
+// * SapTote Routing
 export const STGetAll = async (): Promise<Object> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/SapTotes/records`,
@@ -223,7 +223,7 @@ export const STUpdate = async (
   return res;
 };
 
-// Truck Routing
+// TODO: Truck Routing
 export const TruckGetAll = async (): Promise<RecordModel[]> => {
   const res = await pb.collection("Trucks").getFullList();
 
@@ -256,21 +256,21 @@ export const UpdateTruck = async (
   return res;
 };
 
-// Employee Routing
+// TODO Employee Routing
 export const getEmployees = async (): Promise<RecordModel[]> => {
   const res = await pb.collection("Employees").getFullList();
 
   return res;
 };
 
-// Associate Routing
+// TODO Associate Routing
 export const getAssociates = async (): Promise<RecordModel[]> => {
   const res = await pb.collection("WarehouseAssociates").getFullList();
 
   return res;
 };
 
-// Handling Unit Routing
+// * Handling Unit Routing
 export const HUGetAll = async (): Promise<Object> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/HandlingUnits/records`,
