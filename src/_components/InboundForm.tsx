@@ -28,35 +28,35 @@ const InboundForm: React.FC<InboundFormProps> = ({
   >([]);
   const [enteredSapTotes, setEnteredSapTotes] = useState<RecordModel[]>([]);
 
-  const containerIdChange = (e: React.FormEvent) => {
+  const containerIdChange = async (e: React.FormEvent) => {
     e.preventDefault();
     const contindex = containers.findIndex(
       (cont) => cont.ContainerID === enteredContId
     );
-    if (contindex === -1) {
-      setDisabledEntry(true);
-      setEnteredTrackingNumbers([]);
-      setEnteredSapTotes([]);
-      setWorkingCont({} as RecordModel);
+    if (contindex !== -1) {
+      setWorkingCont(containers[contindex]);
+      console.log(workingCont);
+      setDisabledEntry(false);
+      if (workingCont !== undefined) {
+        const res = await fetch(
+          `http://127.0.0.1:8090/api/collections/Containers/records/${workingCont.id}?expand=TrackingNumbers,SapTotes`,
+          { cache: "no-store" }
+        );
+        const cont = await res.json();
+        console.log(cont);
+        if (cont.expand) {
+          setEnteredSapTotes(cont.expand.SapTotes);
+          console.log(enteredSapTotes);
+          setEnteredTrackingNumbers(cont.expand.TrackingNumbers);
+          console.log(enteredTrackingNumbers);
+        }
+      }
       return;
     }
-    setWorkingCont(containers[contindex]);
-    setDisabledEntry(false);
-    if (workingCont !== undefined) {
-      workingCont.TrackingNumbers.forEach((tn: string) => {
-        const index = trackingNumbers.findIndex(
-          (itn) => itn.TrackingNumber === tn
-        );
-        setEnteredTrackingNumbers([
-          ...enteredTrackingNumbers,
-          trackingNumbers[index],
-        ]);
-      });
-      workingCont.SapTotes.forEach((st: string) => {
-        const index = sapTotes.findIndex((ist) => ist.ToteID === st);
-        setEnteredSapTotes([...enteredSapTotes, sapTotes[index]]);
-      });
-    }
+    setDisabledEntry(true);
+    setEnteredTrackingNumbers([]);
+    setEnteredSapTotes([]);
+    setWorkingCont({} as RecordModel);
   };
   const changeTrackingNumberData = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,10 +144,10 @@ const InboundForm: React.FC<InboundFormProps> = ({
             onChange={(e) => setEnteredContId(e.target.value)}
           />
         </Form.Group>
-        </Form>
-        <Button variant="outline-light" type="button" onClick={submitContainer}>
-          Submit Container
-        </Button>
+      </Form>
+      <Button variant="outline-light" type="button" onClick={submitContainer}>
+        Submit Container
+      </Button>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
         <Form.Label className="text-white">Tracking Number</Form.Label>
         <Form.Control
