@@ -8,14 +8,10 @@ import TrackingNumberList from "./TrackingNumberList";
 
 interface InboundFormProps {
   containers: RecordModel[];
-  trackingNumbers: RecordModel[];
-  sapTotes: RecordModel[];
 }
 
 const InboundForm: React.FC<InboundFormProps> = ({
   containers,
-  trackingNumbers,
-  sapTotes,
 }) => {
   const [enteredContId, setEnteredContId] = useState("");
   const [workingCont, setWorkingCont] = useState<RecordModel>();
