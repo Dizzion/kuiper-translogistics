@@ -14,7 +14,6 @@ const ContainerList: React.FC<ContainerListProps> = ({
   trackingNumbers,
   sapTotes,
 }) => {
-  const [trackingList, setTrackingList] = useState<string[]>([]);
 
   return (
     <>
