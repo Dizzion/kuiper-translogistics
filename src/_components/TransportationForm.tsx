@@ -1,9 +1,19 @@
-import React from 'react'
+"use client";
+import { RecordModel } from "pocketbase";
+import React from "react";
 
-const TransportationForm = () => {
-  return (
-    <div>TransportationForm</div>
-  )
+interface TransportationFormProps {
+  containers: RecordModel[];
+  trackingNumbers: RecordModel[];
+  sapTotes: RecordModel[];
 }
 
-export default TransportationForm
+const TransportationForm: React.FC<TransportationFormProps> = ({
+  containers,
+  trackingNumbers,
+  sapTotes,
+}) => {
+  return <div>TransportationForm</div>;
+};
+
+export default TransportationForm;
