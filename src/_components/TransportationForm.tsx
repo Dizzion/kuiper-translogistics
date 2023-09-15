@@ -296,7 +296,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Processing</Card.Header>
               <Card.Body key={timers[1].id}>
-                Elapsed Time {timers[1].id}: {timers[1].elapsedTime} seconds
+                Elapsed Time: {timers[1].elapsedTime} seconds
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[1].id)}
@@ -314,7 +314,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Loading</Card.Header>
               <Card.Body key={timers[0].id}>
-                Elapsed Time {timers[0].id}: {timers[0].elapsedTime} seconds
+                Elapsed Time: {timers[0].elapsedTime} seconds
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[0].id)}
@@ -346,7 +346,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Unloading</Card.Header>
               <Card.Body key={timers[2].id}>
-                Elapsed Time {timers[2].id}: {timers[2].elapsedTime} seconds
+                Elapsed Time: {timers[2].elapsedTime} seconds
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[2].id)}
@@ -364,7 +364,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Processing</Card.Header>
               <Card.Body key={timers[3].id}>
-                Elapsed Time {timers[3].id}: {timers[3].elapsedTime} seconds
+                Elapsed Time: {timers[3].elapsedTime} seconds
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[3].id)}
