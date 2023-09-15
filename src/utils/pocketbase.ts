@@ -233,37 +233,56 @@ export const STUpdate = async (
   return updatedST;
 };
 
-// TODO: Truck Routing
-export const TruckGetAll = async (): Promise<RecordModel[]> => {
-  const res = await pb.collection("Trucks").getFullList();
-
-  return res;
+// * Truck Routing
+export const TruckGetAll = async (): Promise<Object> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Trucks/records`,
+    { cache: "no-store" }
+  );
+    const trucks = await res.json();
+  return trucks;
 };
 
 export const TruckGetOne = async (id: string): Promise<RecordModel> => {
-  const res = await pb.collection("Trucks").getOne(id);
-
-  return res;
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Trucks/records/${id}`,
+    { cache: "no-store"}
+  );
+  const truck = await res.json();
+  return truck;
 };
 
 export const CreateTruck = async (truck: Truck): Promise<RecordModel> => {
-  const res = await pb.collection("Trucks").create(truck);
-
-  return res;
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Trucks/records`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(truck),
+    }
+  );
+  const newTruck = await res.json();
+  return newTruck;
 };
 
 export const UpdateTruck = async (
   id: string,
   truck: Truck
 ): Promise<RecordModel> => {
-  const res = await pb.collection("Trucks").update(id, {
-    ArrivalTime: truck.ArrivalTime,
-    UnloadProcessing: truck.UnloadProcessing,
-    UnloadTime: truck.UnloadTime,
-    ArrivalAA: truck.ArrivalAA,
-  });
-
-  return res;
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Trucks/records/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(truck),
+    }
+  );
+  const updatedTruck = await res.json();
+  return updatedTruck;
 };
 
 // TODO Employee Routing
