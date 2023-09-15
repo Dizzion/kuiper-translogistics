@@ -85,7 +85,8 @@ const InboundForm: React.FC<InboundFormProps> = ({
       setEnteredTracking("");
       updatedEnteredSapTotes.splice(isInEST, 1);
       setEnteredSapTotes(updatedEnteredSapTotes);
-    } 
+    }
+    setEnteredTracking('');
   };
 
   const submitContainer = async () => {
