@@ -1,7 +1,10 @@
 "use client";
-import { STUpdate, TNUpdate } from "@/utils/pocketbase";
+import { ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
+import { Form, Button, ListGroup, Modal } from "react-bootstrap";
+import DisplaySapTote from "./SapToteDisplay";
+import TrackingNumberList from "./TrackingNumberList";
 
 interface InboundFormProps {
   containers: RecordModel[];
@@ -88,11 +91,103 @@ const InboundForm: React.FC<InboundFormProps> = ({
     if (isInEST !== -1) {
       const recordid = enteredSapTotes[isInEST].id;
       await STUpdate(recordid, timestamp);
-      setEnteredTracking('');
+      setEnteredTracking("");
       setEnteredSapTotes(enteredSapTotes.splice(isInEST, 1));
+    } else {
+      setShowAlert(true);
     }
   };
-  return <></>;
+
+  const submitContainer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const timestamp = new Date();
+    if (workingCont !== undefined) {
+      await ContUpdate(workingCont.id, timestamp);
+    }
+    setDisabledEntry(true);
+    setEnteredContId("");
+    setEnteredSapTotes([]);
+    setEnteredTracking("");
+    setEnteredTrackingNumbers([]);
+    setLocationTag("");
+    setWorkingCont({} as RecordModel);
+  };
+
+  function handleClose(): void {
+    setShowAlert(false);
+    setEnteredTracking("");
+  }
+
+  return (
+    <>
+      <Form
+        onSubmit={submitContainer}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault(); 
+          }
+        }}
+      >
+        <Form.Group className="text-center">
+          <Form.Label className="text-white">Location</Form.Label>
+          <Form.Select
+            size="lg"
+            placeholder="99 or 133?"
+            required
+            value={locationTag}
+            onChange={(e) => setLocationTag(e.target.value)}
+          >
+            <option>Select Your Location</option>
+            <option value="99">SEA99</option>
+            <option value="133">SEA133</option>
+          </Form.Select>
+          <Form.Label className="text-white">Container ID</Form.Label>
+          <Form.Control
+            type="containterID"
+            size="lg"
+            placeholder="Which Container are you loading?"
+            value={enteredContId}
+            onChange={(e) => containerIdChange(e.target.value)}
+          />
+        </Form.Group>
+        <Button variant="outline-light" type="submit">
+          Submit Container
+        </Button>
+      </Form>
+      <Form onSubmit={changeTrackingNumberData} className="text-center">
+        <Form.Label className="text-white">Tracking Number</Form.Label>
+        <Form.Control
+          type="trackingNumber"
+          placeholder="Enter Tracking Number"
+          value={enteredTracking}
+          disabled={disabledEntry}
+          onChange={(e) => setEnteredTracking(e.target.value)}
+        />
+      </Form>
+      <ListGroup>
+        {enteredSapTotes.map((SapTote) => (
+          <ListGroup.Item variant="dark" key={SapTote.id}>
+            <DisplaySapTote SapTote={SapTote} />
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
+      <Modal centered show={showAlert} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tracking Info Not Valid</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          The tracking info that you have entered has an error please make sure
+          you are scanning the correct code.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
 };
 
 export default InboundForm;
