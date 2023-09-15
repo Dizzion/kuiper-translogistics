@@ -16,8 +16,6 @@ import ContainerList from "./ContainerList";
 interface TransportationFormProps {
   trucks: RecordModel[];
   containers: RecordModel[];
-  trackingNumbers: RecordModel[];
-  sapTotes: RecordModel[];
 }
 interface Timer {
   id: string;
@@ -29,8 +27,6 @@ interface Timer {
 const TransportationForm: React.FC<TransportationFormProps> = ({
   trucks,
   containers,
-  trackingNumbers,
-  sapTotes,
 }) => {
   const [truckId, setTruckId] = useState("");
   const [locationTag, setLocationTag] = useState("");
@@ -394,8 +390,6 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
       )}
       <ContainerList
         containers={containerList}
-        trackingNumbers={trackingNumbers}
-        sapTotes={sapTotes}
       />
     </>
   );

@@ -1,26 +1,19 @@
 import { RecordModel } from "pocketbase";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
-import ContainerContents from "./ContainerContents";
 import DisplaySapTote from "./SapToteDisplay";
 import TrackingNumberList from "./TrackingNumberList";
 
 interface DisplayContainerProps {
   container: RecordModel;
-  trackingNumbers: RecordModel[];
-  sapTotes: RecordModel[];
 }
 
 const DisplayContainer: React.FC<DisplayContainerProps> = ({
-  container,
-  trackingNumbers,
-  sapTotes,
+  container
 }) => {
   const [column1, setColumn1] = useState<RecordModel[]>([]);
   const [column2, setColumn2] = useState<RecordModel[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-
-  useEffect(() => {}, []);
 
   const toggleExpandCollapse = async () => {
     setIsExpanded(!isExpanded);

@@ -5,14 +5,10 @@ import DisplayContainer from "./DisplayContainer";
 
 interface ContainerListProps {
   containers: RecordModel[];
-  trackingNumbers: RecordModel[];
-  sapTotes: RecordModel[];
 }
 
 const ContainerList: React.FC<ContainerListProps> = ({
   containers,
-  trackingNumbers,
-  sapTotes,
 }) => {
 
   return (
@@ -23,8 +19,6 @@ const ContainerList: React.FC<ContainerListProps> = ({
           <ListGroup.Item variant="dark" key={cont.id}>
             <DisplayContainer
               container={cont}
-              trackingNumbers={trackingNumbers}
-              sapTotes={sapTotes}
             />
           </ListGroup.Item>
         ))}
