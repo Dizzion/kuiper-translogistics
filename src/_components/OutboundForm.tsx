@@ -35,6 +35,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   }
 
   const changeTrackingNumberData = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (stIds.length === 0 && tnIds.length === 0) {
       setStartTime(new Date());
     }
@@ -81,6 +82,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     } else {
       setShowAlert(true);
     }
+    setEnteredTracking('');
   };
 
   const submitContainer = async (e: React.FormEvent) => {

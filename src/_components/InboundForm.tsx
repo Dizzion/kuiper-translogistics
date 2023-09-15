@@ -28,8 +28,8 @@ const InboundForm: React.FC<InboundFormProps> = ({
   >([]);
   const [enteredSapTotes, setEnteredSapTotes] = useState<RecordModel[]>([]);
 
-  const containerIdChange = (value: string) => {
-    setEnteredContId(value);
+  const containerIdChange = (e: React.FormEvent) => {
+    e.preventDefault();
     const contindex = containers.findIndex(
       (cont) => cont.ContainerID === enteredContId
     );
@@ -59,6 +59,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
     }
   };
   const changeTrackingNumberData = async (e: React.FormEvent) => {
+    e.preventDefault();
     const timestamp = new Date();
     const isInETN = enteredTrackingNumbers.findIndex(
       (obj) => obj.TrackingNumber === enteredTracking
@@ -98,8 +99,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
     }
   };
 
-  const submitContainer = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitContainer = async () => {
     const timestamp = new Date();
     if (workingCont !== undefined) {
       await ContUpdate(workingCont.id, timestamp);
@@ -120,14 +120,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
 
   return (
     <>
-      <Form
-        onSubmit={submitContainer}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault(); 
-          }
-        }}
-      >
+      <Form onSubmit={containerIdChange}>
         <Form.Group className="text-center">
           <Form.Label className="text-white">Location</Form.Label>
           <Form.Select
@@ -145,15 +138,16 @@ const InboundForm: React.FC<InboundFormProps> = ({
           <Form.Control
             type="containterID"
             size="lg"
+            required
             placeholder="Which Container are you loading?"
             value={enteredContId}
-            onChange={(e) => containerIdChange(e.target.value)}
+            onChange={(e) => setEnteredContId(e.target.value)}
           />
         </Form.Group>
-        <Button variant="outline-light" type="submit">
+        </Form>
+        <Button variant="outline-light" type="button" onClick={submitContainer}>
           Submit Container
         </Button>
-      </Form>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
         <Form.Label className="text-white">Tracking Number</Form.Label>
         <Form.Control
