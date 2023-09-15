@@ -216,6 +216,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
       return;
     }
     setShowAlert(true);
+    setEnteredContainer('');
   };
 
   function handleClose(): void {

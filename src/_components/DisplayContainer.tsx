@@ -1,6 +1,9 @@
 import { RecordModel } from "pocketbase";
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
+import ContainerContents from "./ContainerContents";
+import DisplaySapTote from "./SapToteDisplay";
+import TrackingNumberList from "./TrackingNumberList";
 
 interface DisplayContainerProps {
   container: RecordModel;
@@ -13,30 +16,29 @@ const DisplayContainer: React.FC<DisplayContainerProps> = ({
   trackingNumbers,
   sapTotes,
 }) => {
-  const [trackingDataList, setTrackingDataList] = useState<string[]>([]);
-  const [column1, setColumn1] = useState<string[]>([]);
-  const [column2, setColumn2] = useState<string[]>([]);
+  const [column1, setColumn1] = useState<RecordModel[]>([]);
+  const [column2, setColumn2] = useState<RecordModel[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  useEffect(() => {
-    container.TrackingNumbers.forEach((id: string) => {
-      const index = trackingNumbers.findIndex((tn) => tn.id === id);
-      setTrackingDataList([
-        ...trackingDataList,
-        trackingNumbers[index].TrackingNumber,
-      ]);
-    });
-    container.SapTotes.forEach((id: string) => {
-      const index = sapTotes.findIndex((st) => st.id === id);
-      setTrackingDataList([...trackingDataList, sapTotes[index].ToteID]);
-    });
-    setColumn1(trackingDataList.filter((_, index) => index % 2 === 0));
-    setColumn2(trackingDataList.filter((_, index) => index % 2 !== 0));
-  }, []);
+  useEffect(() => {}, []);
 
-  const toggleExpandCollapse = () => {
+  const toggleExpandCollapse = async () => {
     setIsExpanded(!isExpanded);
+    const res = await fetch(
+      `http://127.0.0.1:8090/api/collections/Containers/records/${container.id}?expand=TrackingNumbers,SapTotes`,
+      { cache: "no-store" }
+    );
+    const cont = await res.json();
+    
+    if (cont.expand.SapTotes && cont.expand.SapTotes.length > 0) {
+      setColumn1(cont.expand.SapTotes);
+    }
+    
+    if (cont.expand.TrackingNumbers && cont.expand.TrackingNumbers.length > 0) {
+      setColumn2(cont.expand.TrackingNumbers);
+    }
   };
+  
 
   return (
     <ListGroup.Item
@@ -49,20 +51,16 @@ const DisplayContainer: React.FC<DisplayContainerProps> = ({
           <Row>
             <Col>
               <ListGroup>
-                {column1.map((trackingData) => (
-                  <ListGroup.Item variant="dark" key={trackingData}>
-                    {trackingData}
+                {column1.map((tote) => (
+                  <ListGroup.Item variant="dark" key={tote.id}>
+                    <DisplaySapTote SapTote={tote} />
                   </ListGroup.Item>
                 ))}
               </ListGroup>
             </Col>
             <Col>
               <ListGroup>
-                {column2.map((trackingData) => (
-                  <ListGroup.Item variant="dark" key={trackingData}>
-                    {trackingData}
-                  </ListGroup.Item>
-                ))}
+                <TrackingNumberList trackingNumbersList={column2}/>
               </ListGroup>
             </Col>
           </Row>
