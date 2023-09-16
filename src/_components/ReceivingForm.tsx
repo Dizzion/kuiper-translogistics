@@ -134,12 +134,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       };
       await TNCreate(newTrackingNumber);
     }
-    setEnteredHUs([]);
+    
   }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (requestor.name !== "") {
       updateAsReceived(enteredTrackingNumber, requestor);
+      setEnteredHUs([]);
       setEnteredTrackingNumber("");
       setRequestor({
         name: "",
