@@ -73,7 +73,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
 
         // Clone the content of the Modal to the print window
         printWindow.document.write(
-          '<div style="width: 6in; height: 4in; padding: 10px; border: 1px solid #000;">'
+          '<div style="width: 4in; height: 6in; padding: 10px; border: 1px solid #000;">'
         );
         printWindow.document.write(modalCurrent.innerHTML);
         printWindow.document.write("</div>");
