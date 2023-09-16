@@ -1,5 +1,5 @@
 import { RecordModel } from "pocketbase";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ListGroup } from "react-bootstrap";
 import DisplayContainer from "./DisplayContainer";
 
@@ -10,7 +10,6 @@ interface ContainerListProps {
 const ContainerList: React.FC<ContainerListProps> = ({
   containers,
 }) => {
-
   return (
     <>
       <h3 className="text-white">Containers: {containers.length}</h3>
