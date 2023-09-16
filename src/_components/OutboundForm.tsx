@@ -1,10 +1,11 @@
 "use client";
 import { ContCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
-import React, { useState } from "react";
-import { Form, Button, Modal, ListGroup } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface OutboundFormProps {
   sapTotes: RecordModel[];
@@ -15,6 +16,8 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   sapTotes,
   trackingNumbers,
 }) => {
+  const modalRef = useRef(null);
+  const [printLabel, setPrintLabel] = useState("");
   const [stIds, setStIds] = useState<string[]>([]);
   const [tnIds, setTnIds] = useState<string[]>([]);
   const [enteredSapTotes, setEnteredSapTotes] = useState<RecordModel[]>([]);
@@ -82,7 +85,30 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     } else {
       setShowAlert(true);
     }
-    setEnteredTracking('');
+    setEnteredTracking("");
+  };
+
+  const handlePrint = () => {
+    const modalCurrent = modalRef.current as HTMLElement | null;
+    if (modalCurrent) {
+      const printWindow = window.open("", "", "width=800,height=600");
+      if (printWindow) {
+        printWindow.document.write(
+          "<html><head><title>Print</title></head><body>"
+        );
+
+        // Clone the content of the Modal to the print window
+        printWindow.document.write(
+          '<div style="width: 4in; height: 6in; padding: 10px; border: 1px solid #000;">'
+        );
+        printWindow.document.write(modalCurrent.innerHTML);
+        printWindow.document.write("</div>");
+
+        printWindow.document.write("</body></html>");
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
   };
 
   const submitContainer = async (e: React.FormEvent) => {
@@ -95,7 +121,9 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       SapTotes: stIds,
       alias: localStorage.getItem("id") as string,
     };
+    setPrintLabel(containerId);
     await ContCreate(enteredContainer);
+    handlePrint();
     setContainerId("");
     setLocationTag("");
     setStIds([]);
@@ -175,6 +203,31 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
             Close
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal
+        ref={modalRef}
+        className="printModal2"
+        style={{
+          display: "block",
+          width: "6in",
+          height: "4in",
+          padding: "10px",
+          border: "1px solid #000",
+        }}
+      >
+        <Modal.Dialog>
+          <Modal.Header>Container ID:</Modal.Header>
+          <Modal.Body>
+            <Row>
+              <Col xs={4} md={4}>
+                <QRCodeCanvas value={printLabel} />
+              </Col>
+              <Col xs={8} md={8}>
+                <h5>{printLabel}</h5>
+              </Col>
+            </Row>
+          </Modal.Body>
+        </Modal.Dialog>
       </Modal>
     </>
   );
