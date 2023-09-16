@@ -13,9 +13,9 @@ interface SapToteFormProps {
 const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
   const modalRef = useRef(null);
   const [printLabel, setPrintLabel] = useState({
-    toteId: '',
-    hus: [] as number[]
-  })
+    toteId: "",
+    hus: [] as number[],
+  });
   const [uid, setUid] = useState(
     `SAP_${Date.now()}-${Math.floor(Math.random() * 10000)}`
   );
@@ -97,12 +97,10 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       HU: HUids,
       alias: localStorage.getItem("id") as string,
     };
-    setPrintLabel(
-      {
-        toteId: uid,
-        hus: enteredHandlingUnits
-      }
-    )
+    setPrintLabel({
+      toteId: uid,
+      hus: enteredHandlingUnits,
+    });
     await STCreate(SapToteCreated);
     handlePrint();
     setUid(`SAP_${Date.now()}-${Math.floor(Math.random() * 10000)}`);
@@ -149,30 +147,32 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         ref={modalRef}
         className="printModal3"
         style={{
-            display: "block",
-            width: "6in",
-            height: "4in",
-            padding: "10px",
-            border: "1px solid #000",
+          display: "block",
+          width: "6in",
+          height: "4in",
+          padding: "10px",
+          border: "1px solid #000",
         }}
-    >
+      >
         <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
 
         <Modal.Body>
-            <Row>
-                <Col sm={2}>
-                    <QRCodeCanvas size={60} value={printLabel.toteId} />
-                </Col>
-                <Col sm={8}>
-                    <div className="grid-container">
-                        <a className="grid-item">
-                            199XXXXXXXX <QRCodeCanvas size={10} value="199XXXXXXXX" />
-                        </a>
-                    </div>
-                </Col>
-            </Row>
+          <Row>
+            <Col sm={2}>
+              <QRCodeCanvas size={60} value={printLabel.toteId} />
+            </Col>
+            <Col sm={8}>
+              <div className="grid-container">
+                {printLabel.hus.map((hu) => (
+                  <a className="grid-item" key={hu}>
+                    {hu} <QRCodeCanvas size={10} value={hu.toString()} />
+                  </a>
+                ))}
+              </div>
+            </Col>
+          </Row>
         </Modal.Body>
-    </Modal>
+      </Modal>
     </>
   );
 };

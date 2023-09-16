@@ -5,7 +5,6 @@ import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
 import { HUCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
 import { QRCodeCanvas } from "qrcode.react";
-import { stringify } from "querystring";
 
 interface ReceivingFormProps {
   employees: RecordModel[];
