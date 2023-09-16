@@ -1,9 +1,11 @@
 "use client";
 import { RecordModel } from "pocketbase";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
 import { HUCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
+import { QRCodeCanvas } from "qrcode.react";
+import { stringify } from "querystring";
 
 interface ReceivingFormProps {
   employees: RecordModel[];
@@ -23,7 +25,17 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   employees,
   trackingNumbers,
 }) => {
+  const modalRef = useRef(null);
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
+  const [printLabel, setPrintLabel] = useState({
+    trackingNumber: "",
+    timestamp: "",
+    requestorName: "",
+    buildingLocation: "",
+    jira: "",
+    frieght: "",
+    sap: "",
+  });
   const [showAlert, setShowAlert] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
@@ -55,6 +67,29 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       setRequestor({ ...requestor, name: e, building: "" });
     }
   }
+
+  const handlePrint = () => {
+    const modalCurrent = modalRef.current as HTMLElement | null;
+    if (modalCurrent) {
+      const printWindow = window.open("", "", "width=800,height=600");
+      if (printWindow) {
+        printWindow.document.write(
+          "<html><head><title>Print</title></head><body>"
+        );
+
+        // Clone the content of the Modal to the print window
+        printWindow.document.write(
+          '<div style="width: 4in; height: 6in; padding: 10px; border: 1px solid #000;">'
+        );
+        printWindow.document.write(modalCurrent.innerHTML);
+        printWindow.document.write("</div>");
+
+        printWindow.document.write("</body></html>");
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
+  };
 
   const updateHandlingUnitList = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,6 +146,15 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         HU: requestor.handlingUnits,
         alias: localStorage.getItem("id") as string,
       };
+      setPrintLabel({
+        trackingNumber: enteredTrackingNumber,
+        timestamp: newTimestamp,
+        requestorName: requestor.name,
+        buildingLocation: requestor.building,
+        jira: requestor.jira,
+        sap: requestor.inventory.toString(),
+        frieght: requestor.freight.toString(),
+      });
       await TNUpdate(
         trackingNumbers[existingTrackingNumberIndex].id,
         updatedTrackingNumber
@@ -132,10 +176,20 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         HU: requestor.handlingUnits,
         alias: localStorage.getItem("id") as string,
       };
+      setPrintLabel({
+        trackingNumber: enteredTrackingNumber,
+        timestamp: newTimestamp,
+        requestorName: requestor.name,
+        buildingLocation: requestor.building,
+        jira: requestor.jira,
+        sap: requestor.inventory.toString(),
+        frieght: requestor.freight.toString(),
+      });
       await TNCreate(newTrackingNumber);
     }
-    
+    handlePrint();
   }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (requestor.name !== "") {
@@ -153,10 +207,12 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       });
     }
   }
+
   function handleClose(): void {
     setShowAlert(false);
     setEnteredHU("");
   }
+
   return (
     <>
       <Form
@@ -296,6 +352,37 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             Close
           </Button>
         </Modal.Footer>
+      </Modal>
+      <Modal
+        ref={modalRef}
+        className="printModal"
+        style={{
+          width: "4in",
+          height: "6in",
+          border: "1px solid #000",
+        }}
+      >
+        <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
+        <Modal.Body className="justify-content-center">
+          <h3>Requestor:</h3>
+          <h2>{printLabel.requestorName}</h2>
+          <p>{printLabel.buildingLocation}</p>
+          <h5>Jira:</h5>
+          <p>{printLabel.jira}</p>
+          <Row>
+            <Col>
+              <h6>Freight:</h6>
+              <p>{printLabel.frieght}</p>
+            </Col>
+            <Col>
+              <h6>SAP:</h6>
+              <p>{printLabel.sap}</p>
+            </Col>
+          </Row>
+          <h3>Tracking Number:</h3>
+          <p>{printLabel.trackingNumber}</p>
+          <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
+        </Modal.Body>
       </Modal>
     </>
   );

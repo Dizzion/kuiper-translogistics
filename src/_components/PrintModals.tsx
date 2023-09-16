@@ -2,36 +2,6 @@ import { QRCodeCanvas } from "qrcode.react";
 import { Modal, Row, Col } from "react-bootstrap";
 
 <><Modal
-    show={showModal}
-    className="printModal"
-    style={{
-        width: "4in",
-        height: "6in",
-        border: "1px solid #000",
-    }}
->
-    <Modal.Header>Received Date: 9/15/2023 10:53 AM</Modal.Header>
-    <Modal.Body className="justify-content-center">
-        <h3>Requestor:</h3>
-        <h2>Reuqestors Name</h2>
-        <p>Building Location</p>
-        <h5>Jira:</h5>
-        <p>PUR-XXXX</p>
-        <Row>
-            <Col>
-                <h6>Freight:</h6>
-                <p>Yes/No</p>
-            </Col>
-            <Col>
-                <h6>SAP:</h6>
-                <p>Yes/No</p>
-            </Col>
-        </Row>
-        <h3>Tracking Number:</h3>
-        <p>1Z103456789091</p>
-        <QRCodeCanvas size={89} value="1Z103456789091" />
-    </Modal.Body>
-</Modal><Modal
     show={showModal2}
     className="printModal2"
     style={{
