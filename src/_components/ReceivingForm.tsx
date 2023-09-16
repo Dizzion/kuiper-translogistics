@@ -25,6 +25,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   trackingNumbers,
 }) => {
   const modalRef = useRef(null);
+  const [modalPrint, setModalPrint] = useState(false);
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [printLabel, setPrintLabel] = useState({
     trackingNumber: "",
@@ -186,13 +187,14 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       });
       await TNCreate(newTrackingNumber);
     }
-    handlePrint();
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (requestor.name !== "") {
       updateAsReceived(enteredTrackingNumber, requestor);
+      setModalPrint(true);
+      handlePrint();
       setEnteredHUs([]);
       setEnteredTrackingNumber("");
       setRequestor({
@@ -273,7 +275,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={"false"}>Non-Inventory</option>
+                <option>Non-Inventory</option>
                 <option value={"true"}>SAP Inventory</option>
               </Form.Select>
             </Col>
@@ -290,8 +292,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={"true"}>Yes</option>
-                <option value={"false"}>No</option>
+                <option>Yes</option>
+                <option value={"true"}>No</option>
               </Form.Select>
             </Col>
           </Row>
@@ -353,7 +355,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         </Modal.Footer>
       </Modal>
       <Modal
-        ref={modalRef}
+        show={modalPrint}
         className="printModal"
         style={{
           width: "4in",
@@ -361,27 +363,30 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           border: "1px solid #000",
         }}
       >
-        <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
-        <Modal.Body className="justify-content-center">
-          <h3>Requestor:</h3>
-          <h2>{printLabel.requestorName}</h2>
-          <p>{printLabel.buildingLocation}</p>
-          <h5>Jira:</h5>
-          <p>{printLabel.jira}</p>
-          <Row>
-            <Col>
-              <h6>Freight:</h6>
-              <p>{printLabel.frieght}</p>
-            </Col>
-            <Col>
-              <h6>SAP:</h6>
-              <p>{printLabel.sap}</p>
-            </Col>
-          </Row>
-          <h3>Tracking Number:</h3>
-          <p>{printLabel.trackingNumber}</p>
-          <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
-        </Modal.Body>
+        <div ref={modalRef}>
+          <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
+          <Modal.Body className="justify-content-center">
+            <h3>Requestor:</h3>
+            <h2>{printLabel.requestorName}</h2>
+            <p>{printLabel.buildingLocation}</p>
+            <h5>Jira:</h5>
+            <p>{printLabel.jira}</p>
+            <Row>
+              <Col>
+                <h6>Freight:</h6>
+                <p>{printLabel.frieght}</p>
+              </Col>
+              <Col>
+                <h6>SAP:</h6>
+                <p>{printLabel.sap}</p>
+              </Col>
+            </Row>
+            <h3>Tracking Number:</h3>
+            <p>{printLabel.trackingNumber}</p>
+            <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
+          </Modal.Body>
+        </div>
+        <Button type="button" onClick={() => setModalPrint(false)}>Close Label</Button>
       </Modal>
     </>
   );

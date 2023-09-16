@@ -205,7 +205,6 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         </Modal.Footer>
       </Modal>
       <Modal
-        ref={modalRef}
         className="printModal2"
         style={{
           display: "block",
@@ -215,7 +214,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           border: "1px solid #000",
         }}
       >
-        <Modal.Dialog>
+        <Modal.Dialog ref={modalRef}>
           <Modal.Header>Container ID:</Modal.Header>
           <Modal.Body>
             <Row>
