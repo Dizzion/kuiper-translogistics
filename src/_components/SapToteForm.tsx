@@ -1,15 +1,21 @@
 "use client";
 import { HUUpdate, STCreate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import HandlingUnitList from "./HandlingUnitList";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Col, Row } from "react-bootstrap";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface SapToteFormProps {
   handlingUnits: RecordModel[];
 }
 
 const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
+  const modalRef = useRef(null);
+  const [printLabel, setPrintLabel] = useState({
+    toteId: '',
+    hus: [] as number[]
+  })
   const [uid, setUid] = useState(
     `SAP_${Date.now()}-${Math.floor(Math.random() * 10000)}`
   );
@@ -56,6 +62,29 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
     setEnteredHandlingUnit("");
   };
 
+  const handlePrint = () => {
+    const modalCurrent = modalRef.current as HTMLElement | null;
+    if (modalCurrent) {
+      const printWindow = window.open("", "", "width=800,height=600");
+      if (printWindow) {
+        printWindow.document.write(
+          "<html><head><title>Print</title></head><body>"
+        );
+
+        // Clone the content of the Modal to the print window
+        printWindow.document.write(
+          '<div style="width: 6in; height: 4in; padding: 10px; border: 1px solid #000;">'
+        );
+        printWindow.document.write(modalCurrent.innerHTML);
+        printWindow.document.write("</div>");
+
+        printWindow.document.write("</body></html>");
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
+  };
+
   const submitSapTote = async (e: React.FormEvent) => {
     e.preventDefault();
     if (enteredHandlingUnits.length === 0) {
@@ -68,7 +97,14 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       HU: HUids,
       alias: localStorage.getItem("id") as string,
     };
+    setPrintLabel(
+      {
+        toteId: uid,
+        hus: enteredHandlingUnits
+      }
+    )
     await STCreate(SapToteCreated);
+    handlePrint();
     setUid(`SAP_${Date.now()}-${Math.floor(Math.random() * 10000)}`);
     setHUids([]);
     setEnteredHandlingUnit("");
@@ -109,6 +145,34 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       </Form>
 
       <HandlingUnitList handlingUnits={enteredHandlingUnits} />
+      <Modal
+        ref={modalRef}
+        className="printModal3"
+        style={{
+            display: "block",
+            width: "6in",
+            height: "4in",
+            padding: "10px",
+            border: "1px solid #000",
+        }}
+    >
+        <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
+
+        <Modal.Body>
+            <Row>
+                <Col sm={2}>
+                    <QRCodeCanvas size={60} value={printLabel.toteId} />
+                </Col>
+                <Col sm={8}>
+                    <div className="grid-container">
+                        <a className="grid-item">
+                            199XXXXXXXX <QRCodeCanvas size={10} value="199XXXXXXXX" />
+                        </a>
+                    </div>
+                </Col>
+            </Row>
+        </Modal.Body>
+    </Modal>
     </>
   );
 };
