@@ -362,7 +362,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           border: "1px solid #000",
         }}
       >
-        <div ref={modalRef}>
+        <div className="printable-content">
           <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
           <Modal.Body className="justify-content-center">
             <h3>Requestor:</h3>
