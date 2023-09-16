@@ -17,6 +17,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   trackingNumbers,
 }) => {
   const modalRef = useRef(null);
+  const [printModal, setPrintModal] = useState(false);
   const [printLabel, setPrintLabel] = useState("");
   const [stIds, setStIds] = useState<string[]>([]);
   const [tnIds, setTnIds] = useState<string[]>([]);
@@ -123,7 +124,6 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     };
     setPrintLabel(containerId);
     await ContCreate(enteredContainer);
-    handlePrint();
     setContainerId("");
     setLocationTag("");
     setStIds([]);
@@ -205,6 +205,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         </Modal.Footer>
       </Modal>
       <Modal
+        show={printModal}
         className="printModal2"
         style={{
           display: "block",
@@ -227,6 +228,12 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
             </Row>
           </Modal.Body>
         </Modal.Dialog>
+        <Button type="button" onClick={() => handlePrint()}>
+          Close Label
+        </Button>
+        <Button type="button" onClick={() => setPrintModal(false)}>
+          Close Label
+        </Button>
       </Modal>
     </>
   );

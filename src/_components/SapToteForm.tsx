@@ -25,6 +25,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
   );
   const [enteredHandlingUnit, setEnteredHandlingUnit] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [printModal, setPrintModal] = useState(false);
   const [startTime, setStartTime] = useState(new Date());
 
   function handleClose() {
@@ -102,7 +103,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       hus: enteredHandlingUnits,
     });
     await STCreate(SapToteCreated);
-    handlePrint();
+    setPrintModal(true);
     setUid(`SAP_${Date.now()}-${Math.floor(Math.random() * 10000)}`);
     setHUids([]);
     setEnteredHandlingUnit("");
@@ -144,7 +145,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
 
       <HandlingUnitList handlingUnits={enteredHandlingUnits} />
       <Modal
-        ref={modalRef}
+        show={printModal}
         className="printModal3"
         style={{
           display: "block",
@@ -154,24 +155,32 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           border: "1px solid #000",
         }}
       >
-        <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
+        <div ref={modalRef}>
+          <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
 
-        <Modal.Body>
-          <Row>
-            <Col sm={2}>
-              <QRCodeCanvas size={60} value={printLabel.toteId} />
-            </Col>
-            <Col sm={8}>
-              <div className="grid-container">
-                {printLabel.hus.map((hu) => (
-                  <a className="grid-item" key={hu}>
-                    {hu} <QRCodeCanvas size={10} value={hu.toString()} />
-                  </a>
-                ))}
-              </div>
-            </Col>
-          </Row>
-        </Modal.Body>
+          <Modal.Body>
+            <Row>
+              <Col sm={2}>
+                <QRCodeCanvas size={60} value={printLabel.toteId} />
+              </Col>
+              <Col sm={8}>
+                <div className="grid-container">
+                  {printLabel.hus.map((hu) => (
+                    <a className="grid-item" key={hu}>
+                      {hu} <QRCodeCanvas size={10} value={hu.toString()} />
+                    </a>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+          </Modal.Body>
+        </div>
+        <Button type="button" onClick={() => handlePrint()}>
+          Close Label
+        </Button>
+        <Button type="button" onClick={() => setPrintModal(false)}>
+          Close Label
+        </Button>
       </Modal>
     </>
   );

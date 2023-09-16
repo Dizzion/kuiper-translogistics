@@ -194,7 +194,6 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     if (requestor.name !== "") {
       updateAsReceived(enteredTrackingNumber, requestor);
       setModalPrint(true);
-      handlePrint();
       setEnteredHUs([]);
       setEnteredTrackingNumber("");
       setRequestor({
@@ -386,7 +385,12 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
           </Modal.Body>
         </div>
-        <Button type="button" onClick={() => setModalPrint(false)}>Close Label</Button>
+        <Button type="button" onClick={() => handlePrint()}>
+          Print Label
+        </Button>
+        <Button type="button" onClick={() => setModalPrint(false)}>
+          Close Label
+        </Button>
       </Modal>
     </>
   );
