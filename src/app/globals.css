@@ -51,3 +51,27 @@ main {
     box-shadow: 0 0 5px rgba(23, 162, 184, 0.7);
   }
 }
+
+.printModal {
+  justify-content: center;
+  text-align: center;
+}
+.printModal3 {
+  border-radius: 0%;
+  align-items: flex-start;
+  justify-content: left;
+  text-align: left;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  white-space: 3px;
+}
+.grid-item {
+  font-size: 8px;
+  text-align: center;
+  padding: 2px;
+}
+p {
+  font-size: 12px;
+}
