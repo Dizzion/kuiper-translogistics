@@ -121,49 +121,19 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         return;
       }
       await UpdateTruck(trucks[truckIndex].id, record);
-      setArrivalTime(new Date());
-      setContainerIds([]);
-      setContainerList([]);
-      setEnteredContainer("");
-      setLoadOrUnload("");
-      setLocationTag("");
-      setTimers([
-        {
-          id: "load",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-        {
-          id: "loadprocessing",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-        {
-          id: "unload",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-        {
-          id: "unloadprocessing",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-      ]);
       setTruckId("");
     } else if (loadOrUnload === "load") {
       const record = {
         TruckID: truckId,
         LoadProcessing: timers[1].elapsedTime.toLocaleString(),
         LoadTime: timers[0].elapsedTime.toLocaleString(),
-        DepartureTime: new Date(),
+        DepartureTime: new Date().toLocaleString(),
+        Containers: containerIds,
         DepartureAA: localStorage.getItem("id") as string,
       };
       await CreateTruck(record);
-      setArrivalTime(new Date());
+    }
+    setArrivalTime(new Date());
       setContainerIds([]);
       setContainerList([]);
       setEnteredContainer("");
@@ -196,7 +166,6 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         },
       ]);
       setTruckId("");
-    }
   };
 
   const updateEnteredContainer = (e: React.FormEvent) => {
@@ -208,7 +177,9 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
       contIndex !== -1 &&
       !containerList.some((cont) => cont.ContainerID === enteredContainer)
     ) {
+      setContainerIds([...containerIds, containers[contIndex].id]);
       setContainerList([...containerList, containers[contIndex]]);
+      setEnteredContainer('');
       return;
     }
     setShowAlert(true);

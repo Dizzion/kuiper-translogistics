@@ -53,7 +53,7 @@ interface Truck {
   UnloadProcessing?: string;
   LoadProcessing?: string;
   LoadTime?: string;
-  DepartureTime?: Date;
+  DepartureTime?: string;
   Containers?: string[];
   DepartureAA?: string;
   ArrivalAA?: string;
