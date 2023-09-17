@@ -4,7 +4,7 @@ import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import HandlingUnitList from "./HandlingUnitList";
 import { Modal, Button, Form, Col, Row } from "react-bootstrap";
-import { QRCodeCanvas } from "qrcode.react";
+import QRCode from "qrcode";
 
 interface SapToteFormProps {
   handlingUnits: RecordModel[];
@@ -14,6 +14,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
   const modalRef = useRef(null);
   const [printLabel, setPrintLabel] = useState({
     toteId: "",
+    qrcode: "",
     hus: [] as number[],
   });
   const [uid, setUid] = useState(
@@ -63,7 +64,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
     setEnteredHandlingUnit("");
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     const modalCurrent = modalRef.current as HTMLElement | null;
     if (modalCurrent) {
       const printWindow = window.open("", "", "width=800,height=600");
@@ -72,14 +73,59 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           "<html><head><title>Print</title></head><body>"
         );
 
-        // Clone the content of the Modal to the print window
+        // Include Bootstrap CSS if used
         printWindow.document.write(
-          '<div style="width: 4in; height: 6in; padding: 10px; border: 1px solid #000;">'
+          '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">'
         );
+
+        // Include your custom CSS styles here
+        printWindow.document.write("<style>");
+        printWindow.document.write(
+          "div { border-radius: 0%, align-items: flex-start, justify-content: left, text-align: left, }"
+        );
+        printWindow.document.write(
+          ".grid-container {display: grid, grid-template-columns: auto auto auto auto, white-space: 3px}"
+        );
+        printWindow.document.write(
+          ".grid-item { font-size: 8px, text-align: center, padding: 2px}"
+        );
+        printWindow.document.write("</style>");
+
+        // Include external CSS files if needed
+        printWindow.document.write(
+          '<link rel="stylesheet" type="text/css" href="C:/Users/gofro/Documents/NextJSProjects/kuiper-translogistics/src/app/globals.css">'
+        );
+
+        // Include required JavaScript files
+        printWindow.document.write(
+          '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>'
+        );
+        printWindow.document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>'
+        );
+        printWindow.document.write(
+          '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>'
+        );
+
+        printWindow.document.write(
+          '<div style="width: 6in; height: 4in; padding: 10px; border: 1px solid #000;">'
+        );
+
+        // Clone the content of the Modal to the print window
         printWindow.document.write(modalCurrent.innerHTML);
+
         printWindow.document.write("</div>");
 
+        // Include external scripts if needed
+        printWindow.document.write(
+          '<script src="path/to/your/external.js"></script>'
+        );
+
+        // Wait for resources to load, then initiate the print action
+        // You can add the 'onload' event to the <link> and <script> elements
+
         printWindow.document.write("</body></html>");
+
         printWindow.document.close();
         printWindow.print();
       }
@@ -100,6 +146,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
     };
     setPrintLabel({
       toteId: uid,
+      qrcode: await QRCode.toDataURL(uid),
       hus: enteredHandlingUnits,
     });
     await STCreate(SapToteCreated);
@@ -155,28 +202,29 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           border: "1px solid #000",
         }}
       >
-        <div ref={modalRef}>
+        <Modal.Dialog ref={modalRef}>
           <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
 
           <Modal.Body>
             <Row>
               <Col sm={2}>
-                <QRCodeCanvas size={60} value={printLabel.toteId} />
+                <img width={80} height={80} src={printLabel.qrcode} alt="QR Code" />
               </Col>
               <Col sm={8}>
                 <div className="grid-container">
                   {printLabel.hus.map((hu) => (
                     <a className="grid-item" key={hu}>
-                      {hu} <QRCodeCanvas size={10} value={hu.toString()} />
+                      {hu} 
+                      {/* <QRCodeCanvas size={10} value={hu.toString()} /> */}
                     </a>
                   ))}
                 </div>
               </Col>
             </Row>
           </Modal.Body>
-        </div>
+        </Modal.Dialog>
         <Button type="button" onClick={() => handlePrint()}>
-          Close Label
+          Print Label
         </Button>
         <Button type="button" onClick={() => setPrintModal(false)}>
           Close Label
