@@ -81,13 +81,11 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         // Include your custom CSS styles here
         printWindow.document.write("<style>");
         printWindow.document.write(
-          "div { border-radius: 0%, align-items: flex-start, justify-content: left, text-align: left, }"
+          ".grid-container { display: grid; grid-template-columns: auto auto auto auto; white-space: nowrap; }"
         );
+        
         printWindow.document.write(
-          ".grid-container {display: grid, grid-template-columns: auto auto auto auto, white-space: 3px}"
-        );
-        printWindow.document.write(
-          ".grid-item { font-size: 8px, text-align: center, padding: 2px}"
+          ".grid-item { font-size: 8px; text-align: center; padding: 2px; }"
         );
         printWindow.document.write("</style>");
 
