@@ -121,7 +121,6 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         return;
       }
       await UpdateTruck(trucks[truckIndex].id, record);
-      setTruckId("");
     } else if (loadOrUnload === "load") {
       const record = {
         TruckID: truckId,
@@ -134,38 +133,38 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
       await CreateTruck(record);
     }
     setArrivalTime(new Date());
-      setContainerIds([]);
-      setContainerList([]);
-      setEnteredContainer("");
-      setLoadOrUnload("");
-      setLocationTag("");
-      setTimers([
-        {
-          id: "load",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-        {
-          id: "loadprocessing",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-        {
-          id: "unload",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-        {
-          id: "unloadprocessing",
-          startTime: null,
-          intervalId: null,
-          elapsedTime: 0,
-        },
-      ]);
-      setTruckId("");
+    setContainerIds([]);
+    setContainerList([]);
+    setEnteredContainer("");
+    setLoadOrUnload("");
+    setLocationTag("");
+    setTimers([
+      {
+        id: "load",
+        startTime: null,
+        intervalId: null,
+        elapsedTime: 0,
+      },
+      {
+        id: "loadprocessing",
+        startTime: null,
+        intervalId: null,
+        elapsedTime: 0,
+      },
+      {
+        id: "unload",
+        startTime: null,
+        intervalId: null,
+        elapsedTime: 0,
+      },
+      {
+        id: "unloadprocessing",
+        startTime: null,
+        intervalId: null,
+        elapsedTime: 0,
+      },
+    ]);
+    setTruckId("");
   };
 
   const updateEnteredContainer = (e: React.FormEvent) => {
@@ -179,11 +178,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     ) {
       setContainerIds([...containerIds, containers[contIndex].id]);
       setContainerList([...containerList, containers[contIndex]]);
-      setEnteredContainer('');
+      setEnteredContainer("");
       return;
     }
     setShowAlert(true);
-    setEnteredContainer('');
+    setEnteredContainer("");
   };
 
   function handleClose(): void {
@@ -359,9 +358,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           </Form>
         </>
       )}
-      <ContainerList
-        containers={containerList}
-      />
+      <ContainerList containers={containerList} />
     </>
   );
 };
