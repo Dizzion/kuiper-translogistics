@@ -36,7 +36,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
 
   const updateHandlingUnits = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (enteredHandlingUnits.length === 0) {
+    if (enteredHandlingUnits.length <= 0) {
       setStartTime(new Date());
     }
     const enteredIndex = handlingUnits.findIndex(
@@ -44,7 +44,8 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
     );
     if (
       enteredIndex === -1 ||
-      !/^(199|133|299|233)/.test(enteredHandlingUnit)
+      !/^(199|133|299|233)/.test(enteredHandlingUnit) ||
+      enteredHandlingUnits.includes(Number(enteredHandlingUnit))
     ) {
       setShowAlert(true);
       return;
