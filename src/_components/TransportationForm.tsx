@@ -115,7 +115,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         ArrivalAA: localStorage.getItem("id") as string,
       };
       const truckIndex = trucks.findIndex(
-        (obj) => obj.Containers === containerIds
+        (obj) => obj.Containers.includes(containerIds[0])
       );
       if (truckIndex === -1) {
         return;
