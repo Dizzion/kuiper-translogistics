@@ -354,37 +354,36 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         </Modal.Footer>
       </Modal>
       <Modal
+        ref={modalRef}
+        className="printable-content"
         show={modalPrint}
-        className="printModal"
         style={{
           width: "4in",
           height: "6in",
           border: "1px solid #000",
         }}
       >
-        <div className="printable-content">
-          <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
-          <Modal.Body className="justify-content-center">
-            <h3>Requestor:</h3>
-            <h2>{printLabel.requestorName}</h2>
-            <p>{printLabel.buildingLocation}</p>
-            <h5>Jira:</h5>
-            <p>{printLabel.jira}</p>
-            <Row>
-              <Col>
-                <h6>Freight:</h6>
-                <p>{printLabel.frieght}</p>
-              </Col>
-              <Col>
-                <h6>SAP:</h6>
-                <p>{printLabel.sap}</p>
-              </Col>
-            </Row>
-            <h3>Tracking Number:</h3>
-            <p>{printLabel.trackingNumber}</p>
-            <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
-          </Modal.Body>
-        </div>
+        <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
+        <Modal.Body className="justify-content-center">
+          <h3>Requestor:</h3>
+          <h2>{printLabel.requestorName}</h2>
+          <p>{printLabel.buildingLocation}</p>
+          <h5>Jira:</h5>
+          <p>{printLabel.jira}</p>
+          <Row>
+            <Col>
+              <h6>Freight:</h6>
+              <p>{printLabel.frieght}</p>
+            </Col>
+            <Col>
+              <h6>SAP:</h6>
+              <p>{printLabel.sap}</p>
+            </Col>
+          </Row>
+          <h3>Tracking Number:</h3>
+          <p>{printLabel.trackingNumber}</p>
+          <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
+        </Modal.Body>
         <Button type="button" onClick={() => handlePrint()}>
           Print Label
         </Button>
