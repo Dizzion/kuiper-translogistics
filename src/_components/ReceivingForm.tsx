@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
 import { HUCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
-import { QRCodeCanvas } from "qrcode.react";
+import QRCode from "qrcode";
 
 interface ReceivingFormProps {
   employees: RecordModel[];
@@ -35,6 +35,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     jira: "",
     frieght: "",
     sap: "",
+    qrCodeDataUrl: "",
   });
   const [showAlert, setShowAlert] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
@@ -68,7 +69,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     }
   }
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     const modalCurrent = modalRef.current as HTMLElement | null;
     if (modalCurrent) {
       const printWindow = window.open("", "", "width=800,height=600");
@@ -77,14 +78,53 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           "<html><head><title>Print</title></head><body>"
         );
 
-        // Clone the content of the Modal to the print window
+        // Include Bootstrap CSS if used
+        printWindow.document.write(
+          '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">'
+        );
+
+        // Include your custom CSS styles here
+        printWindow.document.write("<style>");
+        printWindow.document.write(
+          "div { justify-content: center, text-align: center, }"
+        );
+        printWindow.document.write("</style>");
+
+        // Include external CSS files if needed
+        printWindow.document.write(
+          '<link rel="stylesheet" type="text/css" href="C:/Users/gofro/Documents/NextJSProjects/kuiper-translogistics/src/app/globals.css">'
+        );
+
+        // Include required JavaScript files
+        printWindow.document.write(
+          '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>'
+        );
+        printWindow.document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>'
+        );
+        printWindow.document.write(
+          '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>'
+        );
+
         printWindow.document.write(
           '<div style="width: 4in; height: 6in; padding: 10px; border: 1px solid #000;">'
         );
+
+        // Clone the content of the Modal to the print window
         printWindow.document.write(modalCurrent.innerHTML);
+
         printWindow.document.write("</div>");
 
+        // Include external scripts if needed
+        printWindow.document.write(
+          '<script src="path/to/your/external.js"></script>'
+        );
+
+        // Wait for resources to load, then initiate the print action
+        // You can add the 'onload' event to the <link> and <script> elements
+
         printWindow.document.write("</body></html>");
+
         printWindow.document.close();
         printWindow.print();
       }
@@ -154,6 +194,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         jira: requestor.jira,
         sap: requestor.inventory.toString(),
         frieght: requestor.freight.toString(),
+        qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
       await TNUpdate(
         trackingNumbers[existingTrackingNumberIndex].id,
@@ -184,6 +225,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         jira: requestor.jira,
         sap: requestor.inventory.toString(),
         frieght: requestor.freight.toString(),
+        qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
       await TNCreate(newTrackingNumber);
     }
@@ -354,7 +396,6 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         </Modal.Footer>
       </Modal>
       <Modal
-        ref={modalRef}
         className="printable-content"
         show={modalPrint}
         style={{
@@ -363,27 +404,29 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           border: "1px solid #000",
         }}
       >
-        <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
-        <Modal.Body className="justify-content-center">
-          <h3>Requestor:</h3>
-          <h2>{printLabel.requestorName}</h2>
-          <p>{printLabel.buildingLocation}</p>
-          <h5>Jira:</h5>
-          <p>{printLabel.jira}</p>
-          <Row>
-            <Col>
-              <h6>Freight:</h6>
-              <p>{printLabel.frieght}</p>
-            </Col>
-            <Col>
-              <h6>SAP:</h6>
-              <p>{printLabel.sap}</p>
-            </Col>
-          </Row>
-          <h3>Tracking Number:</h3>
-          <p>{printLabel.trackingNumber}</p>
-          <QRCodeCanvas size={89} value={printLabel.trackingNumber} />
-        </Modal.Body>
+        <Modal.Dialog ref={modalRef}>
+          <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
+          <Modal.Body className="justify-content-center">
+            <h3>Requestor:</h3>
+            <h2>{printLabel.requestorName}</h2>
+            <p>{printLabel.buildingLocation}</p>
+            <h5>Jira:</h5>
+            <p>{printLabel.jira}</p>
+            <Row>
+              <Col>
+                <h6>Freight:</h6>
+                <p>{printLabel.frieght}</p>
+              </Col>
+              <Col>
+                <h6>SAP:</h6>
+                <p>{printLabel.sap}</p>
+              </Col>
+            </Row>
+            <h3>Tracking Number:</h3>
+            <p>{printLabel.trackingNumber}</p>
+            <img src={printLabel.qrCodeDataUrl} alt="QR Code" />
+          </Modal.Body>
+        </Modal.Dialog>
         <Button type="button" onClick={() => handlePrint()}>
           Print Label
         </Button>
