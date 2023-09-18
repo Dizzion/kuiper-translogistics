@@ -3,7 +3,13 @@ import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
-import { HUCreate, TNCreate, TNUpdate, addEmployees, updateEmployees } from "@/utils/pocketbase";
+import {
+  HUCreate,
+  TNCreate,
+  TNUpdate,
+  addEmployees,
+  updateEmployees,
+} from "@/utils/pocketbase";
 import QRCode from "qrcode";
 import { revalidatePath } from "next/cache";
 
@@ -256,7 +262,22 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
 
   function handleClose(): void {
     setShowAlert(false);
+    setAddEmployee(false);
+    setUpdateEmployee(false);
     setEnteredHU("");
+    setEnteredEmployee({
+      employee_id: "",
+      alias: "",
+      first_name: "",
+      last_name: "",
+      Full_Name: "",
+      job_title: "",
+      manager_alias: "",
+      department_name: "",
+      office_building: "",
+      default_delivery_location: "",
+      default_location: "",
+    });
   }
 
   async function addEnteredEmployee(): Promise<void> {
@@ -266,7 +287,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       Full_Name: `${enteredEmployee.first_name} ${enteredEmployee.last_name}`,
     });
     await addEmployees(enteredEmployee);
-    revalidatePath('/Translogistics/Receiving');
+    revalidatePath("/Translogistics/Receiving");
   }
 
   function showUpdateEmployee(): void {
@@ -297,7 +318,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     if (pulledEmployee) {
       await updateEmployees(pulledEmployee.id, enteredEmployee);
     }
-    revalidatePath('/Translogistics/Receiving');
+    revalidatePath("/Translogistics/Receiving");
   }
 
   return (
@@ -344,7 +365,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 value={requestor.building}
               />
             </Col>
-            <Col className="text-center" style={{marginTop: "1.5rem"}}>
+            <Col className="text-center" style={{ marginTop: "1.5rem" }}>
               {requestor.building === "" ? (
                 <Button type="button" onClick={() => setAddEmployee(true)}>
                   Add Employee
@@ -471,11 +492,11 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             <Row>
               <Col>
                 <h6>Freight:</h6>
-                {printLabel.freight === "true" ? (<p>Yes</p>):(<p>No</p>)}
+                {printLabel.freight === "true" ? <p>Yes</p> : <p>No</p>}
               </Col>
               <Col>
                 <h6>SAP:</h6>
-                {printLabel.sap === "false" ? (<p>Yes</p>):(<p>No</p>)}
+                {printLabel.sap === "false" ? <p>Yes</p> : <p>No</p>}
               </Col>
             </Row>
             <h3>Tracking Number:</h3>
@@ -490,7 +511,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           Close Label
         </Button>
       </Modal>
-      <Modal centered show={addEmployee}>
+      <Modal centered show={addEmployee} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Employee</Modal.Title>
         </Modal.Header>
@@ -527,6 +548,22 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                   }
                 />
               </Col>
+            </Row>
+            <Row>
+              <Form.Control
+                type="Full_Name"
+                size="sm"
+                required
+                placeholder="Full Name"
+                disabled
+                value={`${enteredEmployee.first_name} ${enteredEmployee.last_name}`}
+                onChange={(e) =>
+                  setEnteredEmployee({
+                    ...enteredEmployee,
+                    Full_Name: e.target.value,
+                  })
+                }
+              />
             </Row>
             <Row>
               <Col>
@@ -654,7 +691,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           </Form>
         </Modal.Body>
       </Modal>
-      <Modal centered show={updateEmployee}>
+      <Modal centered show={updateEmployee} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Employee</Modal.Title>
         </Modal.Header>
@@ -712,6 +749,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                   type="alias"
                   size="sm"
                   placeholder="alias"
+                  required
                   value={enteredEmployee.alias}
                   onChange={(e) =>
                     setEnteredEmployee({
