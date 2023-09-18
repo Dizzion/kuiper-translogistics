@@ -286,19 +286,41 @@ export const UpdateTruck = async (
   return updatedTruck;
 };
 
-// TODO Employee Routing
+// * Employee Routing
 export const getEmployees = async (): Promise<RecordModel[]> => {
   const res = await pb.collection("Employees").getFullList();
 
   return res;
 };
 
-// TODO Associate Routing
+export const addEmployees = async (employee: RecordModel) : Promise<RecordModel> => {
+  const res = await pb.collection("Employees").create(employee);
+
+  return res;
+};
+
+export const updateEmployee = async (id: string, employee: RecordModel): Promise<RecordModel> => {
+  const res = await pb.collection("Employees").update(id, employee);
+
+  return res;
+};
+
+// * Associate Routing
 export const getAssociates = async (): Promise<RecordModel[]> => {
   const res = await pb.collection("WarehouseAssociates").getFullList();
 
   return res;
 };
+
+export const addAssociate = async (associate: RecordModel): Promise<RecordModel> => {
+  const res = await pb.collection("WarehouseAssociates").create(associate);
+
+  return res;
+}
+
+export const deleteAssociate = async (id: string) => {
+  await pb.collection("WarehouseAssociates").delete(id);
+}
 
 // * Handling Unit Routing
 export const HUGetAll = async (): Promise<Object> => {
