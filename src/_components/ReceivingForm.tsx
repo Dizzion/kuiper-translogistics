@@ -358,7 +358,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 value={requestor.building}
               />
             </Col>
-            <Col>
+            <Col className="text-center" style={{marginTop: "1.5rem"}}>
               {requestor.building === "" ? (
                 <Button type="button" onClick={() => setAddEmployee(true)}>
                   Add Employee
