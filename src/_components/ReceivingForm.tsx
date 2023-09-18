@@ -26,6 +26,21 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
 }) => {
   const modalRef = useRef(null);
   const [modalPrint, setModalPrint] = useState(false);
+  const [addEmployee, setAddEmployee] = useState(false);
+  const [updateEmployee, setUpdateEmployee] = useState(false);
+  const [enteredEmployee, setEnteredEmployee] = useState({
+    employee_id: "",
+    alias: "",
+    first_name: "",
+    last_name: "",
+    Full_Name: "",
+    job_title: "",
+    manager_alias: "",
+    department_name: "",
+    office_building: "",
+    default_delivery_location: "",
+    default_location: "",
+  });
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [printLabel, setPrintLabel] = useState({
     trackingNumber: "",
@@ -126,7 +141,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         printWindow.document.write("</body></html>");
 
         printWindow.document.close();
-        printWindow.print();
+        // printWindow.print();
       }
     }
   };
@@ -241,8 +256,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       setRequestor({
         name: "",
         building: "",
-        inventory: false,
-        freight: false,
+        inventory: requestor.inventory,
+        freight: requestor.freight,
         jira: "",
         handlingUnits: [],
         coupaPoLines: "",
@@ -298,6 +313,14 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 disabled
                 value={requestor.building}
               />
+            </Col>
+            <Col>
+              <Button type="button" onClick={() => setAddEmployee(true)}>
+                Add Employee
+              </Button>
+              <Button type="button" onClick={() => setUpdateEmployee(true)}>
+                Update Employee
+              </Button>
             </Col>
           </Row>
           <Row>
@@ -433,6 +456,46 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         <Button type="button" onClick={() => setModalPrint(false)}>
           Close Label
         </Button>
+      </Modal>
+      <Modal centered show={addEmployee}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Employee</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="first_name"
+                  size="sm"
+                  placeholder="First Name"
+                  value={enteredEmployee.first_name}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      first_name: e.target.value,
+                    })
+                  }
+                />
+                <Form.Control
+                  type="last_name"
+                  size="sm"
+                  placeholder="Last Name"
+                  value={enteredEmployee.last_name}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      last_name: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Button variant="secondary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
       </Modal>
     </>
   );

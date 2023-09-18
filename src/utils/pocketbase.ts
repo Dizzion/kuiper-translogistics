@@ -21,6 +21,20 @@ interface TrackingNumber {
   alias: string;
 }
 
+interface Employee {
+  employee_id?: string;
+  alias?: string;
+  first_name?: string;
+  last_name?: string;
+  Full_Name?: string;
+  job_title?: string;
+  manager_alias?: string;
+  department_name?: string;
+  office_building?: string;
+  default_delivery_location?: string;
+  default_location?: string;
+}
+
 interface HandlingUnit {
   HU?: number;
   ToQI?: Date;
@@ -74,9 +88,6 @@ export const TNGetAll = async (): Promise<Object> => {
     { cache: "no-store" }
   );
   const tns = await res.json();
-
-  const test = await pb.collection("TrackingNumbers").getFullList();
-  console.log(test);
   return tns;
 };
 
@@ -298,7 +309,7 @@ export const getEmployees = async (): Promise<RecordModel[]> => {
 };
 
 export const addEmployees = async (
-  employee: RecordModel
+  employee: Employee
 ): Promise<RecordModel> => {
   const res = await pb.collection("Employees").create(employee);
 
@@ -307,7 +318,7 @@ export const addEmployees = async (
 
 export const updateEmployee = async (
   id: string,
-  employee: RecordModel
+  employee: Employee
 ): Promise<RecordModel> => {
   const res = await pb.collection("Employees").update(id, employee);
 
