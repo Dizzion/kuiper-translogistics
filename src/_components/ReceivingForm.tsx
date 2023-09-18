@@ -102,7 +102,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
 
         printWindow.document.write("<style>");
         printWindow.document.write(
-          "div { justify-content: center, text-align: center, }"
+          "div { justify-content: center; text-align: center; }"
         );
         printWindow.document.write("</style>");
 
@@ -372,8 +372,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={0}>Non-Inventory</option>
-                <option value={1}>SAP Inventory</option>
+                <option>Non-Inventory</option>
+                <option value={0}>SAP Inventory</option>
               </Form.Select>
             </Col>
             <Col>
@@ -389,8 +389,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={1}>Yes</option>
-                <option value={0}>No</option>
+                <option value={0}>Yes</option>
+                <option>No</option>
               </Form.Select>
             </Col>
           </Row>
@@ -471,16 +471,16 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             <Row>
               <Col>
                 <h6>Freight:</h6>
-                {printLabel.freight ? (<p>Yes</p>):(<p>No</p>)}
+                {printLabel.freight === "true" ? (<p>Yes</p>):(<p>No</p>)}
               </Col>
               <Col>
                 <h6>SAP:</h6>
-                {printLabel.sap ? (<p>Yes</p>):(<p>No</p>)}
+                {printLabel.sap === "false" ? (<p>Yes</p>):(<p>No</p>)}
               </Col>
             </Row>
             <h3>Tracking Number:</h3>
             <p>{printLabel.trackingNumber}</p>
-            <img src={printLabel.qrCodeDataUrl} alt="QR Code" />
+            <img style={{ maxWidth: "100%", maxHeight: "100%" }} src={printLabel.qrCodeDataUrl} alt="QR Code" />
           </Modal.Body>
         </Modal.Dialog>
         <Button type="button" onClick={() => handlePrint()}>
