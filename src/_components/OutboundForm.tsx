@@ -107,7 +107,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
 
         printWindow.document.write("<style>");
         printWindow.document.write(
-          "div { justify-content: center, text-align: center, }"
+          "div { justify-content: center; text-align: center; }"
         );
         printWindow.document.write("</style>");
 

@@ -372,8 +372,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option>Non-Inventory</option>
-                <option value={0}>SAP Inventory</option>
+                <option value={0}>Non-Inventory</option>
+                <option value={1}>SAP Inventory</option>
               </Form.Select>
             </Col>
             <Col>
@@ -389,8 +389,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={0}>Yes</option>
-                <option>No</option>
+                <option value={1}>Yes</option>
+                <option value={0}>No</option>
               </Form.Select>
             </Col>
           </Row>
@@ -480,7 +480,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             </Row>
             <h3>Tracking Number:</h3>
             <p>{printLabel.trackingNumber}</p>
-            <img style={{ maxWidth: "100%", maxHeight: "100%" }} src={printLabel.qrCodeDataUrl} alt="QR Code" />
+            <img src={printLabel.qrCodeDataUrl} alt="QR Code" />
           </Modal.Body>
         </Modal.Dialog>
         <Button type="button" onClick={() => handlePrint()}>
