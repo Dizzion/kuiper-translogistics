@@ -316,7 +316,7 @@ export const addEmployees = async (
   return res;
 };
 
-export const updateEmployee = async (
+export const updateEmployees = async (
   id: string,
   employee: Employee
 ): Promise<RecordModel> => {

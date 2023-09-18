@@ -3,8 +3,9 @@ import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
-import { HUCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
+import { HUCreate, TNCreate, TNUpdate, addEmployees, updateEmployees } from "@/utils/pocketbase";
 import QRCode from "qrcode";
+import { revalidatePath } from "next/cache";
 
 interface ReceivingFormProps {
   employees: RecordModel[];
@@ -55,6 +56,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   const [showAlert, setShowAlert] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
+  const [pulledEmployee, setPulledEmployee] = useState<RecordModel>();
   const [requestor, setRequestor] = useState<Requestor>({
     name: "",
     building: "",
@@ -74,6 +76,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       (employee) => employee.Full_Name === requestorName
     );
     if (requestorIndex !== -1) {
+      setPulledEmployee(employees[requestorIndex]);
       setRequestor({
         ...requestor,
         name: requestorName,
@@ -270,6 +273,47 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     setEnteredHU("");
   }
 
+  async function addEnteredEmployee(): Promise<void> {
+    setAddEmployee(false);
+    setEnteredEmployee({
+      ...enteredEmployee,
+      Full_Name: `${enteredEmployee.first_name} ${enteredEmployee.last_name}`,
+    });
+    await addEmployees(enteredEmployee);
+    revalidatePath('/Translogistics/Receiving');
+  }
+
+  function showUpdateEmployee(): void {
+    if (pulledEmployee) {
+      setEnteredEmployee({
+        employee_id: pulledEmployee.employee_id,
+        alias: pulledEmployee.alias,
+        first_name: pulledEmployee.first_name,
+        last_name: pulledEmployee.last_name,
+        Full_Name: pulledEmployee.Full_Name,
+        job_title: pulledEmployee.job_title,
+        manager_alias: pulledEmployee.manager_alias,
+        department_name: pulledEmployee.department_name,
+        office_building: pulledEmployee.office_building,
+        default_delivery_location: pulledEmployee.default_delivery_location,
+        default_location: pulledEmployee.default_location,
+      });
+    }
+    setUpdateEmployee(true);
+  }
+
+  async function updateEnteredEmployee(): Promise<void> {
+    setUpdateEmployee(false);
+    setEnteredEmployee({
+      ...enteredEmployee,
+      Full_Name: `${enteredEmployee.first_name} ${enteredEmployee.last_name}`,
+    });
+    if (pulledEmployee) {
+      await updateEmployees(pulledEmployee.id, enteredEmployee);
+    }
+    revalidatePath('/Translogistics/Receiving');
+  }
+
   return (
     <>
       <Form
@@ -315,12 +359,15 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
               />
             </Col>
             <Col>
-              <Button type="button" onClick={() => setAddEmployee(true)}>
-                Add Employee
-              </Button>
-              <Button type="button" onClick={() => setUpdateEmployee(true)}>
-                Update Employee
-              </Button>
+              {requestor.building === "" ? (
+                <Button type="button" onClick={() => setAddEmployee(true)}>
+                  Add Employee
+                </Button>
+              ) : (
+                <Button type="button" onClick={() => showUpdateEmployee()}>
+                  Update Employee
+                </Button>
+              )}
             </Col>
           </Row>
           <Row>
@@ -462,12 +509,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           <Modal.Title>Add Employee</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={addEnteredEmployee}>
             <Row>
               <Col>
                 <Form.Control
                   type="first_name"
                   size="sm"
+                  required
                   placeholder="First Name"
                   value={enteredEmployee.first_name}
                   onChange={(e) =>
@@ -477,15 +525,302 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                     })
                   }
                 />
+              </Col>
+              <Col>
                 <Form.Control
                   type="last_name"
                   size="sm"
+                  required
                   placeholder="Last Name"
                   value={enteredEmployee.last_name}
                   onChange={(e) =>
                     setEnteredEmployee({
                       ...enteredEmployee,
                       last_name: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="employee_id"
+                  size="sm"
+                  placeholder="Employee ID"
+                  value={enteredEmployee.employee_id}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      employee_id: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="alias"
+                  size="sm"
+                  placeholder="alias"
+                  value={enteredEmployee.alias}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      alias: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="job_title"
+                  size="sm"
+                  placeholder="Job Title"
+                  value={enteredEmployee.job_title}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      job_title: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="manager_alias"
+                  size="sm"
+                  placeholder="Manager Alias"
+                  value={enteredEmployee.manager_alias}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      manager_alias: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="department_name"
+                  size="sm"
+                  placeholder="Department Name"
+                  value={enteredEmployee.department_name}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      department_name: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="office_building"
+                  size="sm"
+                  placeholder="Office Building"
+                  value={enteredEmployee.office_building}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      office_building: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="default_delivery_location"
+                  size="sm"
+                  placeholder="Default Delivery Location"
+                  value={enteredEmployee.default_delivery_location}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      default_delivery_location: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="default_location"
+                  size="sm"
+                  placeholder="Default Location"
+                  value={enteredEmployee.default_location}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      default_location: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Button variant="secondary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+      <Modal centered show={updateEmployee}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Employee</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={updateEnteredEmployee}>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="first_name"
+                  size="sm"
+                  required
+                  placeholder="First Name"
+                  value={enteredEmployee.first_name}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      first_name: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="last_name"
+                  size="sm"
+                  required
+                  placeholder="Last Name"
+                  value={enteredEmployee.last_name}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      last_name: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="employee_id"
+                  size="sm"
+                  placeholder="Employee ID"
+                  value={enteredEmployee.employee_id}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      employee_id: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="alias"
+                  size="sm"
+                  placeholder="alias"
+                  value={enteredEmployee.alias}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      alias: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="job_title"
+                  size="sm"
+                  placeholder="Job Title"
+                  value={enteredEmployee.job_title}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      job_title: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="manager_alias"
+                  size="sm"
+                  placeholder="Manager Alias"
+                  value={enteredEmployee.manager_alias}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      manager_alias: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="department_name"
+                  size="sm"
+                  placeholder="Department Name"
+                  value={enteredEmployee.department_name}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      department_name: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="office_building"
+                  size="sm"
+                  placeholder="Office Building"
+                  value={enteredEmployee.office_building}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      office_building: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Control
+                  type="default_delivery_location"
+                  size="sm"
+                  placeholder="Default Delivery Location"
+                  value={enteredEmployee.default_delivery_location}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      default_delivery_location: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+              <Col>
+                <Form.Control
+                  type="default_location"
+                  size="sm"
+                  placeholder="Default Location"
+                  value={enteredEmployee.default_location}
+                  onChange={(e) =>
+                    setEnteredEmployee({
+                      ...enteredEmployee,
+                      default_location: e.target.value,
                     })
                   }
                 />
