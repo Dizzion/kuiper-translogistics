@@ -1,6 +1,7 @@
 import Pocketbase, { RecordModel } from "pocketbase";
 
-const pb = new Pocketbase(process.env.APP_SERVER);
+// const pb = new Pocketbase(env.APP_SERVER);
+const pb = new Pocketbase("http://127.0.0.1:8090");
 
 interface TrackingNumber {
   TrackingNumber?: string;
@@ -73,6 +74,9 @@ export const TNGetAll = async (): Promise<Object> => {
     { cache: "no-store" }
   );
   const tns = await res.json();
+
+  const test = await pb.collection("TrackingNumbers").getFullList();
+  console.log(test);
   return tns;
 };
 
@@ -225,7 +229,7 @@ export const STUpdate = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        UnloadTime: timestamp
+        UnloadTime: timestamp,
       }),
     }
   );
@@ -240,14 +244,14 @@ export const TruckGetAll = async (): Promise<Object> => {
     `http://127.0.0.1:8090/api/collections/Trucks/records`,
     { cache: "no-store" }
   );
-    const trucks = await res.json();
+  const trucks = await res.json();
   return trucks;
 };
 
 export const TruckGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Trucks/records/${id}`,
-    { cache: "no-store"}
+    { cache: "no-store" }
   );
   const truck = await res.json();
   return truck;
@@ -293,13 +297,18 @@ export const getEmployees = async (): Promise<RecordModel[]> => {
   return res;
 };
 
-export const addEmployees = async (employee: RecordModel) : Promise<RecordModel> => {
+export const addEmployees = async (
+  employee: RecordModel
+): Promise<RecordModel> => {
   const res = await pb.collection("Employees").create(employee);
 
   return res;
 };
 
-export const updateEmployee = async (id: string, employee: RecordModel): Promise<RecordModel> => {
+export const updateEmployee = async (
+  id: string,
+  employee: RecordModel
+): Promise<RecordModel> => {
   const res = await pb.collection("Employees").update(id, employee);
 
   return res;
@@ -312,15 +321,17 @@ export const getAssociates = async (): Promise<RecordModel[]> => {
   return res;
 };
 
-export const addAssociate = async (associate: RecordModel): Promise<RecordModel> => {
+export const addAssociate = async (
+  associate: RecordModel
+): Promise<RecordModel> => {
   const res = await pb.collection("WarehouseAssociates").create(associate);
 
   return res;
-}
+};
 
 export const deleteAssociate = async (id: string) => {
   await pb.collection("WarehouseAssociates").delete(id);
-}
+};
 
 // * Handling Unit Routing
 export const HUGetAll = async (): Promise<Object> => {
