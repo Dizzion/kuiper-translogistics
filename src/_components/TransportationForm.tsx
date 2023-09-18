@@ -33,6 +33,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
   const [loadOrUnload, setLoadOrUnload] = useState("");
   const [enteredContainer, setEnteredContainer] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlert3, setShowAlert3] = useState(false);
   const [arrivalTime, setArrivalTime] = useState<Date>();
   const [containerIds, setContainerIds] = useState<string[]>([]);
   const [containerList, setContainerList] = useState<RecordModel[]>([]);
@@ -106,6 +107,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 
   const submitTruck = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!containerList || truckId === '' || locationTag === '') {
+      setShowAlert3(true);
+      return;
+    }
     if (loadOrUnload === "unload") {
       const record = {
         TruckID: truckId,
@@ -136,7 +141,6 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     setContainerIds([]);
     setContainerList([]);
     setEnteredContainer("");
-    setLoadOrUnload("");
     setLocationTag("");
     setTimers([
       {
@@ -187,6 +191,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 
   function handleClose(): void {
     setShowAlert(false);
+    setShowAlert3(false);
   }
 
   return (
@@ -246,10 +251,23 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
       </Form>
       <Modal centered show={showAlert} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Double Scan</Modal.Title>
+          <Modal.Title>Invalid Container</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Make sure you aren't scanning the same Container twice.
+          Your Container Scan wasn't a valid entry please try again.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert3} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Missing Data</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Your missing part of teh form entry please check your inputs and try again.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
