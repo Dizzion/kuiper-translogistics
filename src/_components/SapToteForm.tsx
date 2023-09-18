@@ -74,12 +74,10 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           "<html><head><title>Print</title></head><body>"
         );
 
-        // Include Bootstrap CSS if used
         printWindow.document.write(
           '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">'
         );
 
-        // Include your custom CSS styles here
         printWindow.document.write("<style>");
         printWindow.document.write(
           ".grid-container { display: grid; grid-template-columns: auto auto auto auto; white-space: nowrap; }"
@@ -90,12 +88,10 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         );
         printWindow.document.write("</style>");
 
-        // Include external CSS files if needed
         printWindow.document.write(
           '<link rel="stylesheet" type="text/css" href="C:/Users/gofro/Documents/NextJSProjects/kuiper-translogistics/src/app/globals.css">'
         );
 
-        // Include required JavaScript files
         printWindow.document.write(
           '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>'
         );
@@ -110,23 +106,13 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           '<div style="width: 6in; height: 4in; padding: 10px; border: 1px solid #000;">'
         );
 
-        // Clone the content of the Modal to the print window
         printWindow.document.write(modalCurrent.innerHTML);
 
         printWindow.document.write("</div>");
 
-        // Include external scripts if needed
-        printWindow.document.write(
-          '<script src="path/to/your/external.js"></script>'
-        );
-
-        // Wait for resources to load, then initiate the print action
-        // You can add the 'onload' event to the <link> and <script> elements
-
         printWindow.document.write("</body></html>");
 
         printWindow.document.close();
-        printWindow.print();
       }
     }
   };

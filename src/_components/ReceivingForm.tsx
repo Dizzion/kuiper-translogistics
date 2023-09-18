@@ -49,7 +49,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     requestorName: "",
     buildingLocation: "",
     jira: "",
-    frieght: "",
+    freight: "",
     sap: "",
     qrCodeDataUrl: "",
   });
@@ -96,24 +96,20 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           "<html><head><title>Print</title></head><body>"
         );
 
-        // Include Bootstrap CSS if used
         printWindow.document.write(
           '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">'
         );
 
-        // Include your custom CSS styles here
         printWindow.document.write("<style>");
         printWindow.document.write(
           "div { justify-content: center, text-align: center, }"
         );
         printWindow.document.write("</style>");
 
-        // Include external CSS files if needed
         printWindow.document.write(
           '<link rel="stylesheet" type="text/css" href="C:/Users/gofro/Documents/NextJSProjects/kuiper-translogistics/src/app/globals.css">'
         );
 
-        // Include required JavaScript files
         printWindow.document.write(
           '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>'
         );
@@ -128,23 +124,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           '<div style="width: 4in; height: 6in; padding: 10px; border: 1px solid #000;">'
         );
 
-        // Clone the content of the Modal to the print window
         printWindow.document.write(modalCurrent.innerHTML);
 
         printWindow.document.write("</div>");
 
-        // Include external scripts if needed
-        printWindow.document.write(
-          '<script src="path/to/your/external.js"></script>'
-        );
-
-        // Wait for resources to load, then initiate the print action
-        // You can add the 'onload' event to the <link> and <script> elements
-
         printWindow.document.write("</body></html>");
 
         printWindow.document.close();
-        // printWindow.print();
       }
     }
   };
@@ -211,7 +197,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         buildingLocation: requestor.building,
         jira: requestor.jira,
         sap: requestor.inventory.toString(),
-        frieght: requestor.freight.toString(),
+        freight: requestor.freight.toString(),
         qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
       await TNUpdate(
@@ -242,7 +228,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         buildingLocation: requestor.building,
         jira: requestor.jira,
         sap: requestor.inventory.toString(),
-        frieght: requestor.freight.toString(),
+        freight: requestor.freight.toString(),
         qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
       await TNCreate(newTrackingNumber);
@@ -386,8 +372,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option>Non-Inventory</option>
-                <option value={"true"}>SAP Inventory</option>
+                <option value={0}>Non-Inventory</option>
+                <option value={1}>SAP Inventory</option>
               </Form.Select>
             </Col>
             <Col>
@@ -403,8 +389,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 }
               >
                 <option>Dropdown Options</option>
-                <option>Yes</option>
-                <option value={"true"}>No</option>
+                <option value={1}>Yes</option>
+                <option value={0}>No</option>
               </Form.Select>
             </Col>
           </Row>
@@ -485,11 +471,11 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             <Row>
               <Col>
                 <h6>Freight:</h6>
-                <p>{printLabel.frieght}</p>
+                {printLabel.freight ? (<p>Yes</p>):(<p>No</p>)}
               </Col>
               <Col>
                 <h6>SAP:</h6>
-                <p>{printLabel.sap}</p>
+                {printLabel.sap ? (<p>Yes</p>):(<p>No</p>)}
               </Col>
             </Row>
             <h3>Tracking Number:</h3>
