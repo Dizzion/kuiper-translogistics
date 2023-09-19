@@ -30,6 +30,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 }) => {
   const [truckId, setTruckId] = useState("");
   const [locationTag, setLocationTag] = useState("");
+  const [running, setRunning] = useState(false);
   const [loadOrUnload, setLoadOrUnload] = useState("");
   const [enteredContainer, setEnteredContainer] = useState("");
   const [showAlert, setShowAlert] = useState(false);
@@ -65,6 +66,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
   ]);
 
   const startTimer = (id: string) => {
+    setRunning(true);
     setTimers((prevTimers) => {
       const newTimers = [...prevTimers];
       const timer = newTimers.find((timer) => timer.id === id);
@@ -79,6 +81,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
   };
 
   const stopTimer = (id: string) => {
+    setRunning(false);
     setTimers((prevTimers) => {
       const newTimers = [...prevTimers];
       const timer = newTimers.find((timer) => timer.id === id);
@@ -107,7 +110,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 
   const submitTruck = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!containerList || truckId === '' || locationTag === '') {
+    if (!containerList || truckId === "" || locationTag === "") {
       setShowAlert3(true);
       return;
     }
@@ -119,8 +122,8 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         UnloadProcessing: timers[3].elapsedTime.toLocaleString(),
         ArrivalAA: localStorage.getItem("id") as string,
       };
-      const truckIndex = trucks.findIndex(
-        (obj) => obj.Containers.includes(containerIds[0])
+      const truckIndex = trucks.findIndex((obj) =>
+        obj.Containers.includes(containerIds[0])
       );
       if (truckIndex === -1) {
         return;
@@ -131,7 +134,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         TruckID: truckId,
         LoadProcessing: timers[1].elapsedTime.toLocaleString(),
         LoadTime: timers[0].elapsedTime.toLocaleString(),
-        DepartureTime: new Date().toLocaleString(),
+        DepartureTime: new Date(),
         Containers: containerIds,
         DepartureAA: localStorage.getItem("id") as string,
       };
@@ -267,7 +270,8 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           <Modal.Title>Missing Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Your missing part of teh form entry please check your inputs and try again.
+          Your missing part of the form entry please check your inputs and try
+          again.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -281,7 +285,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Processing</Card.Header>
               <Card.Body key={timers[1].id}>
-                Elapsed Time: {timers[1].elapsedTime} seconds
+                {running === true ? (
+                  <p>Running......</p>
+                ) : (
+                  <p>Elapsed Time: {timers[1].elapsedTime} seconds</p>
+                )}
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[1].id)}
@@ -299,7 +307,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Loading</Card.Header>
               <Card.Body key={timers[0].id}>
-                Elapsed Time: {timers[0].elapsedTime} seconds
+                {running === true ? (
+                  <p>Running......</p>
+                ) : (
+                  <p>Elapsed Time: {timers[0].elapsedTime} seconds</p>
+                )}
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[0].id)}
@@ -331,7 +343,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Unloading</Card.Header>
               <Card.Body key={timers[2].id}>
-                Elapsed Time: {timers[2].elapsedTime} seconds
+                {running === true ? (
+                  <p>Running......</p>
+                ) : (
+                  <p>Elapsed Time: {timers[2].elapsedTime} seconds</p>
+                )}
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[2].id)}
@@ -349,7 +365,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Processing</Card.Header>
               <Card.Body key={timers[3].id}>
-                Elapsed Time: {timers[3].elapsedTime} seconds
+                {running === true ? (
+                  <p>Running......</p>
+                ) : (
+                  <p>Elapsed Time: {timers[3].elapsedTime} seconds</p>
+                )}
                 <Button
                   variant="outline-light"
                   onClick={() => startTimer(timers[3].id)}

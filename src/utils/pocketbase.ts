@@ -14,8 +14,8 @@ interface TrackingNumber {
   full_name?: string;
   default_location?: string;
   CoupaPOLines?: string;
-  SAP?: boolean;
-  Freight?: boolean;
+  SAP?: string;
+  Freight?: string;
   Jira?: string;
   HU?: string[];
   alias: string;
@@ -72,7 +72,7 @@ interface Truck {
   UnloadProcessing?: string;
   LoadProcessing?: string;
   LoadTime?: string;
-  DepartureTime?: string;
+  DepartureTime?: Date;
   Containers?: string[];
   DepartureAA?: string;
   ArrivalAA?: string;
