@@ -60,6 +60,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     qrCodeDataUrl: "",
   });
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlert2, setShowAlert2] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
   const [pulledEmployee, setPulledEmployee] = useState<RecordModel>();
@@ -180,6 +181,10 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       typeof requestor.inventory === "boolean" &&
       typeof requestor.freight === "boolean"
     ) {
+      if (trackingNumbers[existingTrackingNumberIndex].Inbound133 === "") {
+        setShowAlert2(true);
+        return;
+      }
       const updatedTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
         Outbound99: trackingNumbers[existingTrackingNumberIndex].Outbound99,
@@ -210,7 +215,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         trackingNumbers[existingTrackingNumberIndex].id,
         updatedTrackingNumber
       );
-    } else {
+    } else if (trackingNumbers[existingTrackingNumberIndex].Deliverd !== "") {
       const newTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
         Outbound99: "",
@@ -237,7 +242,9 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         freight: requestor.freight.toString(),
         qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
-      await TNCreate(newTrackingNumber);
+      await TNUpdate(trackingNumbers[existingTrackingNumberIndex].id, newTrackingNumber);
+    } else {
+      setShowAlert2(true);
     }
   }
 
@@ -465,6 +472,19 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         <Modal.Body>
           The Handling Unit you scanned is not valid make sure you scanning the
           correct barcode.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert2} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Missing Pervious Scan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Pervious Scan hasn't been captured please make sure to follow the entire process.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
