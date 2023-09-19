@@ -7,13 +7,13 @@ import {
   HUCreate,
   TNUpdate,
   addEmployees,
+  getEmployeeByFullName,
   updateEmployees,
 } from "@/utils/pocketbase";
 import QRCode from "qrcode";
 import { revalidatePath } from "next/cache";
 
 interface ReceivingFormProps {
-  employees: RecordModel[];
   trackingNumbers: RecordModel[];
 }
 export interface Requestor {
@@ -26,13 +26,11 @@ export interface Requestor {
   coupaPoLines: string;
 }
 
-const ReceivingForm: React.FC<ReceivingFormProps> = ({
-  employees,
-  trackingNumbers,
-}) => {
+const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
   const modalRef = useRef(null);
   const [modalPrint, setModalPrint] = useState(false);
   const [addEmployee, setAddEmployee] = useState(false);
+  const [generateFullName, setGenerateFullName] = useState(true);
   const [updateEmployee, setUpdateEmployee] = useState(false);
   const [enteredEmployee, setEnteredEmployee] = useState({
     employee_id: "",
@@ -61,6 +59,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   const [showAlert, setShowAlert] = useState(false);
   const [showAlert2, setShowAlert2] = useState(false);
   const [showAlert3, setShowAlert3] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
   const [pulledEmployee, setPulledEmployee] = useState<RecordModel>();
@@ -74,23 +73,17 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     coupaPoLines: "",
   });
 
-  function pullRequestorBuilding(e: string) {
-    if (e === "") {
-      setRequestor({ ...requestor, name: e, building: "" });
-    }
+  async function pullRequestorBuilding(e: string) {
+    setRequestor({ ...requestor, name: e, building: "" });
     const requestorName = e;
-    const requestorIndex = employees.findIndex(
-      (employee) => employee.Full_Name === requestorName
-    );
-    if (requestorIndex !== -1) {
-      setPulledEmployee(employees[requestorIndex]);
+    const employee = await getEmployeeByFullName(requestorName);
+    if (employee.items[0] !== undefined) {
+      setPulledEmployee(employee.items);
       setRequestor({
         ...requestor,
         name: requestorName,
-        building: employees[requestorIndex].default_location,
+        building: employee.items[0].default_location,
       });
-    } else {
-      setRequestor({ ...requestor, name: e, building: "" });
     }
   }
 
@@ -246,6 +239,15 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     }
   }
 
+  const setFullName = () => {
+    setEnteredEmployee({
+      ...enteredEmployee,
+      Full_Name: `${enteredEmployee.first_name} ${enteredEmployee.last_name}`,
+    });
+    setGenerateFullName(false);
+    setShowSubmit(true);
+  };
+
   function handleClose(): void {
     setShowAlert(false);
     setShowAlert2(false);
@@ -268,14 +270,25 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     });
   }
 
-  async function addEnteredEmployee(): Promise<void> {
-    setAddEmployee(false);
-    setEnteredEmployee({
-      ...enteredEmployee,
-      Full_Name: `${enteredEmployee.first_name} ${enteredEmployee.last_name}`,
-    });
+  async function addEnteredEmployee(e: React.FormEvent): Promise<void> {
+    e.preventDefault();
     await addEmployees(enteredEmployee);
-    revalidatePath("/Translogistics/Receiving");
+    setAddEmployee(false);
+    setGenerateFullName(true);
+    setShowSubmit(false);
+    setEnteredEmployee({
+      employee_id: "",
+      alias: "",
+      first_name: "",
+      last_name: "",
+      Full_Name: "",
+      job_title: "",
+      manager_alias: "",
+      department_name: "",
+      office_building: "",
+      default_delivery_location: "",
+      default_location: "",
+    });
   }
 
   function showUpdateEmployee(): void {
@@ -297,16 +310,26 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     setUpdateEmployee(true);
   }
 
-  async function updateEnteredEmployee(): Promise<void> {
-    setUpdateEmployee(false);
-    setEnteredEmployee({
-      ...enteredEmployee,
-      Full_Name: `${enteredEmployee.first_name} ${enteredEmployee.last_name}`,
-    });
+  async function updateEnteredEmployee(e: React.FormEvent): Promise<void> {
+    e.preventDefault();
+    setFullName();
     if (pulledEmployee) {
       await updateEmployees(pulledEmployee.id, enteredEmployee);
     }
-    revalidatePath("/Translogistics/Receiving");
+    setUpdateEmployee(false);
+    setEnteredEmployee({
+      employee_id: "",
+      alias: "",
+      first_name: "",
+      last_name: "",
+      Full_Name: "",
+      job_title: "",
+      manager_alias: "",
+      department_name: "",
+      office_building: "",
+      default_delivery_location: "",
+      default_location: "",
+    });
   }
 
   return (
@@ -575,20 +598,21 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
               </Col>
             </Row>
             <Row>
-              <Form.Control
-                type="Full_Name"
-                size="sm"
-                required
-                placeholder="Full Name"
-                disabled
-                value={`${enteredEmployee.first_name} ${enteredEmployee.last_name}`}
-                onChange={(e) =>
-                  setEnteredEmployee({
-                    ...enteredEmployee,
-                    Full_Name: e.target.value,
-                  })
-                }
-              />
+              {generateFullName === true ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={setFullName}
+                >Click Here to set Full Name</Button>
+              ) : (
+                <Form.Control
+                  type="Full_Name"
+                  size="sm"
+                  required
+                  disabled
+                  value={enteredEmployee.Full_Name}
+                />
+              )}
             </Row>
             <Row>
               <Col>
@@ -610,6 +634,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                   type="alias"
                   size="sm"
                   placeholder="alias"
+                  required
                   value={enteredEmployee.alias}
                   onChange={(e) =>
                     setEnteredEmployee({
@@ -700,6 +725,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                   type="default_location"
                   size="sm"
                   placeholder="Default Location"
+                  required
                   value={enteredEmployee.default_location}
                   onChange={(e) =>
                     setEnteredEmployee({
@@ -710,9 +736,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 />
               </Col>
             </Row>
-            <Button variant="secondary" type="submit">
-              Submit
-            </Button>
+            {showSubmit ? (
+              <Button variant="secondary" type="submit">
+                Submit
+              </Button>
+            ) : (
+              <></>
+            )}
           </Form>
         </Modal.Body>
       </Modal>
