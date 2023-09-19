@@ -11,7 +11,6 @@ import {
   updateEmployees,
 } from "@/utils/pocketbase";
 import QRCode from "qrcode";
-import { revalidatePath } from "next/cache";
 
 interface ReceivingFormProps {
   trackingNumbers: RecordModel[];
