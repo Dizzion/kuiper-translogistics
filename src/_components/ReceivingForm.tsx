@@ -5,7 +5,6 @@ import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
 import {
   HUCreate,
-  TNCreate,
   TNUpdate,
   addEmployees,
   updateEmployees,
