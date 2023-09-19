@@ -75,17 +75,3 @@ main {
 p {
   font-size: 12px;
 }
-/* Define styles for printing */
-@media print {
-  /* Hide unnecessary elements for printing */
-  body * {
-    visibility: hidden;
-  }
-  
-  /* Display only the content you want to print */
-  .printable-content {
-    visibility: visible;
-    justify-content: center;
-    text-align: center;
-  }
-}
