@@ -21,6 +21,10 @@ interface TrackingNumber {
   alias: string;
 }
 
+interface WarehouseAssociate {
+  alias: string;
+}
+
 interface Employee {
   employee_id?: string;
   alias?: string;
