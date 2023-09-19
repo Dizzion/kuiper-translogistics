@@ -337,7 +337,7 @@ export const getAssociates = async (): Promise<RecordModel[]> => {
 };
 
 export const addAssociate = async (
-  associate: RecordModel
+  associate: WarehouseAssociate
 ): Promise<RecordModel> => {
   const res = await pb.collection("WarehouseAssociates").create(associate);
 
