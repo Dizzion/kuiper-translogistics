@@ -758,6 +758,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
                   type="first_name"
                   size="sm"
                   required
+                  disabled
                   placeholder="First Name"
                   value={enteredEmployee.first_name}
                   onChange={(e) =>
@@ -773,6 +774,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
                   type="last_name"
                   size="sm"
                   required
+                  disabled
                   placeholder="Last Name"
                   value={enteredEmployee.last_name}
                   onChange={(e) =>
