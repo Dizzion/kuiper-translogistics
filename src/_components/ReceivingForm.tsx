@@ -60,6 +60,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   });
   const [showAlert, setShowAlert] = useState(false);
   const [showAlert2, setShowAlert2] = useState(false);
+  const [showAlert3, setShowAlert3] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
   const [pulledEmployee, setPulledEmployee] = useState<RecordModel>();
@@ -169,14 +170,17 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
     enteredTrackingNumber: string,
     requestor: Requestor
   ) {
-    const newTimestamp = new Date().toLocaleString();
+    const newTimestamp = new Date();
 
     const existingTrackingNumberIndex = trackingNumbers.findIndex(
       (trackingNumber) =>
         trackingNumber.TrackingNumber === enteredTrackingNumber
     );
     if (existingTrackingNumberIndex !== -1) {
-      if (trackingNumbers[existingTrackingNumberIndex].Inbound133 === "" && trackingNumbers[existingTrackingNumberIndex].Delivered === "") {
+      if (
+        trackingNumbers[existingTrackingNumberIndex].Inbound133 &&
+        trackingNumbers[existingTrackingNumberIndex].Delivered
+      ) {
         setShowAlert2(true);
         return;
       }
@@ -198,7 +202,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       };
       setPrintLabel({
         trackingNumber: enteredTrackingNumber,
-        timestamp: newTimestamp,
+        timestamp: newTimestamp.toLocaleString(),
         requestorName: requestor.name,
         buildingLocation: requestor.building,
         jira: requestor.jira,
@@ -210,6 +214,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         trackingNumbers[existingTrackingNumberIndex].id,
         updatedTrackingNumber
       );
+      setModalPrint(true);
     } else {
       setShowAlert2(true);
     }
@@ -217,9 +222,16 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (requestor.name !== "") {
+    if (requestor.building === "") {
+      setShowAlert3(true);
+      return;
+    }
+    if (
+      requestor.name !== "" &&
+      (requestor.inventory === "Yes" || requestor.inventory === "No") &&
+      (requestor.freight === "Yes" || requestor.freight === "No")
+    ) {
       updateAsReceived(enteredTrackingNumber, requestor);
-      setModalPrint(true);
       setEnteredHUs([]);
       setEnteredTrackingNumber("");
       setRequestor({
@@ -237,6 +249,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   function handleClose(): void {
     setShowAlert(false);
     setShowAlert2(false);
+    setShowAlert3(false);
     setAddEmployee(false);
     setUpdateEmployee(false);
     setEnteredHU("");
@@ -342,11 +355,19 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             </Col>
             <Col className="text-center" style={{ marginTop: "1.5rem" }}>
               {requestor.building === "" ? (
-                <Button variant="outline-light" type="button" onClick={() => setAddEmployee(true)}>
+                <Button
+                  variant="outline-light"
+                  type="button"
+                  onClick={() => setAddEmployee(true)}
+                >
                   Add Employee
                 </Button>
               ) : (
-                <Button variant="outline-warning" type="button" onClick={() => showUpdateEmployee()}>
+                <Button
+                  variant="outline-warning"
+                  type="button"
+                  onClick={() => showUpdateEmployee()}
+                >
                   Update Employee
                 </Button>
               )}
@@ -452,7 +473,23 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
           <Modal.Title>Missing Pervious Scan</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Pervious Scan hasn't been captured please make sure to follow the entire process.
+          Pervious Scan hasn't been captured please make sure to follow the
+          entire process.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert3} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Missing Employee Data</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Employee entered doesn't exist in the Database make sure your are
+          capitalizing the first letter of both first and last name and/or add
+          the new employee to the database.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

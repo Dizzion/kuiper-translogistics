@@ -58,7 +58,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
       if (locationTag === "99") {
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
-          Inbound99: timestamp.toLocaleString(),
+          Inbound99: timestamp,
           alias: localStorage.getItem("id") as string,
         };
         updatedEnteredTrackingNumbers.splice(isInETN, 1);
@@ -68,7 +68,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
       } else if (locationTag === "133") {
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
-          Inbound133: timestamp.toLocaleString(),
+          Inbound133: timestamp,
           alias: localStorage.getItem("id") as string,
         };
         const recordid = enteredTrackingNumbers[isInETN].id;

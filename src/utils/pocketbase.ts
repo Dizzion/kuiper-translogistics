@@ -5,12 +5,12 @@ const pb = new Pocketbase("http://127.0.0.1:8090");
 
 interface TrackingNumber {
   TrackingNumber?: string;
-  Outbound99?: string;
-  Inbound133?: string;
-  Delivered?: string;
-  Received133?: string;
-  Outbound133?: string;
-  Inbound99?: string;
+  Outbound99?: Date;
+  Inbound133?: Date;
+  Delivered?: Date;
+  Received133?: Date;
+  Outbound133?: Date;
+  Inbound99?: Date;
   full_name?: string;
   default_location?: string;
   CoupaPOLines?: string;

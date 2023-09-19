@@ -49,7 +49,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     if (locationTag === "99" && !/^(SAP_)/.test(enteredTracking)) {
       const createRecord = {
         TrackingNumber: enteredTracking,
-        Outbound99: new Date().toLocaleString(),
+        Outbound99: new Date(),
         alias: localStorage.getItem("id") as string,
       };
       const createdTn = await TNCreate(createRecord);
@@ -66,7 +66,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       }
       const updateRecord = {
         TrackingNumber: trackingNumbers[tnIndex].TrackingNumber,
-        Outbound133: new Date().toLocaleString(),
+        Outbound133: new Date(),
         alias: localStorage.getItem("id") as string,
       };
       const updatedTn = await TNUpdate(
