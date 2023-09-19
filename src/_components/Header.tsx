@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { RecordModel } from "pocketbase";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, InputGroup, Navbar } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Navbar } from "react-bootstrap";
 
 interface HeaderProps {
   associates: RecordModel[] | undefined;
@@ -40,14 +40,16 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
 
   return (
     <Navbar className="navbar navbar-dark bg-dark">
-      <Container>
+      <Container fluid>
+        <Col>
         <Navbar.Brand href="/" className="text-white">
           Amazon <span style={{ color: "#5f90f1" }}>Kuiper</span> Translogistics
-        </Navbar.Brand>
+        </Navbar.Brand></Col>
         {isUserIdInArray ? (
-          <>
+          <><Col>
             <Navbar.Brand href="/Translogistics" style={{justifyContent: 'center', color: "#5f90f1" }}>Warehouse Forms</Navbar.Brand>
-            <Navbar.Text style={{justifyContent: 'end'}} className="text-white">
+            </Col>
+            <Navbar.Text style={{justifyContent: 'end', marginRight: '.5rem'}} className="text-white">
               Alias: {alias}
             </Navbar.Text>
             <Button
