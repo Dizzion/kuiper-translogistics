@@ -19,8 +19,8 @@ interface ReceivingFormProps {
 export interface Requestor {
   name: string;
   building: string;
-  inventory: boolean;
-  freight: boolean;
+  inventory: string;
+  freight: string;
   jira: string;
   handlingUnits: string[];
   coupaPoLines: string;
@@ -66,8 +66,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
   const [requestor, setRequestor] = useState<Requestor>({
     name: "",
     building: "",
-    inventory: false,
-    freight: false,
+    inventory: "",
+    freight: "",
     jira: "",
     handlingUnits: [],
     coupaPoLines: "",
@@ -175,12 +175,8 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
       (trackingNumber) =>
         trackingNumber.TrackingNumber === enteredTrackingNumber
     );
-    if (
-      existingTrackingNumberIndex !== -1 &&
-      typeof requestor.inventory === "boolean" &&
-      typeof requestor.freight === "boolean"
-    ) {
-      if (trackingNumbers[existingTrackingNumberIndex].Inbound133 === "") {
+    if (existingTrackingNumberIndex !== -1) {
+      if (trackingNumbers[existingTrackingNumberIndex].Inbound133 === "" && trackingNumbers[existingTrackingNumberIndex].Delivered === "") {
         setShowAlert2(true);
         return;
       }
@@ -206,38 +202,14 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         requestorName: requestor.name,
         buildingLocation: requestor.building,
         jira: requestor.jira,
-        sap: requestor.inventory.toString(),
-        freight: requestor.freight.toString(),
+        sap: requestor.inventory,
+        freight: requestor.freight,
         qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
       await TNUpdate(
         trackingNumbers[existingTrackingNumberIndex].id,
         updatedTrackingNumber
       );
-    } else if (trackingNumbers[existingTrackingNumberIndex].Delivered !== "") {
-      const newTrackingNumber = {
-        TrackingNumber: enteredTrackingNumber,
-        Received133: newTimestamp,
-        full_name: requestor.name,
-        default_location: requestor.building,
-        CoupaPOLines: requestor.coupaPoLines,
-        SAP: requestor.inventory,
-        Freight: requestor.freight,
-        Jira: requestor.jira,
-        HU: requestor.handlingUnits,
-        alias: localStorage.getItem("id") as string,
-      };
-      setPrintLabel({
-        trackingNumber: enteredTrackingNumber,
-        timestamp: newTimestamp,
-        requestorName: requestor.name,
-        buildingLocation: requestor.building,
-        jira: requestor.jira,
-        sap: requestor.inventory.toString(),
-        freight: requestor.freight.toString(),
-        qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
-      });
-      await TNUpdate(trackingNumbers[existingTrackingNumberIndex].id, newTrackingNumber);
     } else {
       setShowAlert2(true);
     }
@@ -264,6 +236,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
 
   function handleClose(): void {
     setShowAlert(false);
+    setShowAlert2(false);
     setAddEmployee(false);
     setUpdateEmployee(false);
     setEnteredHU("");
@@ -390,13 +363,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 onChange={(e) =>
                   setRequestor({
                     ...requestor,
-                    inventory: Boolean(e.target.value),
+                    inventory: e.target.value,
                   })
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={0}>Non-Inventory</option>
-                <option value={1}>SAP Inventory</option>
+                <option value={"No"}>Non-Inventory</option>
+                <option value={"Yes"}>SAP Inventory</option>
               </Form.Select>
             </Col>
             <Col>
@@ -407,13 +380,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
                 onChange={(e) =>
                   setRequestor({
                     ...requestor,
-                    freight: Boolean(e.target.value),
+                    freight: e.target.value,
                   })
                 }
               >
                 <option>Dropdown Options</option>
-                <option value={1}>Yes</option>
-                <option value={0}>No</option>
+                <option value={"Yes"}>Yes</option>
+                <option value={"No"}>No</option>
               </Form.Select>
             </Col>
           </Row>
@@ -507,11 +480,11 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
             <Row>
               <Col>
                 <h6>Freight:</h6>
-                {printLabel.freight === "true" ? <p>Yes</p> : <p>No</p>}
+                {printLabel.freight}
               </Col>
               <Col>
                 <h6>SAP:</h6>
-                {printLabel.sap === "false" ? <p>Yes</p> : <p>No</p>}
+                {printLabel.sap}
               </Col>
             </Row>
             <h3>Tracking Number:</h3>
