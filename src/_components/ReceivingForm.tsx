@@ -11,6 +11,7 @@ import {
   updateEmployees,
 } from "@/utils/pocketbase";
 import QRCode from "qrcode";
+import Image from "next/image";
 
 interface ReceivingFormProps {
   trackingNumbers: RecordModel[];
@@ -548,7 +549,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             </Row>
             <h3>Tracking Number:</h3>
             <p>{printLabel.trackingNumber}</p>
-            <img src={printLabel.qrCodeDataUrl} alt="QR Code" />
+            <Image src={printLabel.qrCodeDataUrl} alt="QR Code" />
           </Modal.Body>
         </Modal.Dialog>
         <Button type="button" onClick={() => handlePrint()}>

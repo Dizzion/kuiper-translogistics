@@ -257,7 +257,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           <Modal.Title>Invalid Container</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Your Container Scan wasn't a valid entry please try again.
+          Your Container Scan wasnt a valid entry please try again.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

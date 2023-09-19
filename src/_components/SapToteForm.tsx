@@ -5,6 +5,7 @@ import React, { useRef, useState } from "react";
 import HandlingUnitList from "./HandlingUnitList";
 import { Modal, Button, Form, Col, Row } from "react-bootstrap";
 import QRCode from "qrcode";
+import Image from "next/image";
 
 interface SapToteFormProps {
   handlingUnits: RecordModel[];
@@ -193,7 +194,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           <Modal.Body>
             <Row>
               <Col sm={2}>
-                <img width={80} height={80} src={printLabel.qrcode} alt="QR Code" />
+                <Image width={80} height={80} src={printLabel.qrcode} alt="QR Code" />
               </Col>
               <Col sm={8}>
                 <div className="grid-container">
