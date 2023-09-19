@@ -91,7 +91,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
 
   const submitContainer = async () => {
     const timestamp = new Date();
-    if (workingCont !== undefined) {
+    if (workingCont) {
       await ContUpdate(workingCont.id, timestamp);
     }
     setDisabledEntry(true);
