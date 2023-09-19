@@ -215,14 +215,10 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({
         trackingNumbers[existingTrackingNumberIndex].id,
         updatedTrackingNumber
       );
-    } else if (trackingNumbers[existingTrackingNumberIndex].Deliverd !== "") {
+    } else if (trackingNumbers[existingTrackingNumberIndex].Delivered !== "") {
       const newTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
-        Outbound99: "",
-        Inbound133: "",
         Received133: newTimestamp,
-        Outbound133: "",
-        Inbound99: "",
         full_name: requestor.name,
         default_location: requestor.building,
         CoupaPOLines: requestor.coupaPoLines,
