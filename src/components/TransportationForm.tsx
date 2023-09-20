@@ -1,5 +1,5 @@
 "use client";
-import { ContGetByContId, CreateTruck, UpdateTruck } from "@/utils/pocketbase";
+import { ContGetByContId, CreateTruck, TruckGetByContArr, UpdateTruck } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import {
@@ -126,7 +126,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     });
   };
 
-  const startTruck = (value: string) => {
+  const startTruck = async (value: string) => {
     if (truckId === "") {
       setArrivalTime(new Date());
     }
@@ -147,13 +147,13 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         UnloadProcessing: timers[3].elapsedTime.toLocaleString(),
         ArrivalAA: localStorage.getItem("id") as string,
       };
-      const truckIndex = trucks.findIndex((obj) =>
-        obj.Containers.includes(containerIds[0])
-      );
-      if (truckIndex === -1) {
+      console.log(containerIds);
+      const truckIndex = await TruckGetByContArr(containerIds[0]);
+      console.log(truckIndex);
+      if (!truckIndex.items[0]) {
         return;
       }
-      await UpdateTruck(trucks[truckIndex].id, record);
+      await UpdateTruck(truckIndex.items[0].id, record);
     } else if (loadOrUnload === "load") {
       const record = {
         TruckID: truckId,

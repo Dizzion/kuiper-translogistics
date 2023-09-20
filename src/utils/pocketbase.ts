@@ -95,14 +95,16 @@ export const TNGetAll = async (): Promise<Object> => {
   return tns;
 };
 
-export const TNGetByTN = async (trackingNumber: string): Promise<RecordModel> => {
+export const TNGetByTN = async (
+  trackingNumber: string
+): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/TrackingNumbers/records?filter=(TrackingNumber='${trackingNumber}')`,
     { cache: "no-store" }
   );
   const tn = await res.json();
   return tn;
-}
+};
 
 export const TNGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
@@ -281,6 +283,17 @@ export const TruckGetAll = async (): Promise<Object> => {
   return trucks;
 };
 
+export const TruckGetByContArr = async (
+  conts: string
+): Promise<RecordModel> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/Trucks/records?filter=(Containers~'${conts}')`,
+    { cache: "no-store" }
+  );
+  const truck = res.json();
+  return truck;
+};
+
 export const TruckGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Trucks/records/${id}`,
@@ -330,14 +343,16 @@ export const getEmployees = async (): Promise<RecordModel[]> => {
   return res;
 };
 
-export const getEmployeeByFullName = async (fullName: string): Promise<RecordModel> => {
+export const getEmployeeByFullName = async (
+  fullName: string
+): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Employees/records?filter=(Full_Name='${fullName}')`,
     { cache: "no-store" }
   );
   const employee = await res.json();
   return employee;
-}
+};
 
 export const addEmployees = async (
   employee: Employee
