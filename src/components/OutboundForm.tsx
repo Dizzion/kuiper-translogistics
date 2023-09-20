@@ -1,5 +1,5 @@
 "use client";
-import { ContCreate, TNCreate, TNUpdate } from "@/utils/pocketbase";
+import { ContCreate, STGetBySTID, TNCreate, TNGetByTN, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
@@ -57,36 +57,32 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       setEnteredTrackingNumbers([...enteredTrackingNumbers, createdTn]);
       setTnIds([...tnIds, createdTn.id]);
     } else if (locationTag === "133" && !/^(SAP_)/.test(enteredTracking)) {
-      const tnIndex = trackingNumbers.findIndex(
-        (obj) => obj.TrackingNumber === enteredTracking
-      );
-      if (tnIndex === -1) {
+      const tnIndex = await TNGetByTN(enteredTracking);
+      if (!tnIndex) {
         setShowAlert(true);
         setEnteredTracking("");
         return;
       }
       const updateRecord = {
-        TrackingNumber: trackingNumbers[tnIndex].TrackingNumber,
+        TrackingNumber: tnIndex.items[0].TrackingNumber,
         Outbound133: new Date(),
         alias: localStorage.getItem("id") as string,
       };
       const updatedTn = await TNUpdate(
-        trackingNumbers[tnIndex].id,
+        tnIndex.items[0].id,
         updateRecord
       );
       setEnteredTrackingNumbers([...enteredTrackingNumbers, updatedTn]);
       setTnIds([...tnIds, updatedTn.id]);
     } else if (/^(SAP_)/.test(enteredTracking)) {
-      const stIndex = sapTotes.findIndex(
-        (obj) => obj.ToteID === enteredTracking
-      );
-      if (stIndex === -1) {
+      const stIndex = await STGetBySTID(enteredTracking);
+      if (!stIndex) {
         setShowAlert(true);
         setEnteredTracking("");
         return;
       }
-      setStIds([...stIds, sapTotes[stIndex].id]);
-      setEnteredSapTotes([...enteredSapTotes, sapTotes[stIndex]]);
+      setStIds([...stIds, stIndex.items[0].id]);
+      setEnteredSapTotes([...enteredSapTotes, stIndex.items[0]]);
     } else {
       setShowAlert(true);
     }

@@ -227,6 +227,15 @@ export const STGetAll = async (): Promise<Object> => {
   return STs;
 };
 
+export const STGetBySTID = async (stId: string): Promise<RecordModel> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/SapTotes/records?filter=(ToteID='${stId}')`,
+    { cache: "no-store"}
+  );
+  const ST = await res.json();
+  return ST;
+}
+
 export const STGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}`,
