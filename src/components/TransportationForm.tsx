@@ -1,5 +1,5 @@
 "use client";
-import { CreateTruck, UpdateTruck } from "@/utils/pocketbase";
+import { ContGetByContId, CreateTruck, UpdateTruck } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import {
@@ -199,17 +199,12 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     setTruckId("");
   };
 
-  const updateEnteredContainer = (e: React.FormEvent) => {
+  const updateEnteredContainer = async (e: React.FormEvent) => {
     e.preventDefault();
-    const contIndex = containers.findIndex(
-      (obj) => obj.ContainerID === enteredContainer
-    );
-    if (
-      contIndex !== -1 &&
-      !containerList.some((cont) => cont.ContainerID === enteredContainer)
-    ) {
-      setContainerIds([...containerIds, containers[contIndex].id]);
-      setContainerList([...containerList, containers[contIndex]]);
+    const searchedCont = await ContGetByContId(enteredContainer);
+    if (searchedCont) {
+      setContainerIds([...containerIds, searchedCont.id]);
+      setContainerList([...containerList, searchedCont]);
       setEnteredContainer("");
       return;
     }

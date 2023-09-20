@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
 import TrackingNumberList from "./TrackingNumberList";
+import { ContGetOne } from "@/utils/pocketbase";
 
 interface DisplayContainerProps {
   container: RecordModel;
@@ -17,12 +18,10 @@ const DisplayContainer: React.FC<DisplayContainerProps> = ({
 
   const toggleExpandCollapse = async () => {
     setIsExpanded(!isExpanded);
-    const res = await fetch(
-      `http://127.0.0.1:8090/api/collections/Containers/records/${container.id}?expand=TrackingNumbers,SapTotes`,
-      { cache: "no-store" }
-    );
-    const cont = await res.json();
-    
+    const cont = await ContGetOne(container.id);
+    if (cont.expand === undefined) {
+      return;
+    }
     if (cont.expand.SapTotes && cont.expand.SapTotes.length > 0) {
       setColumn1(cont.expand.SapTotes);
     }

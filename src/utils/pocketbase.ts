@@ -377,7 +377,7 @@ export const updateEmployees = async (
 // * Associate Routing
 export const getAssociates = async (): Promise<RecordModel[]> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/WarehouseAssociates/records`,
+    `http://127.0.0.1:8090/api/collections/WarehouseAssociates/records?perPage=500`,
     { cache: "no-store" }
   );
   const associates = await res.json();

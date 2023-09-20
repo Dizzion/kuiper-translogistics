@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
                 aria-label="Alias"
                 aria-describedby="login"
                 value={alias}
-                onChange={(e) => setAlias(e.target.value)}
+                onChange={(e) => setAlias(e.target.value.toLowerCase())}
                 required
               ></Form.Control>
             </InputGroup>
