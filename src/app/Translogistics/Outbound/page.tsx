@@ -1,4 +1,4 @@
-import OutboundForm from "@/_components/OutboundForm";
+import OutboundForm from "@/components/OutboundForm";
 import { STGetAll, TNGetAll } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React from "react";

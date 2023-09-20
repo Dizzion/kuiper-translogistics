@@ -1,4 +1,4 @@
-import TransportationForm from "@/_components/TransportationForm";
+import TransportationForm from "@/components/TransportationForm";
 import {
   ContGetAll,
   TruckGetAll,

@@ -256,7 +256,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           <Modal.Body>
             <Row>
               <Col xs={4} md={4}>
-              <Image src={printLabel.qrcode} alt="QR Code" width="150" height="150"/>
+              <Image src={printLabel.qrcode} alt="QR Code" width="200" height="200"/>
               </Col>
               <Col xs={8} md={8}>
                 <h5>{printLabel.containerId}</h5>

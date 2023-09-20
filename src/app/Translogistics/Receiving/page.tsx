@@ -1,4 +1,4 @@
-import ReceivingForm from "@/_components/ReceivingForm";
+import ReceivingForm from "@/components/ReceivingForm";
 import { TNGetAll, getEmployees } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React from "react";

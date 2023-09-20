@@ -1,5 +1,5 @@
 import React from "react";
-import TranslogisticsNav from "../../_components/TranslogisticsNav";
+import TranslogisticsNav from "../../components/TranslogisticsNav";
 
 export default function TranslogisticsLayout({
   children,

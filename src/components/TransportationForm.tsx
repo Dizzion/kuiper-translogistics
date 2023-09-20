@@ -30,7 +30,8 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 }) => {
   const [truckId, setTruckId] = useState("");
   const [locationTag, setLocationTag] = useState("");
-  const [running, setRunning] = useState(false);
+  const [running1, setRunning1] = useState(false);
+  const [running2, setRunning2] = useState(false);
   const [loadOrUnload, setLoadOrUnload] = useState("");
   const [enteredContainer, setEnteredContainer] = useState("");
   const [showAlert, setShowAlert] = useState(false);
@@ -65,8 +66,27 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     },
   ]);
 
+  const calcElapsedTime = (elapsedTime: number): string => {
+    if (isNaN(elapsedTime) || elapsedTime < 0) {
+      throw new Error('Input must be a non-negative number of seconds.');
+    }
+  
+    const minutes = Math.floor(elapsedTime / 60);
+    const remainingSeconds = elapsedTime % 60;
+  
+    const formattedMinutes = minutes.toString();
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds.toString();
+  
+    return `${formattedMinutes} minutes ${formattedSeconds} seconds`;
+  }
+
   const startTimer = (id: string) => {
-    setRunning(true);
+    if (id === "loadprocessing" || id === "unload") {
+      setRunning1(true);
+    } else {
+      setRunning2(true);
+    }
+    
     setTimers((prevTimers) => {
       const newTimers = [...prevTimers];
       const timer = newTimers.find((timer) => timer.id === id);
@@ -81,7 +101,12 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
   };
 
   const stopTimer = (id: string) => {
-    setRunning(false);
+    if (id === "loadprocessing" || id === "unload") {
+      setRunning1(false);
+    } else {
+      setRunning2(false);
+    }
+
     setTimers((prevTimers) => {
       const newTimers = [...prevTimers];
       const timer = newTimers.find((timer) => timer.id === id);
@@ -285,10 +310,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Processing</Card.Header>
               <Card.Body key={timers[1].id}>
-                {running === true ? (
+                {running1 === true ? (
                   <p>Running......</p>
                 ) : (
-                  <p>Elapsed Time: {timers[1].elapsedTime} seconds</p>
+                  <p>Elapsed Time: {calcElapsedTime(timers[1].elapsedTime)}</p>
                 )}
                 <Button
                   variant="outline-light"
@@ -307,10 +332,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Loading</Card.Header>
               <Card.Body key={timers[0].id}>
-                {running === true ? (
+                {running2 === true ? (
                   <p>Running......</p>
                 ) : (
-                  <p>Elapsed Time: {timers[0].elapsedTime} seconds</p>
+                  <p>Elapsed Time: {calcElapsedTime(timers[0].elapsedTime)}</p>
                 )}
                 <Button
                   variant="outline-light"
@@ -343,10 +368,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Unloading</Card.Header>
               <Card.Body key={timers[2].id}>
-                {running === true ? (
+                {running1 === true ? (
                   <p>Running......</p>
                 ) : (
-                  <p>Elapsed Time: {timers[2].elapsedTime} seconds</p>
+                  <p>Elapsed Time: {calcElapsedTime(timers[2].elapsedTime)}</p>
                 )}
                 <Button
                   variant="outline-light"
@@ -365,10 +390,10 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             <Card bg="secondary" style={{ width: "18rem" }}>
               <Card.Header className="text-white">Processing</Card.Header>
               <Card.Body key={timers[3].id}>
-                {running === true ? (
+                {running2 === true ? (
                   <p>Running......</p>
                 ) : (
-                  <p>Elapsed Time: {timers[3].elapsedTime} seconds</p>
+                  <p>Elapsed Time: {calcElapsedTime(timers[3].elapsedTime)}</p>
                 )}
                 <Button
                   variant="outline-light"

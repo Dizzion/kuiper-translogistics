@@ -1,4 +1,4 @@
-import DeliveryForm from "@/_components/DeliveryForm";
+import DeliveryForm from "@/components/DeliveryForm";
 import { TNGetAll } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React from "react";

@@ -1,4 +1,4 @@
-import InboundForm from "@/_components/InboundForm";
+import InboundForm from "@/components/InboundForm";
 import { ContGetAll } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React from "react";

@@ -1,4 +1,4 @@
-import SapToteForm from "@/_components/SapToteForm";
+import SapToteForm from "@/components/SapToteForm";
 import { HUGetAll } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React from "react";

@@ -5,6 +5,7 @@ import { Form, Row, Col, Button, Modal } from "react-bootstrap";
 import HandlingUnitList from "./HandlingUnitList";
 import {
   HUCreate,
+  TNGetByTN,
   TNUpdate,
   addEmployees,
   getEmployeeByFullName,
@@ -165,25 +166,23 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
   ) {
     const newTimestamp = new Date();
 
-    const existingTrackingNumberIndex = trackingNumbers.findIndex(
-      (trackingNumber) =>
-        trackingNumber.TrackingNumber === enteredTrackingNumber
-    );
-    if (existingTrackingNumberIndex !== -1) {
+    const searchedTN = await TNGetByTN(enteredTrackingNumber);
+
+    if (searchedTN.items.length > 0) {
       if (
-        trackingNumbers[existingTrackingNumberIndex].Inbound133 &&
-        trackingNumbers[existingTrackingNumberIndex].Delivered
+        searchedTN.items[0].Inbound133 &&
+        searchedTN.items[0].Delivered
       ) {
         setShowAlert2(true);
         return;
       }
       const updatedTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
-        Outbound99: trackingNumbers[existingTrackingNumberIndex].Outbound99,
-        Inbound133: trackingNumbers[existingTrackingNumberIndex].Inbound133,
+        Outbound99: searchedTN.items[0].Outbound99,
+        Inbound133: searchedTN.items[0].Inbound133,
         Received133: newTimestamp,
-        Outbound133: trackingNumbers[existingTrackingNumberIndex].Outbound133,
-        Inbound99: trackingNumbers[existingTrackingNumberIndex].Inbound99,
+        Outbound133: searchedTN.items[0].Outbound133,
+        Inbound99: searchedTN.items[0].Inbound99,
         full_name: requestor.name,
         default_location: requestor.building,
         CoupaPOLines: requestor.coupaPoLines,
@@ -204,7 +203,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
         qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
       await TNUpdate(
-        trackingNumbers[existingTrackingNumberIndex].id,
+        searchedTN.items[0].id,
         updatedTrackingNumber
       );
       setModalPrint(true);
