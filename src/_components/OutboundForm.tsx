@@ -6,6 +6,7 @@ import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
 import QRCode from "qrcode";
+import Image from "next/image";
 
 interface OutboundFormProps {
   sapTotes: RecordModel[];
@@ -106,6 +107,9 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         );
 
         printWindow.document.write("<style>");
+        printWindow.document.write(
+          "@page { size: landscape; }"
+        );
         printWindow.document.write(
           "div { justify-content: center; text-align: center; }"
         );
@@ -252,7 +256,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           <Modal.Body>
             <Row>
               <Col xs={4} md={4}>
-                <img src={printLabel.qrcode} alt="QR Code" />
+              <Image src={printLabel.qrcode} alt="QR Code" width="150" height="150"/>
               </Col>
               <Col xs={8} md={8}>
                 <h5>{printLabel.containerId}</h5>

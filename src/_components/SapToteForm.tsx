@@ -81,6 +81,9 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
 
         printWindow.document.write("<style>");
         printWindow.document.write(
+          "@page { size: landscape; }"
+        );
+        printWindow.document.write(
           ".grid-container { display: grid; grid-template-columns: auto auto auto auto; white-space: nowrap; }"
         );
         

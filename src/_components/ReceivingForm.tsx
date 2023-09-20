@@ -549,7 +549,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             </Row>
             <h3>Tracking Number:</h3>
             <p>{printLabel.trackingNumber}</p>
-            <Image src={printLabel.qrCodeDataUrl} alt="QR Code" />
+            <Image src={printLabel.qrCodeDataUrl} alt="QR Code" width="150" height="150"/>
           </Modal.Body>
         </Modal.Dialog>
         <Button type="button" onClick={() => handlePrint()}>
