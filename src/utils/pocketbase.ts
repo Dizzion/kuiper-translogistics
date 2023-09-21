@@ -86,9 +86,9 @@ export const dynamic = "auto",
   preferredRegion = "auto";
 
 // * Tracking Number Routing
-export const TNGetAll = async (): Promise<Object> => {
+export const TNGetAll = async (): Promise<RecordModel> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records?perPage=500`,
     { cache: "no-store" }
   );
   const tns = await res.json();
