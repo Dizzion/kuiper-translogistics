@@ -41,6 +41,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       setStartTime(new Date());
     }
     const searchedHU = await HUGetByHU(Number(enteredHandlingUnit));
+    console.log(searchedHU);
     if (
       !searchedHU ||
       !/^(199|133|299|233)/.test(enteredHandlingUnit) ||
@@ -50,13 +51,13 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       return;
     }
     const HUtoUpdate = {
-      HU: searchedHU.HU,
-      ToQI: searchedHU.ToQI,
+      HU: searchedHU.items[0].HU,
+      ToQI: searchedHU.items[0].ToQI,
       StagedTime: new Date(),
       alias: localStorage.getItem("id") as string,
     };
     const updatedHU = await HUUpdate(
-      searchedHU.id,
+      searchedHU.items[0].id,
       HUtoUpdate
     );
     setHUids([...HUids, updatedHU.id]);
