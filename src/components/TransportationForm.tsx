@@ -263,11 +263,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           </Form.Select>
         </Form.Group>
         {loadOrUnload === "load" ? (
-          <Button type="submit" variant="outline-dark">
+          <Button type="submit" variant="outline-warning">
             Depart Load
           </Button>
         ) : (
-          <Button type="submit" variant="outline-dark">
+          <Button type="submit" variant="outline-warning">
             Finish Unload
           </Button>
         )}
