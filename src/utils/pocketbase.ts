@@ -3,7 +3,7 @@ import Pocketbase, { RecordModel } from "pocketbase";
 // const pb = new Pocketbase(env.APP_SERVER);
 const pb = new Pocketbase("http://127.0.0.1:8090");
 
-interface TrackingNumber {
+export interface TrackingNumber {
   TrackingNumber?: string;
   Outbound99?: Date;
   Inbound133?: Date;
@@ -149,6 +149,13 @@ export const TNUpdate = async (
   const updatedTrackingNumber = await res.json();
   return updatedTrackingNumber;
 };
+
+export const TNDelete = async (id: string) => {
+  await fetch(
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
+    { method: "DELETE" }
+  );
+}
 
 // * Container Routing
 export const ContGetAll = async (): Promise<Object> => {

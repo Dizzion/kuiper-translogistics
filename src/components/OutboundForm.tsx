@@ -1,5 +1,5 @@
 "use client";
-import { ContCreate, STGetBySTID, TNCreate, TNGetByTN, TNUpdate } from "@/utils/pocketbase";
+import { ContCreate, STGetBySTID, TNCreate, TNDelete, TNGetByTN, TNUpdate, TrackingNumber } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
@@ -140,6 +140,28 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     }
   };
 
+  const removeScannedTN = async (id: string) => {
+    const indexOfETNs = enteredTrackingNumbers.findIndex((obj) => obj.id === id);
+    const indexOfEIDTNs = tnIds.findIndex((obj) => obj === id);
+    const updatedTNs = enteredTrackingNumbers;
+    const updatedEIDTNs = tnIds;
+    let record = enteredTrackingNumbers[indexOfETNs] as unknown as TrackingNumber;
+    updatedTNs.splice(indexOfETNs, 1);
+    updatedEIDTNs.splice(indexOfEIDTNs, 1);
+    setEnteredTrackingNumbers(updatedTNs);
+    setTnIds(updatedEIDTNs);
+    if (locationTag === "99") {
+      await TNDelete(id);
+    } else if (locationTag == "133") {
+      record = {
+        ...record,
+        Outbound133: "" as unknown as Date,
+      }
+      await TNUpdate(id, record);
+    }
+    
+  }
+
   const submitContainer = async (e: React.FormEvent) => {
     e.preventDefault();
     const enteredContainer = {
@@ -221,7 +243,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
+      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} removeScannedTN={removeScannedTN}/>
       <Modal centered show={showAlert} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Tracking Number Not Valid</Modal.Title>
