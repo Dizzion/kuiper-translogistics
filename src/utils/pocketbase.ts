@@ -437,6 +437,15 @@ export const HUGetAll = async (): Promise<Object> => {
   return HUs;
 };
 
+export const HUGetByHU = async (hu: number): Promise<RecordModel> => {
+  const res = await fetch(
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records?filter=(HU='${hu}')`,
+    { cache: "no-store" }
+  );
+  const HU = res.json();
+  return HU;
+}
+
 export const HUGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/HandlingUnits/records/${id}`,
