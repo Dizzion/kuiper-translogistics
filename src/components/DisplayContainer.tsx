@@ -2,8 +2,8 @@ import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
-import TrackingNumberList from "./TrackingNumberList";
 import { ContGetOne } from "@/utils/pocketbase";
+import ContTNList from "./ContTNList";
 
 interface DisplayContainerProps {
   container: RecordModel;
@@ -52,7 +52,7 @@ const DisplayContainer: React.FC<DisplayContainerProps> = ({
             </Col>
             <Col>
               <ListGroup>
-                <TrackingNumberList trackingNumbersList={column2}/>
+                <ContTNList trackingNumbersList={column2}/>
               </ListGroup>
             </Col>
           </Row>
