@@ -142,12 +142,9 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
 
   const removeScannedTN = async (id: string) => {
     const indexOfETNs = enteredTrackingNumbers.findIndex((obj) => obj.id === id);
-    const indexOfEIDTNs = tnIds.findIndex((obj) => obj === id);
-    const updatedTNs = enteredTrackingNumbers;
-    const updatedEIDTNs = tnIds;
+    const updatedTNs = enteredTrackingNumbers.filter((obj) => obj.id !== id);
+    const updatedEIDTNs = tnIds.filter((obj) => obj !== id);
     let record = enteredTrackingNumbers[indexOfETNs] as unknown as TrackingNumber;
-    updatedTNs.splice(indexOfETNs, 1);
-    updatedEIDTNs.splice(indexOfEIDTNs, 1);
     setEnteredTrackingNumbers(updatedTNs);
     setTnIds(updatedEIDTNs);
     if (locationTag === "99") {
@@ -159,7 +156,6 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       }
       await TNUpdate(id, record);
     }
-    
   }
 
   const submitContainer = async (e: React.FormEvent) => {

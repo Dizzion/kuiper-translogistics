@@ -40,9 +40,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
   };
 
   const removeScannedTN = async (id: string) => {
-    const indexOfETNs = trackingNumberList.findIndex((obj) => obj.id === id);
-    const updatedTNs = trackingNumberList;
-    updatedTNs.splice(indexOfETNs, 1);
+    const updatedTNs = trackingNumberList.filter((obj) => obj.id !== id);
     setTrackingNumberList(updatedTNs);
     await TNDelete(id);
   }

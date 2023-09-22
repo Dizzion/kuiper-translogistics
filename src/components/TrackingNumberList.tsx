@@ -16,7 +16,8 @@ const TrackingNumberList: React.FC<TrackingNumberListProps> = ({
   useEffect(() => {
     setColumn1(trackingNumbersList.filter((_, index) => index % 2 === 0));
     setColumn2(trackingNumbersList.filter((_, index) => index % 2 !== 0));
-  }, [trackingNumbersList, column1, column2]);
+    console.log(trackingNumbersList)
+  }, [trackingNumbersList]);
   return (
     <div>
       <h4 className="text-white">

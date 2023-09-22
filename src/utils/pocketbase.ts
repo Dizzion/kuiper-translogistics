@@ -174,7 +174,7 @@ export const ContGetAll = async (): Promise<Object> => {
 
 export const ContGetByContId = async (contId: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/Containers/records?filter=(ContainerID='${contId}')`,
+    `http://127.0.0.1:8090/api/collections/Containers/records?filter=(ContainerID='${contId}')&expand=TrackingNumbers,SapTotes`,
     { cache: "no-store" }
   );
   const cont = await res.json();
@@ -250,7 +250,7 @@ export const STGetBySTID = async (stId: string): Promise<RecordModel> => {
 
 export const STGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}?expand=HU`,
     { cache: "no-store" }
   );
   const ST = await res.json();

@@ -1,5 +1,5 @@
 "use client";
-import { ContGetOne, ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
+import { ContGetByContId, ContGetOne, ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
@@ -25,16 +25,13 @@ const InboundForm: React.FC<InboundFormProps> = ({
 
   const containerIdChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    const contindex = containers.findIndex(
-      (cont) => cont.ContainerID === enteredContId
-    );
-    if (contindex !== -1) {
+    const cont = await ContGetByContId(enteredContId);
+    if (cont.items[0]) {
       setDisabledEntry(false);
-      const cont = await ContGetOne(containers[contindex].id);
-      setWorkingCont(cont);
-      if (cont.expand) {
-        setEnteredSapTotes(cont.expand.SapTotes || []);
-        setEnteredTrackingNumbers(cont.expand.TrackingNumbers || []);
+      setWorkingCont(cont.items[0]);
+      if (cont.items[0].expand) {
+        setEnteredSapTotes(cont.items[0].expand.SapTotes || []);
+        setEnteredTrackingNumbers(cont.items[0].expand.TrackingNumbers || []);
       }
       return;
     }
