@@ -1,5 +1,5 @@
 "use client";
-import { HUGetByHU, HUUpdate, STCreate } from "@/utils/pocketbase";
+import { HUCreate, HUGetByHU, HUUpdate, STCreate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import HandlingUnitList from "./HandlingUnitList";
@@ -47,6 +47,22 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       !/^(199|133|299|233)/.test(enteredHandlingUnit) ||
       enteredHandlingUnits.includes(Number(enteredHandlingUnit))
     ) {
+      if (
+        !searchedHU.items[0] &&
+        /^(199|133|299|233)/.test(enteredHandlingUnit) &&
+        !enteredHandlingUnits.includes(Number(enteredHandlingUnit)) &&
+        !isNaN(Number(enteredHandlingUnit))
+      ) {
+        const createHU = {
+          HU: Number(enteredHandlingUnit),
+          alias: localStorage.getItem("id") as string,
+        };
+        const createdHU = await HUCreate(createHU);
+        setHUids([...HUids, createdHU.id]);
+        setEnteredHandlingUnits([...enteredHandlingUnits, createdHU.HU]);
+        setEnteredHandlingUnit("");
+        return;
+      }
       setShowAlert(true);
       return;
     }
