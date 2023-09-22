@@ -1,5 +1,13 @@
 "use client";
-import { ContCreate, STGetBySTID, TNCreate, TNDelete, TNGetByTN, TNUpdate, TrackingNumber } from "@/utils/pocketbase";
+import {
+  ContCreate,
+  STGetBySTID,
+  TNCreate,
+  TNDelete,
+  TNGetByTN,
+  TNUpdate,
+  TrackingNumber,
+} from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
@@ -68,10 +76,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         Outbound133: new Date(),
         aliasOut133: localStorage.getItem("id") as string,
       };
-      const updatedTn = await TNUpdate(
-        tnIndex.items[0].id,
-        updateRecord
-      );
+      const updatedTn = await TNUpdate(tnIndex.items[0].id, updateRecord);
       setEnteredTrackingNumbers([...enteredTrackingNumbers, updatedTn]);
       setTnIds([...tnIds, updatedTn.id]);
     } else if (/^(SAP_)/.test(enteredTracking)) {
@@ -103,9 +108,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         );
 
         printWindow.document.write("<style>");
-        printWindow.document.write(
-          "@page { size: landscape; }"
-        );
+        printWindow.document.write("@page { size: landscape; }");
         printWindow.document.write(
           "div { justify-content: center; text-align: center; }"
         );
@@ -141,10 +144,14 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   };
 
   const removeScannedTN = async (id: string) => {
-    const indexOfETNs = enteredTrackingNumbers.findIndex((obj) => obj.id === id);
+    const indexOfETNs = enteredTrackingNumbers.findIndex(
+      (obj) => obj.id === id
+    );
     const updatedTNs = enteredTrackingNumbers.filter((obj) => obj.id !== id);
     const updatedEIDTNs = tnIds.filter((obj) => obj !== id);
-    let record = enteredTrackingNumbers[indexOfETNs] as unknown as TrackingNumber;
+    let record = enteredTrackingNumbers[
+      indexOfETNs
+    ] as unknown as TrackingNumber;
     setEnteredTrackingNumbers(updatedTNs);
     setTnIds(updatedEIDTNs);
     if (locationTag === "99") {
@@ -154,10 +161,10 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         ...record,
         Outbound133: "" as unknown as Date,
         aliasOut133: "",
-      }
+      };
       await TNUpdate(id, record);
     }
-  }
+  };
 
   const submitContainer = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,7 +227,11 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
             value={containerId}
           />
         </Form.Group>
-        <Button style={{marginTop: "5px", marginBottom: "15px"}} variant="outline-light" type="submit">
+        <Button
+          style={{ marginTop: "5px", marginBottom: "15px" }}
+          variant="outline-light"
+          type="submit"
+        >
           Submit Container
         </Button>
       </Form>
@@ -239,7 +250,10 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} removeScannedTN={removeScannedTN}/>
+      <TrackingNumberList
+        trackingNumbersList={enteredTrackingNumbers}
+        removeScannedTN={removeScannedTN}
+      />
       <Modal centered show={showAlert} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Tracking Number Not Valid</Modal.Title>
@@ -259,18 +273,21 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         className="printModal2"
         style={{
           display: "block",
-          width: "6in",
-          height: "4in",
           padding: "10px",
-          border: "1px solid #000",
         }}
+        centered
       >
         <Modal.Dialog ref={modalRef}>
           <Modal.Header>Container ID:</Modal.Header>
           <Modal.Body>
             <Row>
               <Col xs={4} md={4}>
-              <Image src={printLabel.qrcode} alt="QR Code" width="200" height="200"/>
+                <Image
+                  src={printLabel.qrcode}
+                  alt="QR Code"
+                  width="200"
+                  height="200"
+                />
               </Col>
               <Col xs={8} md={8}>
                 <h5>{printLabel.containerId}</h5>
@@ -278,12 +295,14 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
             </Row>
           </Modal.Body>
         </Modal.Dialog>
-        <Button type="button" onClick={() => handlePrint()}>
-          Print Label
-        </Button>
-        <Button type="button" onClick={() => setPrintModal(false)}>
-          Close Label
-        </Button>
+        <Modal.Footer>
+          <Button type="button" onClick={() => handlePrint()}>
+            Print Label
+          </Button>
+          <Button type="button" onClick={() => setPrintModal(false)}>
+            Close Label
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

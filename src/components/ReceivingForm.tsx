@@ -142,7 +142,10 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     if (enteredHUs.includes(Number(enteredHU))) {
       setEnteredHU("");
       return;
-    } else if (!/^(199|133|299|233)/.test(enteredHU) || isNaN(Number(enteredHU))) {
+    } else if (
+      !/^(199|133|299|233)/.test(enteredHU) ||
+      isNaN(Number(enteredHU))
+    ) {
       setShowAlert(true);
       return;
     }
@@ -169,10 +172,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     const searchedTN = await TNGetByTN(enteredTrackingNumber);
 
     if (searchedTN.items.length > 0) {
-      if (
-        searchedTN.items[0].Inbound133 &&
-        searchedTN.items[0].Delivered
-      ) {
+      if (searchedTN.items[0].Inbound133 && searchedTN.items[0].Delivered) {
         setShowAlert2(true);
         return;
       }
@@ -202,10 +202,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
         freight: requestor.freight,
         qrCodeDataUrl: await QRCode.toDataURL(enteredTrackingNumber),
       });
-      await TNUpdate(
-        searchedTN.items[0].id,
-        updatedTrackingNumber
-      );
+      await TNUpdate(searchedTN.items[0].id, updatedTrackingNumber);
       setModalPrint(true);
     } else {
       setShowAlert2(true);
@@ -461,7 +458,11 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             </Col>
           </Row>
         </Form.Group>
-        <Button style={{marginTop: "5px", marginBottom: "15px"}} type="submit" variant="outline-light">
+        <Button
+          style={{ marginTop: "5px", marginBottom: "15px" }}
+          type="submit"
+          variant="outline-light"
+        >
           Receive Package
         </Button>
       </Form>
@@ -518,15 +519,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal
-        className="printable-content"
-        show={modalPrint}
-        style={{
-          width: "4in",
-          height: "6in",
-          border: "1px solid #000",
-        }}
-      >
+      <Modal className="printable-content" show={modalPrint} centered>
         <Modal.Dialog ref={modalRef}>
           <Modal.Header>Received Date: {printLabel.timestamp}</Modal.Header>
           <Modal.Body className="justify-content-center">
@@ -547,15 +540,22 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             </Row>
             <h3>Tracking Number:</h3>
             <p>{printLabel.trackingNumber}</p>
-            <Image src={printLabel.qrCodeDataUrl} alt="QR Code" width="150" height="150"/>
+            <Image
+              src={printLabel.qrCodeDataUrl}
+              alt="QR Code"
+              width="150"
+              height="150"
+            />
           </Modal.Body>
         </Modal.Dialog>
-        <Button type="button" onClick={() => handlePrint()}>
-          Print Label
-        </Button>
-        <Button type="button" onClick={() => setModalPrint(false)}>
-          Close Label
-        </Button>
+        <Modal.Footer>
+          <Button type="button" onClick={() => handlePrint()}>
+            Print Label
+          </Button>
+          <Button type="button" onClick={() => setModalPrint(false)}>
+            Close Label
+          </Button>
+        </Modal.Footer>
       </Modal>
       <Modal centered show={addEmployee} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -597,11 +597,9 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             </Row>
             <Row>
               {generateFullName === true ? (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={setFullName}
-                >Click Here to set Full Name</Button>
+                <Button type="button" variant="secondary" onClick={setFullName}>
+                  Click Here to set Full Name
+                </Button>
               ) : (
                 <Form.Control
                   type="Full_Name"

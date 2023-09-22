@@ -56,10 +56,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       StagedTime: new Date(),
       alias: localStorage.getItem("id") as string,
     };
-    const updatedHU = await HUUpdate(
-      searchedHU.items[0].id,
-      HUtoUpdate
-    );
+    const updatedHU = await HUUpdate(searchedHU.items[0].id, HUtoUpdate);
     setHUids([...HUids, updatedHU.id]);
     setEnteredHandlingUnits([...enteredHandlingUnits, updatedHU.HU]);
     setEnteredHandlingUnit("");
@@ -79,13 +76,11 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         );
 
         printWindow.document.write("<style>");
-        printWindow.document.write(
-          "@page { size: landscape; }"
-        );
+        printWindow.document.write("@page { size: landscape; }");
         printWindow.document.write(
           ".grid-container { display: grid; grid-template-columns: auto auto auto; white-space: nowrap; }"
         );
-        
+
         printWindow.document.write(
           ".grid-item { font-size: 15px; text-align: center; padding: 2px; }"
         );
@@ -106,7 +101,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         );
 
         printWindow.document.write(
-          '<div style="padding: 10px; border: 1px solid #000;">'
+          '<div style="width: 6in; height: 4in; padding: 10px; border: 1px solid #000;">'
         );
 
         printWindow.document.write(modalCurrent.innerHTML);
@@ -164,7 +159,11 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       <Form onSubmit={submitSapTote}>
         <Form.Label className="text-white">Tote ID</Form.Label>
         <Form.Control disabled size="lg" value={uid} />
-        <Button style={{marginTop: "5px", marginBottom: "15px"}} type="submit" variant="outline-light">
+        <Button
+          style={{ marginTop: "5px", marginBottom: "15px" }}
+          type="submit"
+          variant="outline-light"
+        >
           Submit SAP Tote
         </Button>
       </Form>
@@ -184,11 +183,9 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         className="printModal3"
         style={{
           display: "block",
-          width: "6in",
-          height: "4in",
           padding: "10px",
-          border: "1px solid #000",
         }}
+        centered
       >
         <Modal.Dialog ref={modalRef}>
           <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
@@ -196,7 +193,12 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           <Modal.Body>
             <Row>
               <Col sm={2}>
-                <Image width={90} height={90} src={printLabel.qrcode} alt="QR Code" />
+                <Image
+                  width={90}
+                  height={90}
+                  src={printLabel.qrcode}
+                  alt="QR Code"
+                />
               </Col>
               <Col sm={7}>
                 <div className="grid-container">
@@ -210,12 +212,14 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
             </Row>
           </Modal.Body>
         </Modal.Dialog>
-        <Button type="button" onClick={() => handlePrint()}>
-          Print Label
-        </Button>
-        <Button type="button" onClick={() => setPrintModal(false)}>
-          Close Label
-        </Button>
+        <Modal.Footer>
+          <Button type="button" onClick={() => handlePrint()}>
+            Print Label
+          </Button>
+          <Button type="button" onClick={() => setPrintModal(false)}>
+            Close Label
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );
