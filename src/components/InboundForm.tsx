@@ -80,8 +80,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
     }
     if (isInEST !== -1) {
       const updatedEnteredSapTotes = [...enteredSapTotes];
-      const recordid = enteredSapTotes[isInEST].id;
-      await STUpdate(recordid, timestamp);
+      await STUpdate(enteredSapTotes[isInEST].id, timestamp);
       setEnteredTracking("");
       updatedEnteredSapTotes.splice(isInEST, 1);
       setEnteredSapTotes(updatedEnteredSapTotes);

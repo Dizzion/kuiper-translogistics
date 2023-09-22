@@ -220,7 +220,7 @@ export const ContUpdate = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        UnloadFinished: timestamp,
+        UnloadFinish: timestamp,
       }),
     }
   );
