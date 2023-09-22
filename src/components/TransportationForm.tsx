@@ -1,5 +1,10 @@
 "use client";
-import { ContGetByContId, CreateTruck, TruckGetByContArr, UpdateTruck } from "@/utils/pocketbase";
+import {
+  ContGetByContId,
+  CreateTruck,
+  TruckGetByContArr,
+  UpdateTruck,
+} from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import {
@@ -68,17 +73,20 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 
   const calcElapsedTime = (elapsedTime: number): string => {
     if (isNaN(elapsedTime) || elapsedTime < 0) {
-      throw new Error('Input must be a non-negative number of seconds.');
+      throw new Error("Input must be a non-negative number of seconds.");
     }
-  
+
     const minutes = Math.floor(elapsedTime / 60);
     const remainingSeconds = elapsedTime % 60;
-  
+
     const formattedMinutes = minutes.toString();
-    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds.toString();
-  
+    const formattedSeconds =
+      remainingSeconds < 10
+        ? `0${remainingSeconds}`
+        : remainingSeconds.toString();
+
     return `${formattedMinutes} minutes ${formattedSeconds} seconds`;
-  }
+  };
 
   const startTimer = (id: string) => {
     if (id === "loadprocessing" || id === "unload") {
@@ -86,7 +94,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     } else {
       setRunning2(true);
     }
-    
+
     setTimers((prevTimers) => {
       const newTimers = [...prevTimers];
       const timer = newTimers.find((timer) => timer.id === id);
@@ -263,11 +271,19 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           </Form.Select>
         </Form.Group>
         {loadOrUnload === "load" ? (
-          <Button style={{ marginTop: "5px", marginBottom: "5px"}} type="submit" variant="outline-warning">
+          <Button
+            style={{ marginTop: "5px", marginBottom: "5px" }}
+            type="submit"
+            variant="outline-warning"
+          >
             Depart Load
           </Button>
         ) : (
-          <Button style={{ marginTop: "5px", marginBottom: "5px"}} type="submit" variant="outline-warning">
+          <Button
+            style={{ marginTop: "5px", marginBottom: "5px" }}
+            type="submit"
+            variant="outline-warning"
+          >
             Finish Unload
           </Button>
         )}
@@ -348,7 +364,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             </Card>
           </CardGroup>
           <Form onSubmit={updateEnteredContainer}>
-            <Form.Label style={{color: "white"}}>Enter Containers</Form.Label>
+            <Form.Label style={{ color: "white" }}>Enter Containers</Form.Label>
             <Form.Control
               placeholder="Container ID"
               size="lg"
@@ -406,7 +422,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             </Card>
           </CardGroup>
           <Form onSubmit={updateEnteredContainer}>
-            <Form.Label style={{color: "white"}}>Enter Containers</Form.Label>
+            <Form.Label style={{ color: "white" }}>Enter Containers</Form.Label>
             <Form.Control
               placeholder="Container ID"
               size="lg"

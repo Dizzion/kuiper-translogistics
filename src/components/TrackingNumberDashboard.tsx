@@ -13,9 +13,8 @@ interface TrackingNumberDashboardProps {
 const TrackingNumberDashboard: React.FC<TrackingNumberDashboardProps> = ({
   trackingNumberData,
   variant,
-  elapsedTime
+  elapsedTime,
 }) => {
-
   const updatePulse = (variantClass: string): string => {
     let className: string = "";
     if (variantClass === "info") {

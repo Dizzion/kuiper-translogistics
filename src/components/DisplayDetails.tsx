@@ -85,12 +85,16 @@ const DisplayDetails: React.FC<DisplayDetailsProps> = ({ fullTNData }) => {
           <p style={{ fontSize: "14px" }}>Requestor: {fullTNData.full_name}</p>
         </Col>
         <Col>
-          <p style={{ fontSize: "14px" }}>Requestor Location: {fullTNData.default_location}</p>
+          <p style={{ fontSize: "14px" }}>
+            Requestor Location: {fullTNData.default_location}
+          </p>
         </Col>
       </Row>
       <Row>
         <Col>
-          <p style={{ fontSize: "14px" }}>Coupa Po and Lines: {fullTNData.CoupaPOLines}</p>
+          <p style={{ fontSize: "14px" }}>
+            Coupa Po and Lines: {fullTNData.CoupaPOLines}
+          </p>
         </Col>
         <Col>
           <p style={{ fontSize: "14px" }}>SAP: {fullTNData.SAP}</p>

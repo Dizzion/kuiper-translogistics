@@ -6,9 +6,7 @@ interface ContTNListProps {
   trackingNumbersList: RecordModel[];
 }
 
-const ContTNList: React.FC<ContTNListProps> = ({
-  trackingNumbersList
-}) => {
+const ContTNList: React.FC<ContTNListProps> = ({ trackingNumbersList }) => {
   const column1 = trackingNumbersList.filter((_, index) => index % 2 === 0);
   const column2 = trackingNumbersList.filter((_, index) => index % 2 !== 0);
   return (
@@ -21,11 +19,8 @@ const ContTNList: React.FC<ContTNListProps> = ({
           <Col>
             <ListGroup>
               {column1.map((trackingNumber) => (
-                <ListGroup.Item
-                  variant="dark"
-                  key={trackingNumber.id}
-                >
-                    {trackingNumber.TrackingNumber}
+                <ListGroup.Item variant="dark" key={trackingNumber.id}>
+                  {trackingNumber.TrackingNumber}
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -33,11 +28,8 @@ const ContTNList: React.FC<ContTNListProps> = ({
           <Col>
             <ListGroup>
               {column2.map((trackingNumber) => (
-                <ListGroup.Item
-                  variant="dark"
-                  key={trackingNumber.id}
-                >
-                    {trackingNumber.TrackingNumber}
+                <ListGroup.Item variant="dark" key={trackingNumber.id}>
+                  {trackingNumber.TrackingNumber}
                 </ListGroup.Item>
               ))}
             </ListGroup>

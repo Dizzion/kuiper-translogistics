@@ -1,8 +1,6 @@
-import DetailedSearch from '@/components/DetailedSearch'
-import React from 'react'
+import DetailedSearch from "@/components/DetailedSearch";
+import React from "react";
 
 export default async function TranslogisticsTeam() {
-  return (
-    <DetailedSearch/>
-  )
+  return <DetailedSearch />;
 }

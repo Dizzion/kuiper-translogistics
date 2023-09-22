@@ -11,12 +11,16 @@ const TrackingNumberList: React.FC<TrackingNumberListProps> = ({
   trackingNumbersList,
   removeScannedTN,
 }) => {
-  const [column1, setColumn1] = useState(trackingNumbersList.filter((_, index) => index % 2 === 0));
-  const [column2, setColumn2] = useState(trackingNumbersList.filter((_, index) => index % 2 !== 0));
+  const [column1, setColumn1] = useState(
+    trackingNumbersList.filter((_, index) => index % 2 === 0)
+  );
+  const [column2, setColumn2] = useState(
+    trackingNumbersList.filter((_, index) => index % 2 !== 0)
+  );
   useEffect(() => {
     setColumn1(trackingNumbersList.filter((_, index) => index % 2 === 0));
     setColumn2(trackingNumbersList.filter((_, index) => index % 2 !== 0));
-    console.log(trackingNumbersList)
+    console.log(trackingNumbersList);
   }, [trackingNumbersList]);
   return (
     <div>

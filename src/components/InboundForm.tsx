@@ -1,5 +1,10 @@
 "use client";
-import { ContGetByContId, ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
+import {
+  ContGetByContId,
+  ContUpdate,
+  STUpdate,
+  TNUpdate,
+} from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
@@ -10,9 +15,7 @@ interface InboundFormProps {
   containers: RecordModel[];
 }
 
-const InboundForm: React.FC<InboundFormProps> = ({
-  containers,
-}) => {
+const InboundForm: React.FC<InboundFormProps> = ({ containers }) => {
   const [enteredContId, setEnteredContId] = useState("");
   const [workingCont, setWorkingCont] = useState<RecordModel>();
   const [disabledEntry, setDisabledEntry] = useState(true);
@@ -82,7 +85,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
       updatedEnteredSapTotes.splice(isInEST, 1);
       setEnteredSapTotes(updatedEnteredSapTotes);
     }
-    setEnteredTracking('');
+    setEnteredTracking("");
   };
 
   const submitContainer = async () => {
@@ -126,7 +129,12 @@ const InboundForm: React.FC<InboundFormProps> = ({
           />
         </Form.Group>
       </Form>
-      <Button style={{marginTop: "5px", marginBottom: "15px"}} variant="outline-light" type="button" onClick={submitContainer}>
+      <Button
+        style={{ marginTop: "5px", marginBottom: "15px" }}
+        variant="outline-light"
+        type="button"
+        onClick={submitContainer}
+      >
         Submit Container
       </Button>
       <Form onSubmit={changeTrackingNumberData} className="text-center">

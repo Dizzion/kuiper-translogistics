@@ -15,13 +15,13 @@ const DisplaySapTote: React.FC<SapToteItemProps> = ({ SapTote }) => {
   const toggleExpandCollapse = async () => {
     setIsExpanded(!isExpanded);
     if (!isExpanded) {
-        const huArray = SapTote.HU;
-        for await (const i of huArray) {
-            const hu = await HUGetOne(i);
-            setHus([...hus, hu.HU]);
-        }
+      const huArray = SapTote.HU;
+      for await (const i of huArray) {
+        const hu = await HUGetOne(i);
+        setHus([...hus, hu.HU]);
+      }
     } else {
-        setHus([]);
+      setHus([]);
     }
   };
 

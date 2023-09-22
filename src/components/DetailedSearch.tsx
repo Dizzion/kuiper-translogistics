@@ -25,8 +25,8 @@ const DetailedSearch = () => {
       Delivered: new Date(searchedTN.items[0].Delivered),
       Received133: new Date(searchedTN.items[0].Received133),
       Outbound133: new Date(searchedTN.items[0].Outbound133),
-      Inbound99: new Date(searchedTN.items[0].Inbound99)
-    }
+      Inbound99: new Date(searchedTN.items[0].Inbound99),
+    };
     if (searchedTN.items[0].expand) {
       for (const HU of fixedsearchedTN.expand.HU) {
         HU.ToQI = new Date(HU.ToQI);
@@ -54,7 +54,11 @@ const DetailedSearch = () => {
           placeholder="Enter Tracking Number"
           onChange={(e) => setEnteredTN(e.target.value)}
         />
-        <Button style={{ marginTop: '.5rem'}} type="submit" variant="outline-light">
+        <Button
+          style={{ marginTop: ".5rem" }}
+          type="submit"
+          variant="outline-light"
+        >
           Search
         </Button>
       </Form>
@@ -72,11 +76,11 @@ const DetailedSearch = () => {
         </Modal.Footer>
       </Modal>
       <Row className="justify-content-md-center">
-      {fullTNData !== undefined ? (
-        <DisplayDetails fullTNData={fullTNData} />
-      ) : (
-        <></>
-      )}
+        {fullTNData !== undefined ? (
+          <DisplayDetails fullTNData={fullTNData} />
+        ) : (
+          <></>
+        )}
       </Row>
     </Container>
   );
