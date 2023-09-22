@@ -2,7 +2,7 @@
 import { TNGetByTN } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Container, Form, Modal, Row } from "react-bootstrap";
 import DisplayDetails from "./DisplayDetails";
 
 const DetailedSearch = () => {
@@ -18,7 +18,23 @@ const DetailedSearch = () => {
       setEnteredTN("");
       return;
     }
-    setFullTNData(searchedTN.items[0]);
+    const fixedsearchedTN = {
+      ...searchedTN.items[0],
+      Outbound99: new Date(searchedTN.items[0].Outbound99),
+      Inbound133: new Date(searchedTN.items[0].Inbound133),
+      Delivered: new Date(searchedTN.items[0].Delivered),
+      Received133: new Date(searchedTN.items[0].Received133),
+      Outbound133: new Date(searchedTN.items[0].Outbound133),
+      Inbound99: new Date(searchedTN.items[0].Inbound99)
+    }
+    if (searchedTN.items[0].expand) {
+      for (const HU of fixedsearchedTN.expand.HU) {
+        HU.ToQI = new Date(HU.ToQI);
+        HU.StagedTime = new Date(HU.StagedTime);
+      }
+    }
+    console.log(fixedsearchedTN);
+    setFullTNData(fixedsearchedTN);
     setEnteredTN("");
   };
 
@@ -27,7 +43,7 @@ const DetailedSearch = () => {
   }
 
   return (
-    <>
+    <Container>
       <Form onSubmit={searchTNDetails}>
         <Form.Label className="text-white">
           Search Detailed Tracking Number Info
@@ -35,9 +51,10 @@ const DetailedSearch = () => {
         <Form.Control
           type="trackingNumber"
           value={enteredTN}
+          placeholder="Enter Tracking Number"
           onChange={(e) => setEnteredTN(e.target.value)}
         />
-        <Button type="submit" variant="outline-light">
+        <Button style={{ marginTop: '.5rem'}} type="submit" variant="outline-light">
           Search
         </Button>
       </Form>
@@ -54,12 +71,14 @@ const DetailedSearch = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Row className="justify-content-md-center">
       {fullTNData !== undefined ? (
         <DisplayDetails fullTNData={fullTNData} />
       ) : (
         <></>
       )}
-    </>
+      </Row>
+    </Container>
   );
 };
 

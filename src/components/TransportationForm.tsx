@@ -348,7 +348,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             </Card>
           </CardGroup>
           <Form onSubmit={updateEnteredContainer}>
-            <Form.Label>Enter Containers</Form.Label>
+            <Form.Label style={{color: "white"}}>Enter Containers</Form.Label>
             <Form.Control
               placeholder="Container ID"
               size="lg"

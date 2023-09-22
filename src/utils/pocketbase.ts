@@ -104,7 +104,7 @@ export const TNGetByTN = async (
   trackingNumber: string
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records?filter=(TrackingNumber='${trackingNumber}')`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records?filter=(TrackingNumber='${trackingNumber}')&expand=HU`,
     { cache: "no-store" }
   );
   const tn = await res.json();

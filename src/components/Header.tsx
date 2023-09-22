@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
         </Navbar.Brand></Col>
         {isUserIdInArray ? (
           <><Col>
-            <Navbar.Brand href="/Translogistics" style={{justifyContent: 'center', color: "#5f90f1" }}>Warehouse Forms</Navbar.Brand>
+            <Navbar.Brand href="/Translogistics" style={{justifyContent: 'center', color: "#5f90f1" }}>Translogistics Team Dashboard</Navbar.Brand>
             </Col>
             <Navbar.Text style={{justifyContent: 'end', marginRight: '.5rem'}} className="text-white">
               Alias: {alias}
