@@ -142,7 +142,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     if (enteredHUs.includes(Number(enteredHU))) {
       setEnteredHU("");
       return;
-    } else if (!/^(199|133|299|233)/.test(enteredHU)) {
+    } else if (!/^(199|133|299|233)/.test(enteredHU) || Number(enteredHU) === 0) {
       setShowAlert(true);
       return;
     }
@@ -461,12 +461,11 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             </Col>
           </Row>
         </Form.Group>
-        <Button type="submit" variant="outline-light">
+        <Button style={{marginTop: "5px", marginBottom: "15px"}} type="submit" variant="outline-light">
           Receive Package
         </Button>
       </Form>
       <Form onSubmit={updateHandlingUnitList}>
-        <Form.Label className="text-white">Handling Unit</Form.Label>
         <Form.Control
           type="Handling Unit"
           required

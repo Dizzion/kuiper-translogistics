@@ -106,7 +106,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
   return (
     <>
       <Form onSubmit={containerIdChange}>
-        <Form.Group className="text-center">
+        <Form.Group>
           <Form.Label className="text-white">Location</Form.Label>
           <Form.Select
             size="lg"
@@ -130,11 +130,10 @@ const InboundForm: React.FC<InboundFormProps> = ({
           />
         </Form.Group>
       </Form>
-      <Button variant="outline-light" type="button" onClick={submitContainer}>
+      <Button style={{marginTop: "5px", marginBottom: "15px"}} variant="outline-light" type="button" onClick={submitContainer}>
         Submit Container
       </Button>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
-        <Form.Label className="text-white">Tracking Number</Form.Label>
         <Form.Control
           type="trackingNumber"
           placeholder="Enter Tracking Number"

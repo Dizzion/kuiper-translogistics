@@ -201,7 +201,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           }
         }}
       >
-        <Form.Group className="text-center">
+        <Form.Group>
           <Form.Label className="text-white">Location</Form.Label>
           <Form.Select
             size="lg"
@@ -223,12 +223,11 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
             value={containerId}
           />
         </Form.Group>
-        <Button variant="outline-light" type="submit">
+        <Button style={{marginTop: "5px", marginBottom: "15px"}} variant="outline-light" type="submit">
           Submit Container
         </Button>
       </Form>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
-        <Form.Label className="text-white">Tracking Number</Form.Label>
         <Form.Control
           type="trackingNumber"
           placeholder="Enter Tracking Number"

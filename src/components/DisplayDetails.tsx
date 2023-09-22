@@ -1,6 +1,6 @@
 import { RecordModel } from "pocketbase";
 import React, { useEffect } from "react";
-import { Container, Row, Col, ListGroup, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Card } from "react-bootstrap";
 
 interface DisplayDetailsProps {
   fullTNData: RecordModel;

@@ -263,11 +263,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
           </Form.Select>
         </Form.Group>
         {loadOrUnload === "load" ? (
-          <Button type="submit" variant="outline-warning">
+          <Button style={{ marginTop: "5px", marginBottom: "5px"}} type="submit" variant="outline-warning">
             Depart Load
           </Button>
         ) : (
-          <Button type="submit" variant="outline-warning">
+          <Button style={{ marginTop: "5px", marginBottom: "5px"}} type="submit" variant="outline-warning">
             Finish Unload
           </Button>
         )}
@@ -406,7 +406,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
             </Card>
           </CardGroup>
           <Form onSubmit={updateEnteredContainer}>
-            <Form.Label>Enter Containers</Form.Label>
+            <Form.Label style={{color: "white"}}>Enter Containers</Form.Label>
             <Form.Control
               placeholder="Container ID"
               size="lg"

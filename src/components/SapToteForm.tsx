@@ -164,15 +164,15 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       <Form onSubmit={submitSapTote}>
         <Form.Label className="text-white">Tote ID</Form.Label>
         <Form.Control disabled size="lg" value={uid} />
-        <Button type="submit" variant="outline-light">
+        <Button style={{marginTop: "5px", marginBottom: "15px"}} type="submit" variant="outline-light">
           Submit SAP Tote
         </Button>
       </Form>
       <Form onSubmit={updateHandlingUnits}>
-        <Form.Label className="text-white">Handling Unit</Form.Label>
         <Form.Control
           type="Handling Unit"
           required
+          placeholder="199XXXXXXX, 299XXXXXXX, 133XXXXXXX, 233XXXXXXX"
           value={enteredHandlingUnit}
           onChange={(e) => setEnteredHandlingUnit(e.target.value)}
         />

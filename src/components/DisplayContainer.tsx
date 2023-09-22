@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
 import { ContGetOne } from "@/utils/pocketbase";
-import ContTNList from "./ContTNList";
+import ContTNList2 from "./InboundTNList";
 
 interface DisplayContainerProps {
   container: RecordModel;
@@ -34,8 +34,9 @@ const DisplayContainer: React.FC<DisplayContainerProps> = ({
 
   return (
     <ListGroup.Item
-      variant={isExpanded ? "light" : "dark"}
+      variant={isExpanded ? "secondary" : "dark"}
       onClick={toggleExpandCollapse}
+      className="text-black"
     >
       Container ID: {container.ContainerID}
       {isExpanded && (
@@ -52,7 +53,7 @@ const DisplayContainer: React.FC<DisplayContainerProps> = ({
             </Col>
             <Col>
               <ListGroup>
-                <ContTNList trackingNumbersList={column2}/>
+                <ContTNList2 trackingNumbersList={column2}/>
               </ListGroup>
             </Col>
           </Row>

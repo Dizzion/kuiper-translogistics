@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
-import { TNCreate, TNDelete, TrackingNumber } from "@/utils/pocketbase";
+import { TNCreate, TNDelete } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 
 interface DeliveryFormProps {
@@ -49,7 +49,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
 
   return (
     <>
-      <Form onSubmit={updateTrackingNumber} className="text-center">
+      <Form onSubmit={updateTrackingNumber}>
         <Form.Label className="text-white">Tracking Number</Form.Label>
         <Form.Control
           type="trackingNumber"
