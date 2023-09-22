@@ -83,11 +83,11 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           "@page { size: landscape; }"
         );
         printWindow.document.write(
-          ".grid-container { display: grid; grid-template-columns: auto auto auto auto; white-space: nowrap; }"
+          ".grid-container { display: grid; grid-template-columns: auto auto auto; white-space: nowrap; }"
         );
         
         printWindow.document.write(
-          ".grid-item { font-size: 8px; text-align: center; padding: 2px; }"
+          ".grid-item { font-size: 15px; text-align: center; padding: 2px; }"
         );
         printWindow.document.write("</style>");
 
@@ -196,14 +196,13 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           <Modal.Body>
             <Row>
               <Col sm={2}>
-                <Image width={80} height={80} src={printLabel.qrcode} alt="QR Code" />
+                <Image width={90} height={90} src={printLabel.qrcode} alt="QR Code" />
               </Col>
-              <Col sm={8}>
+              <Col sm={7}>
                 <div className="grid-container">
                   {printLabel.hus.map((hu) => (
                     <a className="grid-item" key={hu}>
-                      {hu} 
-                      {/* <QRCodeCanvas size={10} value={hu.toString()} /> */}
+                      {hu}
                     </a>
                   ))}
                 </div>
