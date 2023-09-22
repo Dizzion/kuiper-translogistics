@@ -51,7 +51,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       const createRecord = {
         TrackingNumber: enteredTracking,
         Outbound99: new Date(),
-        alias: localStorage.getItem("id") as string,
+        aliasOut99: localStorage.getItem("id") as string,
       };
       const createdTn = await TNCreate(createRecord);
       setEnteredTrackingNumbers([...enteredTrackingNumbers, createdTn]);
@@ -66,7 +66,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       const updateRecord = {
         TrackingNumber: tnIndex.items[0].TrackingNumber,
         Outbound133: new Date(),
-        alias: localStorage.getItem("id") as string,
+        aliasOut133: localStorage.getItem("id") as string,
       };
       const updatedTn = await TNUpdate(
         tnIndex.items[0].id,

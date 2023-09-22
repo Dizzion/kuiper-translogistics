@@ -4,7 +4,7 @@ import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
-import TrackingNumberList from "./TrackingNumberList";
+import ContTNList from "./ContTNList";
 
 interface InboundFormProps {
   containers: RecordModel[];
@@ -59,7 +59,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
           Inbound99: timestamp,
-          alias: localStorage.getItem("id") as string,
+          aliasIn99: localStorage.getItem("id") as string,
         };
         updatedEnteredTrackingNumbers.splice(isInETN, 1);
         setEnteredTrackingNumbers(updatedEnteredTrackingNumbers);
@@ -69,7 +69,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
           Inbound133: timestamp,
-          alias: localStorage.getItem("id") as string,
+          aliasIn133: localStorage.getItem("id") as string,
         };
         const recordid = enteredTrackingNumbers[isInETN].id;
         await TNUpdate(recordid, record);
@@ -150,7 +150,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
+      <ContTNList trackingNumbersList={enteredTrackingNumbers} />
     </>
   );
 };

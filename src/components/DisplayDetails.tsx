@@ -1,6 +1,6 @@
 import { RecordModel } from "pocketbase";
 import React, { useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, ListGroup } from "react-bootstrap";
 
 interface DisplayDetailsProps {
   fullTNData: RecordModel;
@@ -55,7 +55,18 @@ const DisplayDetails: React.FC<DisplayDetailsProps> = ({ fullTNData }) => {
           <h5>SAP: {fullTNData.SAP}</h5>
         </Col>
       </Row>
-      {fullTNData.SAP === "Yes" ? <Row></Row> : <></>}
+      {fullTNData.SAP === "Yes" ? (
+        <ListGroup>
+          {fullTNData.HU.map((handlingUnit: RecordModel) => (
+            <ListGroup.Item variant="dark" key={handlingUnit.id}>
+              {handlingUnit.HU}{" "} To Quality:{handlingUnit.ToQI.toLocaleString()}{" "}
+              Staged for Transport:{handlingUnit.StagedTime.toLocaleString()}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };

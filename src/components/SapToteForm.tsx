@@ -43,7 +43,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
     const searchedHU = await HUGetByHU(Number(enteredHandlingUnit));
     console.log(searchedHU);
     if (
-      !searchedHU ||
+      !searchedHU.items[0] ||
       !/^(199|133|299|233)/.test(enteredHandlingUnit) ||
       enteredHandlingUnits.includes(Number(enteredHandlingUnit))
     ) {

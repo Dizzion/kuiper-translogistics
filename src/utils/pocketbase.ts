@@ -18,7 +18,12 @@ export interface TrackingNumber {
   Freight?: string;
   Jira?: string;
   HU?: string[];
-  alias: string;
+  aliasOut99?: string;
+  aliasIn133?: string;
+  aliasDeliv?: string;
+  aliasRec133?: string;
+  aliasOut133?: string;
+  aliasIn99?: string;
 }
 
 interface WarehouseAssociate {

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
-import { TNCreate } from "@/utils/pocketbase";
+import { TNCreate, TNDelete, TrackingNumber } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 
 interface DeliveryFormProps {
@@ -32,12 +32,20 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
     const createRecord = {
       TrackingNumber: enteredTrackingNumber,
       Delivered: timestamp,
-      alias: aliasid as string,
+      aliasDeliv: aliasid as string,
     };
     const record = await TNCreate(createRecord);
     setTrackingNumberList([...trackingNumberList, record]);
     setEnteredTrackingNumber("");
   };
+
+  const removeScannedTN = async (id: string) => {
+    const indexOfETNs = trackingNumberList.findIndex((obj) => obj.id === id);
+    const updatedTNs = trackingNumberList;
+    updatedTNs.splice(indexOfETNs, 1);
+    setTrackingNumberList(updatedTNs);
+    await TNDelete(id);
+  }
 
   return (
     <>
@@ -50,7 +58,7 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
           onChange={(e) => setEnteredTrackingNumber(e.target.value)}
         />
       </Form>
-      <TrackingNumberList trackingNumbersList={trackingNumberList} />
+      <TrackingNumberList trackingNumbersList={trackingNumberList} removeScannedTN={removeScannedTN}/>
     </>
   );
 };
