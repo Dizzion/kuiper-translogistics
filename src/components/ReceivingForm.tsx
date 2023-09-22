@@ -142,7 +142,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     if (enteredHUs.includes(Number(enteredHU))) {
       setEnteredHU("");
       return;
-    } else if (!/^(199|133|299|233)/.test(enteredHU) || Number(enteredHU) === 0) {
+    } else if (!/^(199|133|299|233)/.test(enteredHU) || isNaN(Number(enteredHU))) {
       setShowAlert(true);
       return;
     }
@@ -190,7 +190,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
         Freight: requestor.freight,
         Jira: requestor.jira,
         HU: requestor.handlingUnits,
-        alias: localStorage.getItem("id") as string,
+        aliasRec133: localStorage.getItem("id") as string,
       };
       setPrintLabel({
         trackingNumber: enteredTrackingNumber,

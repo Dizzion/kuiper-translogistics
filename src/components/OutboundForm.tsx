@@ -153,6 +153,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       record = {
         ...record,
         Outbound133: "" as unknown as Date,
+        aliasOut133: "",
       }
       await TNUpdate(id, record);
     }
