@@ -178,7 +178,7 @@ export const ContGetByContId = async (contId: string): Promise<RecordModel> => {
     { cache: "no-store" }
   );
   const cont = await res.json();
-  return cont.items[0];
+  return cont;
 };
 
 export const ContGetOne = async (id: string): Promise<RecordModel> => {

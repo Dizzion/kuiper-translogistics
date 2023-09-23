@@ -210,9 +210,9 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
   const updateEnteredContainer = async (e: React.FormEvent) => {
     e.preventDefault();
     const searchedCont = await ContGetByContId(enteredContainer);
-    if (searchedCont) {
-      setContainerIds([...containerIds, searchedCont.id]);
-      setContainerList([...containerList, searchedCont]);
+    if (searchedCont.items[0]) {
+      setContainerIds([...containerIds, searchedCont.items[0].id]);
+      setContainerList([...containerList, searchedCont.items[0]]);
       setEnteredContainer("");
       return;
     }

@@ -66,7 +66,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       setTnIds([...tnIds, createdTn.id]);
     } else if (locationTag === "133" && !/^(SAP_)/.test(enteredTracking)) {
       const tnIndex = await TNGetByTN(enteredTracking);
-      if (!tnIndex) {
+      if (!tnIndex.items[0]) {
         setShowAlert(true);
         setEnteredTracking("");
         return;
