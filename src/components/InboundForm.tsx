@@ -1,18 +1,21 @@
 "use client";
-import { ContGetOne, ContUpdate, STUpdate, TNUpdate } from "@/utils/pocketbase";
+import {
+  ContGetByContId,
+  ContUpdate,
+  STUpdate,
+  TNUpdate,
+} from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
-import TrackingNumberList from "./TrackingNumberList";
+import ContTNList from "./ContTNList";
 
 interface InboundFormProps {
   containers: RecordModel[];
 }
 
-const InboundForm: React.FC<InboundFormProps> = ({
-  containers,
-}) => {
+const InboundForm: React.FC<InboundFormProps> = ({ containers }) => {
   const [enteredContId, setEnteredContId] = useState("");
   const [workingCont, setWorkingCont] = useState<RecordModel>();
   const [disabledEntry, setDisabledEntry] = useState(true);
@@ -25,16 +28,13 @@ const InboundForm: React.FC<InboundFormProps> = ({
 
   const containerIdChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    const contindex = containers.findIndex(
-      (cont) => cont.ContainerID === enteredContId
-    );
-    if (contindex !== -1) {
+    const cont = await ContGetByContId(enteredContId);
+    if (cont.items[0]) {
       setDisabledEntry(false);
-      const cont = await ContGetOne(containers[contindex].id);
-      setWorkingCont(cont);
-      if (cont.expand) {
-        setEnteredSapTotes(cont.expand.SapTotes || []);
-        setEnteredTrackingNumbers(cont.expand.TrackingNumbers || []);
+      setWorkingCont(cont.items[0]);
+      if (cont.items[0].expand) {
+        setEnteredSapTotes(cont.items[0].expand.SapTotes || []);
+        setEnteredTrackingNumbers(cont.items[0].expand.TrackingNumbers || []);
       }
       return;
     }
@@ -59,7 +59,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
           Inbound99: timestamp,
-          alias: localStorage.getItem("id") as string,
+          aliasIn99: localStorage.getItem("id") as string,
         };
         updatedEnteredTrackingNumbers.splice(isInETN, 1);
         setEnteredTrackingNumbers(updatedEnteredTrackingNumbers);
@@ -69,7 +69,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
         const record = {
           TrackingNumber: enteredTrackingNumbers[isInETN].TrackingNumber,
           Inbound133: timestamp,
-          alias: localStorage.getItem("id") as string,
+          aliasIn133: localStorage.getItem("id") as string,
         };
         const recordid = enteredTrackingNumbers[isInETN].id;
         await TNUpdate(recordid, record);
@@ -80,19 +80,19 @@ const InboundForm: React.FC<InboundFormProps> = ({
     }
     if (isInEST !== -1) {
       const updatedEnteredSapTotes = [...enteredSapTotes];
-      const recordid = enteredSapTotes[isInEST].id;
-      await STUpdate(recordid, timestamp);
+      await STUpdate(enteredSapTotes[isInEST].id, timestamp);
       setEnteredTracking("");
       updatedEnteredSapTotes.splice(isInEST, 1);
       setEnteredSapTotes(updatedEnteredSapTotes);
     }
-    setEnteredTracking('');
+    setEnteredTracking("");
   };
 
   const submitContainer = async () => {
     const timestamp = new Date();
-    if (workingCont) {
-      await ContUpdate(workingCont.id, timestamp);
+    const cont = workingCont;
+    if (cont && enteredSapTotes.length <= 0 && enteredTrackingNumbers.length <= 0) {
+      await ContUpdate(cont.id, timestamp);
     }
     setDisabledEntry(true);
     setEnteredContId("");
@@ -106,7 +106,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
   return (
     <>
       <Form onSubmit={containerIdChange}>
-        <Form.Group className="text-center">
+        <Form.Group>
           <Form.Label className="text-white">Location</Form.Label>
           <Form.Select
             size="lg"
@@ -130,11 +130,15 @@ const InboundForm: React.FC<InboundFormProps> = ({
           />
         </Form.Group>
       </Form>
-      <Button variant="outline-light" type="button" onClick={submitContainer}>
+      <Button
+        style={{ marginTop: "5px", marginBottom: "15px" }}
+        variant="outline-light"
+        type="button"
+        onClick={submitContainer}
+      >
         Submit Container
       </Button>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
-        <Form.Label className="text-white">Tracking Number</Form.Label>
         <Form.Control
           type="trackingNumber"
           placeholder="Enter Tracking Number"
@@ -150,7 +154,7 @@ const InboundForm: React.FC<InboundFormProps> = ({
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <TrackingNumberList trackingNumbersList={enteredTrackingNumbers} />
+      <ContTNList trackingNumbersList={enteredTrackingNumbers} />
     </>
   );
 };

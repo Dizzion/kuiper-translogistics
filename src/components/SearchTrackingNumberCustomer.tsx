@@ -16,7 +16,9 @@ export interface TrackingNumberData {
 
 const SearchTrackingNumberCustomer: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [trackingNumber, setTrackingNumber] = useState<RecordModel | undefined>();
+  const [trackingNumber, setTrackingNumber] = useState<
+    RecordModel | undefined
+  >();
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [variant, setVariant] = useState<string[]>([
     "dark",
@@ -77,7 +79,11 @@ const SearchTrackingNumberCustomer: React.FC = () => {
     timestamps: (Date | null)[],
     delivered: Date | null
   ) => {
-    if (delivered !== undefined && delivered !== null && isNaN(delivered.getTime()) !== true) {
+    if (
+      delivered !== undefined &&
+      delivered !== null &&
+      isNaN(delivered.getTime()) !== true
+    ) {
       const deliveredVariant = ["secondary", "secondary", "info"];
       currentVariants.splice(0, deliveredVariant.length, ...deliveredVariant);
       setElapsedTime(calculateTime(delivered));
@@ -86,7 +92,11 @@ const SearchTrackingNumberCustomer: React.FC = () => {
       [currentVariants[0], currentVariants[1]] = ["secondary", "secondary"];
     }
     timestamps.forEach((timestamp, i) => {
-      if (timestamp !== undefined && timestamp !== null && isNaN(timestamp.getTime()) !== true) {
+      if (
+        timestamp !== undefined &&
+        timestamp !== null &&
+        isNaN(timestamp.getTime()) !== true
+      ) {
         currentVariants[i] = "success";
         currentVariants[i + 1] = "info";
         setElapsedTime(calculateTime(timestamp));
@@ -180,7 +190,7 @@ const SearchTrackingNumberCustomer: React.FC = () => {
 
   const searchTrackingNumbers = async (e: React.FormEvent) => {
     e.preventDefault();
-    await getTN(); 
+    await getTN();
   };
 
   function handleClose(): void {
@@ -221,7 +231,11 @@ const SearchTrackingNumberCustomer: React.FC = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <TrackingNumberDashboard trackingNumberData={trackingNumberData} variant={variant} elapsedTime={elapsedTime}/>
+      <TrackingNumberDashboard
+        trackingNumberData={trackingNumberData}
+        variant={variant}
+        elapsedTime={elapsedTime}
+      />
     </>
   );
 };

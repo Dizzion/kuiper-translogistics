@@ -1,5 +1,5 @@
 "use client";
-import { HUUpdate, STCreate } from "@/utils/pocketbase";
+import { HUCreate, HUGetByHU, HUUpdate, STCreate } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
 import HandlingUnitList from "./HandlingUnitList";
@@ -40,27 +40,38 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
     if (enteredHandlingUnits.length <= 0) {
       setStartTime(new Date());
     }
-    const enteredIndex = handlingUnits.findIndex(
-      (obj) => obj.HU === Number(enteredHandlingUnit)
-    );
+    const searchedHU = await HUGetByHU(Number(enteredHandlingUnit));
     if (
-      enteredIndex === -1 ||
+      !searchedHU.items[0] ||
       !/^(199|133|299|233)/.test(enteredHandlingUnit) ||
       enteredHandlingUnits.includes(Number(enteredHandlingUnit))
     ) {
+      if (
+        !searchedHU.items[0] &&
+        /^(199|133|299|233)/.test(enteredHandlingUnit) &&
+        !enteredHandlingUnits.includes(Number(enteredHandlingUnit)) &&
+        !isNaN(Number(enteredHandlingUnit))
+      ) {
+        const createHU = {
+          HU: Number(enteredHandlingUnit),
+          alias: localStorage.getItem("id") as string,
+        };
+        const createdHU = await HUCreate(createHU);
+        setHUids([...HUids, createdHU.id]);
+        setEnteredHandlingUnits([...enteredHandlingUnits, createdHU.HU]);
+        setEnteredHandlingUnit("");
+        return;
+      }
       setShowAlert(true);
       return;
     }
     const HUtoUpdate = {
-      HU: handlingUnits[enteredIndex].HU,
-      ToQI: handlingUnits[enteredIndex].ToQI,
+      HU: searchedHU.items[0].HU,
+      ToQI: searchedHU.items[0].ToQI,
       StagedTime: new Date(),
       alias: localStorage.getItem("id") as string,
     };
-    const updatedHU = await HUUpdate(
-      handlingUnits[enteredIndex].id,
-      HUtoUpdate
-    );
+    const updatedHU = await HUUpdate(searchedHU.items[0].id, HUtoUpdate);
     setHUids([...HUids, updatedHU.id]);
     setEnteredHandlingUnits([...enteredHandlingUnits, updatedHU.HU]);
     setEnteredHandlingUnit("");
@@ -80,15 +91,13 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         );
 
         printWindow.document.write("<style>");
+        printWindow.document.write("@page { size: landscape; }");
         printWindow.document.write(
-          "@page { size: landscape; }"
+          ".grid-container { display: grid; grid-template-columns: auto auto auto; white-space: nowrap; }"
         );
+
         printWindow.document.write(
-          ".grid-container { display: grid; grid-template-columns: auto auto auto auto; white-space: nowrap; }"
-        );
-        
-        printWindow.document.write(
-          ".grid-item { font-size: 8px; text-align: center; padding: 2px; }"
+          ".grid-item { font-size: 15px; text-align: center; padding: 2px; }"
         );
         printWindow.document.write("</style>");
 
@@ -165,15 +174,19 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
       <Form onSubmit={submitSapTote}>
         <Form.Label className="text-white">Tote ID</Form.Label>
         <Form.Control disabled size="lg" value={uid} />
-        <Button type="submit" variant="outline-light">
+        <Button
+          style={{ marginTop: "5px", marginBottom: "15px" }}
+          type="submit"
+          variant="outline-light"
+        >
           Submit SAP Tote
         </Button>
       </Form>
       <Form onSubmit={updateHandlingUnits}>
-        <Form.Label className="text-white">Handling Unit</Form.Label>
         <Form.Control
           type="Handling Unit"
           required
+          placeholder="199XXXXXXX, 299XXXXXXX, 133XXXXXXX, 233XXXXXXX"
           value={enteredHandlingUnit}
           onChange={(e) => setEnteredHandlingUnit(e.target.value)}
         />
@@ -185,11 +198,9 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
         className="printModal3"
         style={{
           display: "block",
-          width: "6in",
-          height: "4in",
           padding: "10px",
-          border: "1px solid #000",
         }}
+        centered
       >
         <Modal.Dialog ref={modalRef}>
           <Modal.Header>SAP Tote ID: {printLabel.toteId}</Modal.Header>
@@ -197,14 +208,18 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           <Modal.Body>
             <Row>
               <Col sm={2}>
-                <Image width={80} height={80} src={printLabel.qrcode} alt="QR Code" />
+                <Image
+                  width={90}
+                  height={90}
+                  src={printLabel.qrcode}
+                  alt="QR Code"
+                />
               </Col>
-              <Col sm={8}>
+              <Col sm={7}>
                 <div className="grid-container">
                   {printLabel.hus.map((hu) => (
                     <a className="grid-item" key={hu}>
-                      {hu} 
-                      {/* <QRCodeCanvas size={10} value={hu.toString()} /> */}
+                      {hu}
                     </a>
                   ))}
                 </div>
@@ -212,12 +227,14 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
             </Row>
           </Modal.Body>
         </Modal.Dialog>
-        <Button type="button" onClick={() => handlePrint()}>
-          Print Label
-        </Button>
-        <Button type="button" onClick={() => setPrintModal(false)}>
-          Close Label
-        </Button>
+        <Modal.Footer>
+          <Button type="button" onClick={() => handlePrint()}>
+            Print Label
+          </Button>
+          <Button type="button" onClick={() => setPrintModal(false)}>
+            Close Label
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

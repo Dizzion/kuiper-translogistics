@@ -1,6 +1,6 @@
 {
   "name": "kuiper-translogistics",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -23,7 +23,8 @@
     "react": "18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "18.2.0",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "webpack": "^5.88.2"
   },
   "devDependencies": {
     "@types/qrcode": "^1.5.2",

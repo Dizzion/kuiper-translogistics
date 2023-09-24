@@ -64,11 +64,11 @@ main {
 }
 .grid-container {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto auto;
   white-space: 3px;
 }
 .grid-item {
-  font-size: 8px;
+  font-size: 12px;
   text-align: center;
   padding: 2px;
 }
