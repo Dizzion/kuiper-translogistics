@@ -155,9 +155,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         UnloadProcessing: timers[3].elapsedTime.toLocaleString(),
         ArrivalAA: localStorage.getItem("id") as string,
       };
-      console.log(containerIds);
       const truckIndex = await TruckGetByContArr(containerIds[0]);
-      console.log(truckIndex);
       if (!truckIndex.items[0]) {
         return;
       }

@@ -33,7 +33,6 @@ const DetailedSearch = () => {
         HU.StagedTime = new Date(HU.StagedTime);
       }
     }
-    console.log(fixedsearchedTN);
     setFullTNData(fixedsearchedTN);
     setEnteredTN("");
   };
