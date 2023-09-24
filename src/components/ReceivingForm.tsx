@@ -220,7 +220,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
       (requestor.inventory === "Yes" || requestor.inventory === "No") &&
       (requestor.freight === "Yes" || requestor.freight === "No")
     ) {
-      updateAsReceived(enteredTrackingNumber, requestor);
+      await updateAsReceived(enteredTrackingNumber, requestor);
       setEnteredHUs([]);
       setEnteredTrackingNumber("");
       setRequestor({
@@ -232,7 +232,9 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
         handlingUnits: [],
         coupaPoLines: "",
       });
+      return;
     }
+    setShowAlert3(true);
   }
 
   const setFullName = () => {
@@ -328,6 +330,30 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     });
   }
 
+  const changedEnteredTrackingNumber = (e: string) => {
+    setEnteredTrackingNumber(e);
+    if (e === "Mystery") {
+      const timestamp = new Date();
+      setPrintLabel({
+        ...printLabel,
+        trackingNumber: enteredTrackingNumber,
+        timestamp: timestamp.toLocaleString(),
+      });
+      setModalPrint(true);
+      setEnteredHUs([]);
+      setEnteredTrackingNumber("");
+      setRequestor({
+        name: "",
+        building: "",
+        inventory: requestor.inventory,
+        freight: requestor.freight,
+        jira: "",
+        handlingUnits: [],
+        coupaPoLines: "",
+      });
+    }
+  }
+
   return (
     <>
       <Form
@@ -346,7 +372,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
             placeholder="Tracking Number Here"
             required
             value={enteredTrackingNumber}
-            onChange={(e) => setEnteredTrackingNumber(e.target.value)}
+            onChange={(e) => changedEnteredTrackingNumber(e.target.value)}
           />
           <Row>
             <Col>
