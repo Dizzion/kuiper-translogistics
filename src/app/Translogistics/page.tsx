@@ -6,7 +6,9 @@ export default async function TranslogisticsTeam() {
   return (
     <>
       <DetailedSearch />
-      <div style={{ backgroundColor: 'white', marginTop: "3rem"}}><BaseDashBoard /></div>
+      <div style={{ backgroundColor: "white", marginTop: "3rem" }}>
+        <BaseDashBoard />
+      </div>
     </>
   );
 }
