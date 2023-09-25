@@ -1,3 +1,4 @@
+'use client'
 import React, { useRef, useEffect } from 'react';
 import {
   Chart as ChartJS,
@@ -10,6 +11,7 @@ import {
   Tooltip
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
+import { Row } from 'react-bootstrap';
 
 ChartJS.register(
   LinearScale,
@@ -30,15 +32,16 @@ export const data = {
       type: 'line' as const,
       label: 'Dataset 1',
       boarderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.7)',
       borderWidth: 2,
       fill: false,
-      data: labels.map(() => [13545, 15467, 17657, 12546, 15768]),
+      data: [13545, 15467, 17657, 12546, 15768],
     },
     {
       type: 'bar' as const,
       label: 'Dataset 2',
-      backgroundColor: 'rgb(75, 192, 192)',
-      data: labels.map(() => [24565, 28609, 18569, 19708, 21098]),
+      backgroundColor: '#5f90f1',
+      data: [24565, 28609, 18569, 19708, 21098],
       boarderColor: 'white',
       boarderWidth: 2,
     },
@@ -87,7 +90,7 @@ const BaseDashBoard = async () => {
     triggerTooltip(chart);
   }, []);
   return (
-    <><Chart ref={chartRef} type='bar' data={data}/></>
+    <Row><Chart ref={chartRef} type='bar' data={data}/><Chart ref={chartRef} type='bar' data={data}/></Row>
   );
 };
 
