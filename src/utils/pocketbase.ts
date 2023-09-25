@@ -1,7 +1,7 @@
 import Pocketbase, { RecordModel } from "pocketbase";
 
 // const pb = new Pocketbase(env.APP_SERVER);
-const pb = new Pocketbase("http://10.68.140.169:8090");
+const pb = new Pocketbase("http://127.0.0.1:8090");
 
 export interface TrackingNumber {
   TrackingNumber?: string;
@@ -93,7 +93,7 @@ export const dynamic = "auto",
 // * Tracking Number Routing
 export const TNGetAll = async (): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/TrackingNumbers/records?perPage=500`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records?perPage=500`,
     { cache: "no-store" }
   );
   const tns = await res.json();
@@ -104,7 +104,7 @@ export const TNGetByTN = async (
   trackingNumber: string
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/TrackingNumbers/records?filter=(TrackingNumber='${trackingNumber}')&expand=HU`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records?filter=(TrackingNumber='${trackingNumber}')&expand=HU`,
     { cache: "no-store" }
   );
   const tn = await res.json();
@@ -113,7 +113,7 @@ export const TNGetByTN = async (
 
 export const TNGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/TrackingNumbers/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
     { cache: "no-store" }
   );
   const tn = await res.json();
@@ -124,7 +124,7 @@ export const TNCreate = async (
   trackingNumber: TrackingNumber
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/TrackingNumbers/records`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records`,
     {
       method: "POST",
       headers: {
@@ -142,7 +142,7 @@ export const TNUpdate = async (
   trackingNumber: TrackingNumber
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/TrackingNumbers/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -157,7 +157,7 @@ export const TNUpdate = async (
 
 export const TNDelete = async (id: string) => {
   await fetch(
-    `http://10.68.140.169:8090/api/collections/TrackingNumbers/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/TrackingNumbers/records/${id}`,
     { method: "DELETE" }
   );
 }
@@ -165,7 +165,7 @@ export const TNDelete = async (id: string) => {
 // * Container Routing
 export const ContGetAll = async (): Promise<Object> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Containers/records/`,
+    `http://127.0.0.1:8090/api/collections/Containers/records/`,
     { cache: "no-store" }
   );
   const containers = await res.json();
@@ -174,7 +174,7 @@ export const ContGetAll = async (): Promise<Object> => {
 
 export const ContGetByContId = async (contId: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Containers/records?filter=(ContainerID='${contId}')&expand=TrackingNumbers,SapTotes`,
+    `http://127.0.0.1:8090/api/collections/Containers/records?filter=(ContainerID='${contId}')&expand=TrackingNumbers,SapTotes`,
     { cache: "no-store" }
   );
   const cont = await res.json();
@@ -183,7 +183,7 @@ export const ContGetByContId = async (contId: string): Promise<RecordModel> => {
 
 export const ContGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Containers/records/${id}?expand=TrackingNumbers,SapTotes`,
+    `http://127.0.0.1:8090/api/collections/Containers/records/${id}?expand=TrackingNumbers,SapTotes`,
     { cache: "no-store" }
   );
   const container = await res.json();
@@ -194,7 +194,7 @@ export const ContCreate = async (
   container: Container
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Containers/records`,
+    `http://127.0.0.1:8090/api/collections/Containers/records`,
     {
       method: "POST",
       headers: {
@@ -213,7 +213,7 @@ export const ContUpdate = async (
   timestamp: Date
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Containers/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/Containers/records/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -232,7 +232,7 @@ export const ContUpdate = async (
 // * SapTote Routing
 export const STGetAll = async (): Promise<Object> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/SapTotes/records`,
+    `http://127.0.0.1:8090/api/collections/SapTotes/records`,
     { cache: "no-store" }
   );
   const STs = await res.json();
@@ -241,7 +241,7 @@ export const STGetAll = async (): Promise<Object> => {
 
 export const STGetBySTID = async (stId: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/SapTotes/records?filter=(ToteID='${stId}')`,
+    `http://127.0.0.1:8090/api/collections/SapTotes/records?filter=(ToteID='${stId}')`,
     { cache: "no-store"}
   );
   const ST = await res.json();
@@ -250,7 +250,7 @@ export const STGetBySTID = async (stId: string): Promise<RecordModel> => {
 
 export const STGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/SapTotes/records/${id}?expand=HU`,
+    `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}?expand=HU`,
     { cache: "no-store" }
   );
   const ST = await res.json();
@@ -259,7 +259,7 @@ export const STGetOne = async (id: string): Promise<RecordModel> => {
 
 export const STCreate = async (tote: SapTote): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/SapTotes/records`,
+    `http://127.0.0.1:8090/api/collections/SapTotes/records`,
     {
       method: "POST",
       headers: {
@@ -278,7 +278,7 @@ export const STUpdate = async (
   timestamp: Date
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/SapTotes/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/SapTotes/records/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -297,7 +297,7 @@ export const STUpdate = async (
 // * Truck Routing
 export const TruckGetAll = async (): Promise<Object> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Trucks/records`,
+    `http://127.0.0.1:8090/api/collections/Trucks/records`,
     { cache: "no-store" }
   );
   const trucks = await res.json();
@@ -308,7 +308,7 @@ export const TruckGetByContArr = async (
   conts: string
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Trucks/records?filter=(Containers~'${conts}')`,
+    `http://127.0.0.1:8090/api/collections/Trucks/records?filter=(Containers~'${conts}')`,
     { cache: "no-store" }
   );
   const truck = res.json();
@@ -317,7 +317,7 @@ export const TruckGetByContArr = async (
 
 export const TruckGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Trucks/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/Trucks/records/${id}`,
     { cache: "no-store" }
   );
   const truck = await res.json();
@@ -326,7 +326,7 @@ export const TruckGetOne = async (id: string): Promise<RecordModel> => {
 
 export const CreateTruck = async (truck: Truck): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Trucks/records`,
+    `http://127.0.0.1:8090/api/collections/Trucks/records`,
     {
       method: "POST",
       headers: {
@@ -344,7 +344,7 @@ export const UpdateTruck = async (
   truck: Truck
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Trucks/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/Trucks/records/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -368,7 +368,7 @@ export const getEmployeeByFullName = async (
   fullName: string
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Employees/records?filter=(Full_Name='${fullName}')`,
+    `http://127.0.0.1:8090/api/collections/Employees/records?filter=(Full_Name='${fullName}')`,
     { cache: "no-store" }
   );
   const employee = await res.json();
@@ -379,7 +379,7 @@ export const addEmployees = async (
   employee: Employee
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Employees/records`,
+    `http://127.0.0.1:8090/api/collections/Employees/records`,
     {
       method: "POST",
       headers: {
@@ -397,7 +397,7 @@ export const updateEmployees = async (
   employee: Employee
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/Employees/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/Employees/records/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -413,7 +413,7 @@ export const updateEmployees = async (
 // * Associate Routing
 export const getAssociates = async (): Promise<RecordModel[]> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/WarehouseAssociates/records?perPage=500`,
+    `http://127.0.0.1:8090/api/collections/WarehouseAssociates/records?perPage=500`,
     { cache: "no-store" }
   );
   const associates = await res.json();
@@ -435,7 +435,7 @@ export const deleteAssociate = async (id: string) => {
 // * Handling Unit Routing
 export const HUGetAll = async (): Promise<Object> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/HandlingUnits/records`,
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records`,
     { cache: "no-store" }
   );
   const HUs = res.json();
@@ -444,7 +444,7 @@ export const HUGetAll = async (): Promise<Object> => {
 
 export const HUGetByHU = async (hu: number): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/HandlingUnits/records?filter=(HU='${hu}')`,
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records?filter=(HU='${hu}')`,
     { cache: "no-store" }
   );
   const HU = res.json();
@@ -453,7 +453,7 @@ export const HUGetByHU = async (hu: number): Promise<RecordModel> => {
 
 export const HUGetOne = async (id: string): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/HandlingUnits/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records/${id}`,
     { cache: "no-store" }
   );
   const HU = res.json();
@@ -464,7 +464,7 @@ export const HUCreate = async (
   handlingUnit: HandlingUnit
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/HandlingUnits/records`,
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records`,
     {
       method: "POST",
       headers: {
@@ -482,7 +482,7 @@ export const HUUpdate = async (
   handlingUnit: HandlingUnit
 ): Promise<RecordModel> => {
   const res = await fetch(
-    `http://10.68.140.169:8090/api/collections/HandlingUnits/records/${id}`,
+    `http://127.0.0.1:8090/api/collections/HandlingUnits/records/${id}`,
     {
       method: "PATCH",
       headers: {
