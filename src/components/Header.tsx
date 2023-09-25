@@ -34,6 +34,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
 
   const onLogout = () => {
     setAlias("");
+    setPassword('');
     setIsUserIdInArray(false);
     localStorage.clear();
     router.push('/');
@@ -78,11 +79,11 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
               <Form.Control
                 placeholder="Warehouse Password"
                 aria-label="password"
-                aria-describedby="login"
-                value={alias}
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <Button variant="info" type="submit">Log-In</Button>
             </InputGroup>
           </Form>
         )}
