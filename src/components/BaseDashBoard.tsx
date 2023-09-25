@@ -86,12 +86,40 @@ const BaseDashBoard = async () => {
 
   useEffect(() => {
     const chart = chartRef.current;
+    if (chart) {
+      chart.config.options = {
+        scales: {
+          x: {
+            grid: {
+              color: '#bfc1c5',
+            },
+            ticks: {
+              color: '#bfc1c5',
+            },
+          },
+          y: {
+            grid: {
+              color: '#bfc1c5',
+            },
+            ticks: {
+              color: '#bfc1c5',
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#bfc1c5', 
+            },
+          },
+        },
+      };
+    }
 
     triggerTooltip(chart);
   }, []);
   return (
     <Row>
-      <Chart ref={chartRef} type="bar" data={data} />
       <Chart ref={chartRef} type="bar" data={data} />
     </Row>
   );
