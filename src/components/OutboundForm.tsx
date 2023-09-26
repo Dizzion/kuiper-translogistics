@@ -10,7 +10,7 @@ import {
 } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
-import { Form, Button, Modal, ListGroup, Col, Row, InputGroup } from "react-bootstrap";
+import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
 import QRCode from "qrcode";
