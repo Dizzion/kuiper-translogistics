@@ -41,6 +41,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
   const [containerId, setContainerId] = useState("");
+  const [reprintId, setReprintId] = useState('');
   const [startTime, setStartTime] = useState(new Date());
 
   function handleLocationChange(value: string): void {
@@ -189,6 +190,15 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setEnteredTrackingNumbers([]);
     setEnteredSapTotes([]);
   };
+  
+  const reprintLabel = async () => {
+    setPrintLabel({
+      qrcode: await QRCode.toDataURL(reprintId),
+      containerId: reprintId,
+    })
+    setPrintModal(true);
+    setReprintId('');
+  };
 
   function handleClose(): void {
     setShowAlert(false);
@@ -235,6 +245,13 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           Submit Container
         </Button>
       </Form>
+      <input value={reprintId} onChange={(e) => setReprintId(e.target.value.toUpperCase())}/>
+      <Button
+        style={{ marginTop: "5px", marginBottom: "15px" }}
+        variant="outline-warning"
+        type="button"
+        onClick={() => reprintLabel()}
+      >Reprint</Button>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
         <Form.Control
           type="trackingNumber"
