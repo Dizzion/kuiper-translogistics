@@ -23,6 +23,7 @@ interface OutboundUpdateProps {
 const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
   const router = useRouter();
   const [contId, setContId] = useState("");
+  const [cont, setCont] = useState<RecordModel>();
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
   const [enteredTrackingNumbers, setEnteredTrackingNumbers] = useState<
@@ -37,26 +38,8 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
 
   const populateCont = async () => {
     const contToUpdate = await ContGetOne(id);
-    if (contToUpdate.expand) {
-      if (contToUpdate.TrackingNumbers) {
-        if (contToUpdate.expand.TrackingNumbers.length > 0) {
-            console.log(contToUpdate.expand.TrackingNumbers)
-          contToUpdate.expand.TrackingNumbers.forEach((tn: RecordModel) => {
-            setTnIds([...tnIds, tn.id]);
-            setEnteredTrackingNumbers([...enteredTrackingNumbers, tn]);
-          });
-          console.log(tnIds);
-        }
-      }
-      if (contToUpdate.expand.SapTotes) {
-        if (contToUpdate.expand.SapTotes.length > 0) {
-          contToUpdate.expand.SapTotes.forEach((st: RecordModel) => {
-            setStIds([...stIds, st.id]);
-            setEnteredSapTotes([...enteredSapTotes, st]);
-          });
-        }
-      }
-
+    if (contToUpdate) {
+      setCont(contToUpdate);
       setContId(contToUpdate.ContainerID);
     } else {
       setShowAlert2(true);
@@ -67,12 +50,49 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
     populateCont();
   }, []);
 
-  function locationTagUpdate(e: string) {
+  async function mapContents(toUpdate: string, items: RecordModel[]) {
+    if (toUpdate === "TN") {
+      items.forEach((obj: RecordModel) => {
+        setTnIds((prevTnIds) => [...prevTnIds, obj.id]);
+        setEnteredTrackingNumbers((prevEnteredTrackingNumbers) => [
+          ...prevEnteredTrackingNumbers,
+          obj,
+        ]);
+      });
+    }
+    if (toUpdate === "ST") {
+      items.forEach((obj: RecordModel) => {
+        setStIds([...stIds, obj.id]);
+        setEnteredSapTotes([...enteredSapTotes, obj]);
+      });
+    }
+  }
+
+  async function locationTagUpdate(e: string) {
     setLocationTag(e);
     if (e === "99" || e === "133") {
+      if (cont && stIds.length === 0 && tnIds.length === 0) {
+        if (cont.expand) {
+          if (cont.expand.TrackingNumbers) {
+            if (cont.expand.TrackingNumbers.length > 0) {
+              await mapContents("TN", cont.expand.TrackingNumbers);
+            }
+          }
+          if (cont.expand.SapTotes) {
+            if (cont.expand.SapTotes.length > 0) {
+              await mapContents("TN", cont.expand.SapTotes);
+            }
+          }
+        }
+      }
+
       setEnable(false);
       return;
     }
+    setEnteredSapTotes([]);
+    setEnteredTrackingNumbers([]);
+    setStIds([]);
+    setTnIds([]);
     setEnable(true);
   }
 

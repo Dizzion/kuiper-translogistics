@@ -223,7 +223,8 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setEnteredTracking("");
   }
 
-  async function moveToUpdate() {
+  async function moveToUpdate(e: React.FormEvent) {
+    e.preventDefault();
     const contToUpdate = await ContGetByContId(updateId);
     if (contToUpdate.items[0]) {
       router.push(`/Translogistics/Outbound/${contToUpdate.items[0].id}`);
@@ -327,6 +328,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
               value={updateId}
               onChange={(e) => setUpdateId(e.target.value)}
             />
+            <Button style={{marginTop: "1rem"}} type="submit">Submit</Button>
           </Form>
         </Modal.Body>
         <Modal.Footer>
