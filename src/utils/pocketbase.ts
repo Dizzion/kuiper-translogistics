@@ -210,7 +210,7 @@ export const ContCreate = async (
 
 export const ContUpdate = async (
   id: string,
-  timestamp: Date
+  cont: Container
 ): Promise<RecordModel> => {
   const res = await fetch(
     `http://127.0.0.1:8090/api/collections/Containers/records/${id}`,
@@ -219,9 +219,7 @@ export const ContUpdate = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        UnloadFinish: timestamp,
-      }),
+      body: JSON.stringify(cont),
     }
   );
   const updatedCont = await res.json();
