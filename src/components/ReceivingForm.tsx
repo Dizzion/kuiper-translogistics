@@ -565,7 +565,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
       </Modal>
       <Modal centered show={mysteryModal} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Missing Previous Scan</Modal.Title>
+          <Modal.Title>Mystery Label Entry</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form
