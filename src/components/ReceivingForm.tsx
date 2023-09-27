@@ -30,6 +30,7 @@ export interface Requestor {
 const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
   const modalRef = useRef(null);
   const [modalPrint, setModalPrint] = useState(false);
+  const [mysteryModal, setMysteryModal] = useState(false);
   const [addEmployee, setAddEmployee] = useState(false);
   const [generateFullName, setGenerateFullName] = useState(true);
   const [updateEmployee, setUpdateEmployee] = useState(false);
@@ -258,6 +259,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     setShowAlert(false);
     setShowAlert2(false);
     setShowAlert3(false);
+    setMysteryModal(false);
     setAddEmployee(false);
     setUpdateEmployee(false);
     setEnteredHU("");
@@ -340,26 +342,36 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
 
   const changedEnteredTrackingNumber = (e: string) => {
     setEnteredTrackingNumber(e);
-    if (e === "Mystery") {
-      const timestamp = new Date();
-      setPrintLabel({
-        ...printLabel,
-        trackingNumber: enteredTrackingNumber,
-        timestamp: timestamp.toLocaleString(),
-      });
-      setModalPrint(true);
-      setEnteredHUs([]);
-      setEnteredTrackingNumber("");
-      setRequestor({
-        name: "",
-        building: "",
-        inventory: requestor.inventory,
-        freight: requestor.freight,
-        jira: "",
-        handlingUnits: [],
-        coupaPoLines: "",
-      });
+    if (e === "Mystery" || e === "mystery") {
+      setMysteryModal(true);
     }
+  }
+
+  async function enteredMystery(e: React.FormEvent) {
+    e.preventDefault();
+    const timestamp = new Date();
+    const inputs = e.target as HTMLFormElement;
+    setPrintLabel({
+      ...printLabel,
+      timestamp: timestamp.toLocaleString(),
+      requestorName: inputs.fullName.value,
+      trackingNumber: inputs.trackingNumber.value,
+      jira: "Mystery",
+      qrCodeDataUrl: await QRCode.toDataURL(inputs.trackingNumber.value),
+    });
+    setMysteryModal(false);
+    setModalPrint(true);
+    setEnteredHUs([]);
+    setEnteredTrackingNumber("");
+    setRequestor({
+      name: "",
+      building: "",
+      inventory: requestor.inventory,
+      freight: requestor.freight,
+      jira: "",
+      handlingUnits: [],
+      coupaPoLines: "",
+    });
   }
 
   return (
@@ -544,6 +556,38 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
         <Modal.Body>
           Pervious Scan hasn't been captured please make sure to follow the
           entire process.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={mysteryModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Missing Previous Scan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSubmit={enteredMystery}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // Prevent form submission on Enter key press
+              }
+            }}
+          >
+            <Form.Control
+              id="trackingNumber"
+              name="trackingNumber"
+              placeholder="Tracking Number Here"
+              />
+            <Form.Control
+              id="fullName"
+              name="fullName"
+              placeholder="Full Employee Name"
+            />
+            <Button type="submit">Create Label</Button>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
