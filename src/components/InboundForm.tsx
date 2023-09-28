@@ -92,7 +92,11 @@ const InboundForm: React.FC<InboundFormProps> = ({ containers }) => {
     const timestamp = new Date();
     const cont = workingCont;
     if (cont && enteredSapTotes.length <= 0 && enteredTrackingNumbers.length <= 0) {
-      await ContUpdate(cont.id, timestamp);
+      const updateCont = {
+        UnloadFinish: timestamp,
+        alias: localStorage.getItem('alias') as string
+      };
+      await ContUpdate(cont.id, updateCont);
     }
     setDisabledEntry(true);
     setEnteredContId("");

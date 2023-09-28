@@ -11,6 +11,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ associates }) => {
   const router = useRouter();
   const [alias, setAlias] = useState("");
+  const [password, setPassword] = useState('');
   const [isUserIdInArray, setIsUserIdInArray] = useState(false);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
 
   const handleAliasSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (typeof associates !== "undefined") {
+    if (typeof associates !== "undefined" && password === '#1WarehouseTeam') {
       setIsUserIdInArray(associates.some((obj) => obj.alias === alias));
       const aliasIndex = associates.findIndex((obj) => obj.alias === alias);
       localStorage.setItem("alias", associates[aliasIndex].alias);
@@ -33,6 +34,7 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
 
   const onLogout = () => {
     setAlias("");
+    setPassword('');
     setIsUserIdInArray(false);
     localStorage.clear();
     router.push('/');
@@ -73,7 +75,15 @@ const Header: React.FC<HeaderProps> = ({ associates }) => {
                 value={alias}
                 onChange={(e) => setAlias(e.target.value.toLowerCase())}
                 required
-              ></Form.Control>
+              />
+              <Form.Control
+                placeholder="Warehouse Password"
+                aria-label="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <Button variant="info" type="submit">Log-In</Button>
             </InputGroup>
           </Form>
         )}

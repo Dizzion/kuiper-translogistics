@@ -30,6 +30,7 @@ export interface Requestor {
 const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
   const modalRef = useRef(null);
   const [modalPrint, setModalPrint] = useState(false);
+  const [mysteryModal, setMysteryModal] = useState(false);
   const [addEmployee, setAddEmployee] = useState(false);
   const [generateFullName, setGenerateFullName] = useState(true);
   const [updateEmployee, setUpdateEmployee] = useState(false);
@@ -60,6 +61,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [showAlert2, setShowAlert2] = useState(false);
   const [showAlert3, setShowAlert3] = useState(false);
+  const [showAlert4, setShowAlert4] = useState(false);
   const [showSubmit, setShowSubmit] = useState(false);
   const [enteredHUs, setEnteredHUs] = useState<number[]>([]);
   const [enteredHU, setEnteredHU] = useState("");
@@ -172,17 +174,13 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     const searchedTN = await TNGetByTN(enteredTrackingNumber);
 
     if (searchedTN.items.length > 0) {
-      if (searchedTN.items[0].Inbound133 && searchedTN.items[0].Delivered) {
+      if (searchedTN.items[0].Inbound133.length === 0 && searchedTN.items[0].Delivered.length === 0) {
         setShowAlert2(true);
         return;
       }
       const updatedTrackingNumber = {
         TrackingNumber: enteredTrackingNumber,
-        Outbound99: searchedTN.items[0].Outbound99,
-        Inbound133: searchedTN.items[0].Inbound133,
         Received133: newTimestamp,
-        Outbound133: searchedTN.items[0].Outbound133,
-        Inbound99: searchedTN.items[0].Inbound99,
         full_name: requestor.name,
         default_location: requestor.building,
         CoupaPOLines: requestor.coupaPoLines,
@@ -221,17 +219,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
       (requestor.freight === "Yes" || requestor.freight === "No")
     ) {
       await updateAsReceived(enteredTrackingNumber, requestor);
-      setEnteredHUs([]);
-      setEnteredTrackingNumber("");
-      setRequestor({
-        name: "",
-        building: "",
-        inventory: requestor.inventory,
-        freight: requestor.freight,
-        jira: "",
-        handlingUnits: [],
-        coupaPoLines: "",
-      });
+      setShowAlert4(true);
       return;
     }
     setShowAlert3(true);
@@ -246,10 +234,32 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     setShowSubmit(true);
   };
 
+  function keepInfo(): void {
+    setShowAlert4(false);
+    setEnteredHUs([]);
+    setEnteredTrackingNumber("");
+  }
+
+  function clearForm(): void {
+    setShowAlert4(false);
+    setEnteredHUs([]);
+    setEnteredTrackingNumber("");
+    setRequestor({
+      name: "",
+      building: "",
+      inventory: requestor.inventory,
+      freight: requestor.freight,
+      jira: "",
+      handlingUnits: [],
+      coupaPoLines: "",
+    });
+  }
+
   function handleClose(): void {
     setShowAlert(false);
     setShowAlert2(false);
     setShowAlert3(false);
+    setMysteryModal(false);
     setAddEmployee(false);
     setUpdateEmployee(false);
     setEnteredHU("");
@@ -332,26 +342,36 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
 
   const changedEnteredTrackingNumber = (e: string) => {
     setEnteredTrackingNumber(e);
-    if (e === "Mystery") {
-      const timestamp = new Date();
-      setPrintLabel({
-        ...printLabel,
-        trackingNumber: enteredTrackingNumber,
-        timestamp: timestamp.toLocaleString(),
-      });
-      setModalPrint(true);
-      setEnteredHUs([]);
-      setEnteredTrackingNumber("");
-      setRequestor({
-        name: "",
-        building: "",
-        inventory: requestor.inventory,
-        freight: requestor.freight,
-        jira: "",
-        handlingUnits: [],
-        coupaPoLines: "",
-      });
+    if (e === "Mystery" || e === "mystery") {
+      setMysteryModal(true);
     }
+  }
+
+  async function enteredMystery(e: React.FormEvent) {
+    e.preventDefault();
+    const timestamp = new Date();
+    const inputs = e.target as HTMLFormElement;
+    setPrintLabel({
+      ...printLabel,
+      timestamp: timestamp.toLocaleString(),
+      requestorName: inputs.fullName.value,
+      trackingNumber: inputs.trackingNumber.value,
+      jira: "Mystery",
+      qrCodeDataUrl: await QRCode.toDataURL(inputs.trackingNumber.value),
+    });
+    setMysteryModal(false);
+    setModalPrint(true);
+    setEnteredHUs([]);
+    setEnteredTrackingNumber("");
+    setRequestor({
+      name: "",
+      building: "",
+      inventory: requestor.inventory,
+      freight: requestor.freight,
+      jira: "",
+      handlingUnits: [],
+      coupaPoLines: "",
+    });
   }
 
   return (
@@ -516,13 +536,58 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal centered show={showAlert4}>
+        <Modal.Body>
+          Would you like to reset the form or keep the information?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={keepInfo}>
+            Keep Info
+          </Button>
+          <Button variant="secondary" onClick={clearForm}>
+            Clear
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal centered show={showAlert2} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Missing Pervious Scan</Modal.Title>
+          <Modal.Title>Missing Previous Scan</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Pervious Scan hasn't been captured please make sure to follow the
           entire process.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={mysteryModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Mystery Label Entry</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSubmit={enteredMystery}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // Prevent form submission on Enter key press
+              }
+            }}
+          >
+            <Form.Control
+              id="trackingNumber"
+              name="trackingNumber"
+              placeholder="Tracking Number Here"
+              />
+            <Form.Control
+              id="fullName"
+              name="fullName"
+              placeholder="Full Employee Name"
+            />
+            <Button type="submit">Create Label</Button>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

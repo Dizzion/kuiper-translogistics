@@ -1,11 +1,8 @@
 import Pocketbase, { RecordModel } from "pocketbase";
 
-// const pb = new Pocketbase(process.env.APP_SERVER);
-// pb.admins.authWithPassword(process.env.APP_ADMIN, process.env.APP_PASSWORD);
+
+// const pb = new Pocketbase(env.APP_SERVER);
 const pb = new Pocketbase("http://127.0.0.1:8090");
-
-    
-
 
 
 export interface TrackingNumber {
@@ -215,7 +212,7 @@ export const ContCreate = async (
 
 export const ContUpdate = async (
   id: string,
-  timestamp: Date
+  cont: Container
 ): Promise<RecordModel> => {
   const res = await fetch(
     `${process.env.APP_SERVER}/api/collections/Containers/records/${id}`,
@@ -224,9 +221,7 @@ export const ContUpdate = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        UnloadFinish: timestamp,
-      }),
+      body: JSON.stringify(cont),
     }
   );
   const updatedCont = await res.json();

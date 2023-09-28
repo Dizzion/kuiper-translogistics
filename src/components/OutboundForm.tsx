@@ -1,6 +1,7 @@
 "use client";
 import {
   ContCreate,
+  ContGetByContId,
   STGetBySTID,
   TNCreate,
   TNDelete,
@@ -8,9 +9,18 @@ import {
   TNUpdate,
   TrackingNumber,
 } from "@/utils/pocketbase";
+import { useRouter } from "next/navigation";
 import { RecordModel } from "pocketbase";
 import React, { useRef, useState } from "react";
-import { Form, Button, Modal, ListGroup, Col, Row } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Modal,
+  ListGroup,
+  Col,
+  Row,
+  Stack,
+} from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
 import QRCode from "qrcode";
@@ -26,6 +36,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   trackingNumbers,
 }) => {
   const modalRef = useRef(null);
+  const router = useRouter();
   const [printModal, setPrintModal] = useState(false);
   const [printLabel, setPrintLabel] = useState({
     qrcode: "",
@@ -41,7 +52,9 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
   const [containerId, setContainerId] = useState("");
-  const [reprintId, setReprintId] = useState('');
+  const [reprintId, setReprintId] = useState("");
+  const [updateCont, setUpdateCont] = useState(false);
+  const [updateId, setUpdateId] = useState("");
   const [startTime, setStartTime] = useState(new Date());
 
   function handleLocationChange(value: string): void {
@@ -192,17 +205,30 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   };
 
   const reprintLabel = async () => {
+    if(!/^(SEA_)/.test(reprintId)) {
+      setReprintId('');
+      return;
+    }
     setPrintLabel({
       qrcode: await QRCode.toDataURL(reprintId),
       containerId: reprintId,
-    })
+    });
     setPrintModal(true);
-    setReprintId('');
-  }
+    setReprintId("");
+  };
 
   function handleClose(): void {
     setShowAlert(false);
+    setUpdateCont(false);
     setEnteredTracking("");
+  }
+
+  async function moveToUpdate(e: React.FormEvent) {
+    e.preventDefault();
+    const contToUpdate = await ContGetByContId(updateId);
+    if (contToUpdate.items[0]) {
+      router.push(`/Translogistics/Outbound/${contToUpdate.items[0].id}`);
+    }
   }
 
   return (
@@ -245,13 +271,32 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           Submit Container
         </Button>
       </Form>
-      <input value={reprintId} onChange={(e) => setReprintId(e.target.value.toUpperCase())}/>
-      <Button
-        style={{ marginTop: "5px", marginBottom: "15px" }}
-        variant="outline-warning"
-        type="button"
-        onClick={() => reprintLabel()}
-      >Reprint</Button>
+      <Stack direction="horizontal" gap={3}
+          style={{ marginTop: "5px", marginBottom: "15px" }}>
+        <Form.Control
+          value={reprintId}
+          size="sm"
+          className="me-auto"
+          placeholder="Reprint ID here"
+          onChange={(e) => setReprintId(e.target.value.toUpperCase())}
+        />
+        <Button
+          variant="outline-warning"
+          type="button"
+          onClick={() => reprintLabel()}
+        >
+          Reprint
+        </Button>
+        <div className="vr" />
+        <Button
+          type="button"
+          variant="outline-info"
+          onClick={() => setUpdateCont(true)}
+          style={{fontSize: "12px"}}
+        >
+          Update Container
+        </Button>
+      </Stack>
       <Form onSubmit={changeTrackingNumberData} className="text-center">
         <Form.Control
           type="trackingNumber"
@@ -271,6 +316,27 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         trackingNumbersList={enteredTrackingNumbers}
         removeScannedTN={removeScannedTN}
       />
+      <Modal centered show={updateCont} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Need to Update a Container?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={moveToUpdate}>
+            <Form.Control
+              type="contId"
+              placeholder="Container ID"
+              value={updateId}
+              onChange={(e) => setUpdateId(e.target.value)}
+            />
+            <Button style={{marginTop: "1rem"}} type="submit">Submit</Button>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal centered show={showAlert} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Tracking Number Not Valid</Modal.Title>
