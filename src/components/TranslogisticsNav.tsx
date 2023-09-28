@@ -23,6 +23,7 @@ const TranslogisticsNav = () => {
     { name: "Receiving", href: "/Translogistics/Receiving" },
     { name: "SapTote", href: "/Translogistics/SapTote" },
     { name: "Delivery", href: "/Translogistics/Delivery" },
+    { name: "SAP Bin Labels", href: "/Translogistics/SAPBinLabels" },
   ];
   return (
     <Nav
