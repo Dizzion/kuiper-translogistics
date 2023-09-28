@@ -49,6 +49,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     RecordModel[]
   >([]);
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlert2, setShowAlert2] = useState(false);
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
   const [containerId, setContainerId] = useState("");
@@ -70,14 +71,20 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       setStartTime(new Date());
     }
     if (locationTag === "99" && !/^(SAP_)/.test(enteredTracking)) {
-      const createRecord = {
-        TrackingNumber: enteredTracking,
-        Outbound99: new Date(),
-        aliasOut99: localStorage.getItem("id") as string,
-      };
-      const createdTn = await TNCreate(createRecord);
-      setEnteredTrackingNumbers([...enteredTrackingNumbers, createdTn]);
-      setTnIds([...tnIds, createdTn.id]);
+      const checker = await TNGetByTN(enteredTracking);
+      if (checker.totalItems > 0) {
+        setShowAlert2(true);
+        return;
+      } else {
+        const createRecord = {
+          TrackingNumber: enteredTracking,
+          Outbound99: new Date(),
+          aliasOut99: localStorage.getItem("id") as string,
+        };
+        const createdTn: RecordModel = await TNCreate(createRecord);
+        setEnteredTrackingNumbers([...enteredTrackingNumbers, createdTn]);
+        setTnIds([...tnIds, createdTn.id]);
+      }
     } else if (locationTag === "133" && !/^(SAP_)/.test(enteredTracking)) {
       const tnIndex = await TNGetByTN(enteredTracking);
       if (!tnIndex.items[0]) {
@@ -205,8 +212,8 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   };
 
   const reprintLabel = async () => {
-    if(!/^(SEA_)/.test(reprintId)) {
-      setReprintId('');
+    if (!/^(SEA_)/.test(reprintId)) {
+      setReprintId("");
       return;
     }
     setPrintLabel({
@@ -219,6 +226,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
 
   function handleClose(): void {
     setShowAlert(false);
+    setShowAlert2(false);
     setUpdateCont(false);
     setEnteredTracking("");
   }
@@ -271,8 +279,11 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           Submit Container
         </Button>
       </Form>
-      <Stack direction="horizontal" gap={3}
-          style={{ marginTop: "5px", marginBottom: "15px" }}>
+      <Stack
+        direction="horizontal"
+        gap={3}
+        style={{ marginTop: "5px", marginBottom: "15px" }}
+      >
         <Form.Control
           value={reprintId}
           size="sm"
@@ -292,7 +303,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           type="button"
           variant="outline-info"
           onClick={() => setUpdateCont(true)}
-          style={{fontSize: "12px"}}
+          style={{ fontSize: "12px" }}
         >
           Update Container
         </Button>
@@ -328,7 +339,9 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
               value={updateId}
               onChange={(e) => setUpdateId(e.target.value)}
             />
-            <Button style={{marginTop: "1rem"}} type="submit">Submit</Button>
+            <Button style={{ marginTop: "1rem" }} type="submit">
+              Submit
+            </Button>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -344,6 +357,20 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         <Modal.Body>
           The tracking number that you have entered has an error please make
           sure you are scanning the correct code.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert2} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tracking Number Duplicate Scan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          The tracking number that you have entered has already been entered
+          please make sure you are not double scanning packages.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

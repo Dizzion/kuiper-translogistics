@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
-import { TNCreate, TNDelete } from "@/utils/pocketbase";
+import { TNCreate, TNDelete, TNGetByTN } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 
 interface DeliveryFormProps {
@@ -11,14 +11,12 @@ interface DeliveryFormProps {
 
 const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const [trackingNumberList, setTrackingNumberList] = useState<RecordModel[]>([]);
 
   const updateTrackingNumber = async (e: React.FormEvent) => {
     e.preventDefault();
     if (
-      trackingNumbers.some(
-        (obj) => obj.TrackingNumber === enteredTrackingNumber
-      ) ||
       enteredTrackingNumber === "" ||
       trackingNumberList.some(
         (obj) => obj.TrackingNumber === enteredTrackingNumber
@@ -27,10 +25,15 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
       setEnteredTrackingNumber("");
       return;
     }
+    const checker = await TNGetByTN(enteredTrackingNumber.trim());
+    if (checker.totalItems > 0) {
+      setShowAlert(true);
+      return;
+    }
     const timestamp = new Date();
     const aliasid = localStorage.getItem("id");
     const createRecord = {
-      TrackingNumber: enteredTrackingNumber,
+      TrackingNumber: enteredTrackingNumber.trim(),
       Delivered: timestamp,
       aliasDeliv: aliasid as string,
     };
@@ -45,6 +48,11 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
     await TNDelete(id);
   }
 
+  function handleClose(): void {
+    setShowAlert(false);
+    setEnteredTrackingNumber("");
+  }
+
   return (
     <>
       <Form onSubmit={updateTrackingNumber}>
@@ -56,6 +64,20 @@ const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
           onChange={(e) => setEnteredTrackingNumber(e.target.value)}
         />
       </Form>
+      <Modal centered show={showAlert} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tracking Number Duplicate Scan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          The tracking number that you have entered has already been entered
+          please make sure you are not double scanning packages.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <TrackingNumberList trackingNumbersList={trackingNumberList} removeScannedTN={removeScannedTN}/>
     </>
   );

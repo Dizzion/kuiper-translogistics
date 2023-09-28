@@ -516,7 +516,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
         <Form.Control
           type="Handling Unit"
           required
-          placeholder="199XXXXXXX, 299XXXXXXX, 133XXXXXXX, 233XXXXXXX"
+          placeholder="Scan Handling Unit Here!"
           value={enteredHU}
           onChange={(e) => setEnteredHU(e.target.value)}
         />
