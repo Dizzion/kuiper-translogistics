@@ -208,6 +208,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       containerId: containerId,
     });
     setPrintModal(true);
+    setShowAlert3(false);
     await ContCreate(enteredContainer);
     setContainerId("");
     setLocationTag("");
@@ -245,6 +246,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       containerId: containerId,
     });
     setPrintModal(true);
+    setShowAlert3(false);
     await ContCreate(enteredContainer);
     setContainerId("");
     setLocationTag("");
@@ -257,6 +259,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   function handleClose(): void {
     setShowAlert(false);
     setShowAlert2(false);
+    setShowAlert3(false);
     setUpdateCont(false);
     setEnteredTracking("");
   }
