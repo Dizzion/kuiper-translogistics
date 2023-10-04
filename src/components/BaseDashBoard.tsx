@@ -35,7 +35,7 @@ async function getData() {
     const res = await fetch(
       `${
         process.env.APP_SERVER
-      }/api/collections/TrackingNumbers/records?perPage=500&Received133>=${new Date(dateFind.setDate(dateFind.getDate() - i)).toDateString()}`,
+      }/api/collections/TrackingNumbers/records?perPage=500&Received133=${new Date(dateFind.setDate(dateFind.getDate() - i)).toDateString()}`,
       { cache: "no-store" }
     );
     const packages: RecordModel = await res.json() as unknown as RecordModel;
