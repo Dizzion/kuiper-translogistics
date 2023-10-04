@@ -8,12 +8,14 @@ interface TrackingNumberDashboardProps {
   trackingNumberData: TrackingNumberData;
   variant: string[];
   elapsedTime: string;
+  sap: boolean;
 }
 
 const TrackingNumberDashboard: React.FC<TrackingNumberDashboardProps> = ({
   trackingNumberData,
   variant,
   elapsedTime,
+  sap,
 }) => {
   const updatePulse = (variantClass: string): string => {
     let className: string = "";
@@ -105,6 +107,7 @@ const TrackingNumberDashboard: React.FC<TrackingNumberDashboardProps> = ({
           <CardText
             variant={variant[3]}
             timestamp={trackingNumberData?.outbound133}
+            sap={sap}
           />
         </Card.Body>
         <CardFooter variant={variant[3]} elapsedTime={elapsedTime} />
@@ -126,6 +129,7 @@ const TrackingNumberDashboard: React.FC<TrackingNumberDashboardProps> = ({
           <CardText
             variant={variant[4]}
             timestamp={trackingNumberData?.inbound99}
+            sap={sap}
           />
         </Card.Body>
         <CardFooter variant={variant[4]} elapsedTime={elapsedTime} />

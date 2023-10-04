@@ -16,6 +16,7 @@ export interface TrackingNumberData {
 
 const SearchTrackingNumberCustomer: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const [sap, setSap] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState<
     RecordModel | undefined
   >();
@@ -102,6 +103,12 @@ const SearchTrackingNumberCustomer: React.FC = () => {
         setElapsedTime(calculateTime(timestamp));
       }
     });
+    if (trackingNumber) {
+      if(trackingNumber.SAP === "Yes") {
+        [currentVariants[3], currentVariants[4]] = ["dark", "dark"];
+        setSap(true);
+      }
+    }
 
     return currentVariants;
   };
@@ -143,6 +150,7 @@ const SearchTrackingNumberCustomer: React.FC = () => {
           inbound99: new Date(trackingNumber.Inbound99).toLocaleString(),
         });
       } else {
+        setSap(false);
         setTrackingNumberData({
           outbound99: "",
           inbound133: "",
@@ -235,6 +243,7 @@ const SearchTrackingNumberCustomer: React.FC = () => {
         trackingNumberData={trackingNumberData}
         variant={variant}
         elapsedTime={elapsedTime}
+        sap={sap}
       />
     </>
   );
