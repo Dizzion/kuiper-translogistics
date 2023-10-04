@@ -12,7 +12,6 @@ import {
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { Row } from "react-bootstrap";
-import { RecordModel } from "pocketbase";
 import { getData } from "@/utils/metrics";
 
 ChartJS.register(
@@ -28,9 +27,9 @@ ChartJS.register(
 const date = new Date();
 let dailyAmount: number[] = [];
 
-function setData() {
-  dailyAmount = getData() as unknown as number[];
-}
+// function setData() {
+//   dailyAmount = getData() as unknown as number[];
+// }
 
 const labels = [
   new Date(date.setDate(date.getDate())).toDateString(),
@@ -106,10 +105,10 @@ const BaseDashBoard = async () => {
   const chartRef = useRef<ChartJS>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setData();
-    setLoading(false);
-  })
+  // useEffect(() => {
+  //   setData();
+  //   setLoading(false);
+  // }, [data])
 
   useEffect(() => {
     const chart = chartRef.current;
