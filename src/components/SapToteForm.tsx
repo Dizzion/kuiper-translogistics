@@ -162,7 +162,7 @@ const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
           <Modal.Title>Handling Unit Not Valid</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          This is not a valid Handling Unit make sure you scanning the write
+          This is not a valid Handling Unit make sure you scanning the correct
           barcode.
         </Modal.Body>
         <Modal.Footer>
