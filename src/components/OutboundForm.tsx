@@ -50,6 +50,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   >([]);
   const [showAlert, setShowAlert] = useState(false);
   const [showAlert2, setShowAlert2] = useState(false);
+  const [showAlert3, setShowAlert3] = useState(false);
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
   const [containerId, setContainerId] = useState("");
@@ -187,11 +188,16 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     }
   };
 
-  const submitContainer = async (e: React.FormEvent) => {
+  const finishForm = (e: React.FormEvent) => {
     e.preventDefault();
+    setShowAlert3(true);
+  }
+
+  const submitContainer = async () => {
     const enteredContainer = {
       ContainerID: containerId,
       StartTime: startTime,
+      Hold: false,
       StagedTime: new Date(),
       TrackingNumbers: tnIds,
       SapTotes: stIds,
@@ -224,6 +230,30 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setReprintId("");
   };
 
+  async function handleHold() {
+    const enteredContainer = {
+      ContainerID: containerId,
+      StartTime: startTime,
+      Hold: true,
+      StagedTime: new Date(),
+      TrackingNumbers: tnIds,
+      SapTotes: stIds,
+      alias: localStorage.getItem("id") as string,
+    };
+    setPrintLabel({
+      qrcode: await QRCode.toDataURL(containerId),
+      containerId: containerId,
+    });
+    setPrintModal(true);
+    await ContCreate(enteredContainer);
+    setContainerId("");
+    setLocationTag("");
+    setStIds([]);
+    setTnIds([]);
+    setEnteredTrackingNumbers([]);
+    setEnteredSapTotes([]);
+  }
+
   function handleClose(): void {
     setShowAlert(false);
     setShowAlert2(false);
@@ -235,14 +265,17 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     e.preventDefault();
     const contToUpdate = await ContGetByContId(updateId);
     if (contToUpdate.items[0]) {
-      router.push(`/Translogistics/Outbound/${contToUpdate.items[0].id}`);
+      if (contToUpdate.items[0].hold === true) {
+        router.push(`/Translogistics/Outbound/${contToUpdate.items[0].id}`);
+      }
+      
     }
   }
 
   return (
     <>
       <Form
-        onSubmit={submitContainer}
+        onSubmit={finishForm}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault(); // Prevent form submission on Enter key press
@@ -329,7 +362,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
       />
       <Modal centered show={updateCont} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Need to Update a Container?</Modal.Title>
+          <Modal.Title>Need to Update a Container on Hold?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={moveToUpdate}>
@@ -371,6 +404,21 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         <Modal.Body>
           The tracking number that you have entered has already been entered
           please make sure you are not double scanning packages.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert3} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>What Action Would you like to take?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Button type="button" onClick={() => submitContainer}>Submit Container</Button>
+          <div className="vr" />
+          <Button type="button" onClick={() => handleHold}>Place Container on Hold</Button>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

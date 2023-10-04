@@ -65,6 +65,7 @@ interface SapTote {
 interface Container {
   ContainerID?: string;
   StartTime?: Date;
+  Hold?: boolean;
   StagedTime?: Date;
   UnloadFinished?: Date;
   TrackingNumbers?: string[];
