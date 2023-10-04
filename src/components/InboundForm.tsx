@@ -128,7 +128,7 @@ const InboundForm: React.FC<InboundFormProps> = ({ containers }) => {
             type="containterID"
             size="lg"
             required
-            placeholder="Which Container are you loading?"
+            placeholder="Which Container are you unloading?"
             value={enteredContId}
             onChange={(e) => setEnteredContId(e.target.value)}
           />
