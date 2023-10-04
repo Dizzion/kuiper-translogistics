@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   LinearScale,
@@ -13,6 +13,7 @@ import {
 import { Chart } from "react-chartjs-2";
 import { Row } from "react-bootstrap";
 import { RecordModel } from "pocketbase";
+import { getData } from "@/utils/metrics";
 
 ChartJS.register(
   LinearScale,
@@ -27,29 +28,8 @@ ChartJS.register(
 const date = new Date();
 let dailyAmount: number[] = [];
 
-async function getData() {
-  ("use server");
-  const dateFind = new Date();
-  while (dailyAmount.length < 6) {
-    let i = 0;
-    const res = await fetch(
-      `${
-        process.env.APP_SERVER
-      }/api/collections/TrackingNumbers/records?perPage=500&Received133>${new Date(
-        dateFind.setDate(dateFind.getDate() - i)
-      ).toDateString()}&Received133<${new Date(
-        dateFind.setDate(dateFind.getDate() + 1)
-      ).toDateString()}`,
-      { cache: "no-store" }
-    );
-    const packages: RecordModel = (await res.json()) as unknown as RecordModel;
-    if (packages.items[0]) {
-      dailyAmount.push(packages.items[0].length);
-      if (i < 1) {
-        i++;
-      }
-    }
-  }
+function setData() {
+  dailyAmount = getData() as unknown as number[];
 }
 
 const labels = [
@@ -124,9 +104,14 @@ function triggerTooltip(chart: ChartJS | null) {
 
 const BaseDashBoard = async () => {
   const chartRef = useRef<ChartJS>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getData();
+    setData();
+    setLoading(false);
+  })
+
+  useEffect(() => {
     const chart = chartRef.current;
     if (chart) {
       chart.config.options = {
@@ -162,7 +147,7 @@ const BaseDashBoard = async () => {
   }, []);
   return (
     <Row>
-      <Chart ref={chartRef} type="bar" data={data} />
+      {loading ? (<></>) : (<Chart ref={chartRef} type="bar" data={data} />)}
     </Row>
   );
 };
