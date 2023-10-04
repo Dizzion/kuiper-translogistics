@@ -27,8 +27,8 @@ ChartJS.register(
 const date = new Date();
 let dailyAmount: number[] = [];
 
-("use server");
 async function getData() {
+  ("use server");
   const dateFind = new Date();
   while (dailyAmount.length < 6) {
     let i = 0;
