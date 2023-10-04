@@ -34,6 +34,7 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
   const [stIds, setStIds] = useState<string[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [showAlert2, setShowAlert2] = useState(false);
+  const [showAlert3, setShowAlert3] = useState(false);
   const [enable, setEnable] = useState(true);
 
   const populateCont = async () => {
@@ -148,13 +149,26 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
     if (contId) {
       await ContUpdate(contId, updatedContainer);
     }
-    setLocationTag("");
-    setStIds([]);
-    setTnIds([]);
-    setEnteredTrackingNumbers([]);
-    setEnteredSapTotes([]);
+    setShowAlert3(false);
     router.back();
   };
+
+  async function handleHold() {
+    const updatedContainer = {
+      Hold: true,
+      TrackingNumbers: tnIds,
+      SapTotes: stIds,
+      alias: localStorage.getItem("id") as string,
+    };
+    setShowAlert3(false);
+    await ContUpdate(contId, updatedContainer);
+    router.back();
+  }
+
+  const finishForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowAlert3(true);
+  }
 
   function handleClose(): void {
     setShowAlert(false);
@@ -191,7 +205,7 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
   return (
     <>
       <Form
-        onSubmit={submitContainer}
+        onSubmit={finishForm}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault(); // Prevent form submission on Enter key press
@@ -271,6 +285,21 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose2}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert3} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>What Action Would you like to take?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Button type="button" onClick={() => submitContainer}>Submit Container</Button>
+          <div className="vr" />
+          <Button type="button" onClick={() => handleHold}>Place Container on Hold</Button>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>
