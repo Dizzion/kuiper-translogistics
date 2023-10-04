@@ -49,7 +49,7 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
 
   useEffect(() => {
     populateCont();
-  }, []);
+  }, [id]);
 
   async function mapContents(toUpdate: string, items: RecordModel[]) {
     if (toUpdate === "TN") {
@@ -142,18 +142,19 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
     e.preventDefault();
     const updatedContainer = {
       StagedTime: new Date(),
+      Hold: false,
       TrackingNumbers: tnIds,
       SapTotes: stIds,
       alias: localStorage.getItem("id") as string,
     };
     if (contId) {
-      await ContUpdate(contId, updatedContainer);
+      await ContUpdate(id, updatedContainer);
     }
     setShowAlert3(false);
     router.back();
   };
 
-  async function handleHold() {
+  const handleHold = async () => {
     const updatedContainer = {
       Hold: true,
       TrackingNumbers: tnIds,
@@ -161,7 +162,7 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
       alias: localStorage.getItem("id") as string,
     };
     setShowAlert3(false);
-    await ContUpdate(contId, updatedContainer);
+    await ContUpdate(id, updatedContainer);
     router.back();
   }
 
@@ -294,9 +295,9 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
           <Modal.Title>What Action Would you like to take?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Button type="button" onClick={() => submitContainer}>Submit Container</Button>
+          <Button type="button" onClick={submitContainer}>Submit Container</Button>
           <div className="vr" />
-          <Button type="button" onClick={() => handleHold}>Place Container on Hold</Button>
+          <Button type="button" onClick={handleHold}>Place Container on Hold</Button>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

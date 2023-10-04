@@ -20,6 +20,10 @@ import {
   Col,
   Row,
   Stack,
+  OverlayTrigger,
+  Popover,
+  Tooltip,
+  TooltipProps,
 } from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
@@ -51,6 +55,8 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const [showAlert, setShowAlert] = useState(false);
   const [showAlert2, setShowAlert2] = useState(false);
   const [showAlert3, setShowAlert3] = useState(false);
+  const [popOver, setPopOver] = useState(false);
+  const [popOver2, setPopOver2] = useState(false);
   const [locationTag, setLocationTag] = useState("");
   const [enteredTracking, setEnteredTracking] = useState("");
   const [containerId, setContainerId] = useState("");
@@ -191,7 +197,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
   const finishForm = (e: React.FormEvent) => {
     e.preventDefault();
     setShowAlert3(true);
-  }
+  };
 
   const submitContainer = async () => {
     const enteredContainer = {
@@ -231,7 +237,7 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setReprintId("");
   };
 
-  async function handleHold() {
+  const handleHold = async () => {
     const enteredContainer = {
       ContainerID: containerId,
       StartTime: startTime,
@@ -254,26 +260,39 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
     setTnIds([]);
     setEnteredTrackingNumbers([]);
     setEnteredSapTotes([]);
-  }
+  };
 
   function handleClose(): void {
     setShowAlert(false);
     setShowAlert2(false);
     setShowAlert3(false);
+    setPopOver(false);
+    setPopOver2(false);
     setUpdateCont(false);
     setEnteredTracking("");
   }
 
   async function moveToUpdate(e: React.FormEvent) {
     e.preventDefault();
+    setPopOver(false);
+    setPopOver2(false);
     const contToUpdate = await ContGetByContId(updateId);
     if (contToUpdate.items[0]) {
-      if (contToUpdate.items[0].hold === true) {
+      if (contToUpdate.items[0].Hold === true) {
         router.push(`/Translogistics/Outbound/${contToUpdate.items[0].id}`);
+      } else if (contToUpdate.items[0].Hold === false) {
+        setPopOver(true);
       }
-      
+    } else {
+      setPopOver2(true);
     }
   }
+
+  const renderWarning = (props: React.JSX.IntrinsicAttributes & TooltipProps & React.RefAttributes<HTMLDivElement>) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Once Submitted a Container Can't be added to.
+    </Tooltip>
+  )
 
   return (
     <>
@@ -369,15 +388,43 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={moveToUpdate}>
-            <Form.Control
-              type="contId"
-              placeholder="Container ID"
-              value={updateId}
-              onChange={(e) => setUpdateId(e.target.value)}
-            />
-            <Button style={{ marginTop: "1rem" }} type="submit">
-              Submit
-            </Button>
+            <OverlayTrigger
+              show={popOver}
+              placement="top"
+              overlay={
+                <Popover style={{ backgroundColor: "#dc3545" }}>
+                  <Popover.Body style={{ color: "white" }}>
+                    This Container has already been <strong>Submitted.</strong>
+                  </Popover.Body>
+                </Popover>
+              }
+            >
+              <Form.Control
+                type="contId"
+                placeholder="Container ID"
+                value={updateId}
+                onChange={(e) => setUpdateId(e.target.value)}
+              />
+            </OverlayTrigger>
+            <OverlayTrigger
+              show={popOver2}
+              placement="top"
+              overlay={
+                <Popover style={{ backgroundColor: "#dc3545" }}>
+                  <Popover.Body style={{ color: "white" }}>
+                    This Container doesn't exist. Try scanning again.
+                  </Popover.Body>
+                </Popover>
+              }
+            >
+              <Button
+                variant="outline-primary"
+                style={{ marginTop: "1rem" }}
+                type="submit"
+              >
+                Submit
+              </Button>
+            </OverlayTrigger>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -419,9 +466,24 @@ const OutboundForm: React.FC<OutboundFormProps> = ({
           <Modal.Title>What Action Would you like to take?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Button type="button" onClick={() => submitContainer}>Submit Container</Button>
-          <div className="vr" />
-          <Button type="button" onClick={() => handleHold}>Place Container on Hold</Button>
+          <Row>
+            <Col>
+            <OverlayTrigger
+            placement="top"
+            delay={{ show: 250, hide: 400}}
+            overlay={renderWarning}
+            >
+              <Button variant="warning" type="button" onClick={submitContainer}>
+                Submit Container
+              </Button>
+              </OverlayTrigger>
+            </Col>
+            <Col>
+              <Button variant="info" type="button" onClick={handleHold}>
+                Place Container on Hold
+              </Button>
+            </Col>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
