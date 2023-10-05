@@ -12,7 +12,17 @@ import {
 } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 import React, { useEffect, useState } from "react";
-import { Button, Form, ListGroup, Modal } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  ListGroup,
+  Modal,
+  OverlayTrigger,
+  Row,
+  Tooltip,
+  TooltipProps,
+} from "react-bootstrap";
 import TrackingNumberList from "./TrackingNumberList";
 import DisplaySapTote from "./SapToteDisplay";
 
@@ -164,12 +174,12 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
     setShowAlert3(false);
     await ContUpdate(id, updatedContainer);
     router.back();
-  }
+  };
 
   const finishForm = (e: React.FormEvent) => {
     e.preventDefault();
     setShowAlert3(true);
-  }
+  };
 
   function handleClose(): void {
     setShowAlert(false);
@@ -202,6 +212,16 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
       await TNUpdate(id, record);
     }
   };
+
+  const renderWarning = (
+    props: React.JSX.IntrinsicAttributes &
+      TooltipProps &
+      React.RefAttributes<HTMLDivElement>
+  ) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Once Submitted a Container Can't be added to.
+    </Tooltip>
+  );
 
   return (
     <>
@@ -295,9 +315,28 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
           <Modal.Title>What Action Would you like to take?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Button type="button" onClick={submitContainer}>Submit Container</Button>
-          <div className="vr" />
-          <Button type="button" onClick={handleHold}>Place Container on Hold</Button>
+          <Row>
+            <Col>
+              <OverlayTrigger
+                placement="top"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderWarning}
+              >
+                <Button
+                  variant="warning"
+                  type="button"
+                  onClick={submitContainer}
+                >
+                  Submit Container
+                </Button>
+              </OverlayTrigger>
+            </Col>
+            <Col>
+              <Button variant="info" type="button" onClick={handleHold}>
+                Place Container on Hold
+              </Button>
+            </Col>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

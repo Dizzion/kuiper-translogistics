@@ -81,7 +81,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
     const requestorName = e;
     const employee = await getEmployeeByFullName(requestorName);
     if (employee.items[0] !== undefined) {
-      setPulledEmployee(employee.items);
+      setPulledEmployee(employee.items[0]);
       setRequestor({
         ...requestor,
         name: requestorName,
@@ -835,7 +835,7 @@ const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
       </Modal>
       <Modal centered show={updateEmployee} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Employee</Modal.Title>
+          <Modal.Title>Update Employee</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={updateEnteredEmployee}>
