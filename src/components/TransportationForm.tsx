@@ -40,6 +40,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
   const [loadOrUnload, setLoadOrUnload] = useState("");
   const [enteredContainer, setEnteredContainer] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [showAlert2, setShowAlert2] = useState(false);
   const [showAlert3, setShowAlert3] = useState(false);
   const [arrivalTime, setArrivalTime] = useState<Date>();
   const [containerIds, setContainerIds] = useState<string[]>([]);
@@ -209,6 +210,11 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
     e.preventDefault();
     const searchedCont = await ContGetByContId(enteredContainer);
     if (searchedCont.items[0]) {
+      if (searchedCont.items[0].Hold === true) {
+        setShowAlert2(true);
+        setEnteredContainer("");
+        return;
+      }
       setContainerIds([...containerIds, searchedCont.items[0].id]);
       setContainerList([...containerList, searchedCont.items[0]]);
       setEnteredContainer("");
@@ -220,6 +226,7 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
 
   function handleClose(): void {
     setShowAlert(false);
+    setShowAlert2(false);
     setShowAlert3(false);
   }
 
@@ -292,6 +299,20 @@ const TransportationForm: React.FC<TransportationFormProps> = ({
         </Modal.Header>
         <Modal.Body>
           Your Container Scan wasnt a valid entry please try again.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal centered show={showAlert2} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Container on Hold</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          This Container is Still on Hold and needs to be submitted before being able to load.
+          Direct the container back to the team loading it.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
