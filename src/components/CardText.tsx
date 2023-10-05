@@ -19,7 +19,7 @@ export const CardText: React.FC<TextProps> = ({ variant, timestamp, sap }) => {
       setContent(<Card.Text>Arrived at SEA133</Card.Text>);
     } else if (variant === "info") {
       setContent(<Card.Text>Awaiting Scan</Card.Text>);
-    } else if (sap) {
+    } else if (sap === true) {
         setContent(<Card.Text>SAP Package</Card.Text>);
     } else {
         setContent(<Card.Text>Awaiting Previous Action</Card.Text>);
