@@ -11,11 +11,7 @@ import { Form, Button, ListGroup } from "react-bootstrap";
 import DisplaySapTote from "./SapToteDisplay";
 import ContTNList from "./ContTNList";
 
-interface InboundFormProps {
-  containers: RecordModel[];
-}
-
-const InboundForm: React.FC<InboundFormProps> = ({ containers }) => {
+const InboundForm: React.FC = () => {
   const [enteredContId, setEnteredContId] = useState("");
   const [workingCont, setWorkingCont] = useState<RecordModel>();
   const [disabledEntry, setDisabledEntry] = useState(true);

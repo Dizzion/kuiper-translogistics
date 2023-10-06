@@ -18,10 +18,6 @@ import {
 } from "react-bootstrap";
 import ContainerList from "./ContainerList";
 
-interface TransportationFormProps {
-  trucks: RecordModel[];
-  containers: RecordModel[];
-}
 interface Timer {
   id: string;
   startTime: number | null;
@@ -29,10 +25,7 @@ interface Timer {
   elapsedTime: number;
 }
 
-const TransportationForm: React.FC<TransportationFormProps> = ({
-  trucks,
-  containers,
-}) => {
+const TransportationForm: React.FC = () => {
   const [truckId, setTruckId] = useState("");
   const [locationTag, setLocationTag] = useState("");
   const [running1, setRunning1] = useState(false);

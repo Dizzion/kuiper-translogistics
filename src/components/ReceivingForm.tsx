@@ -14,9 +14,6 @@ import {
 import QRCode from "qrcode";
 import Image from "next/image";
 
-interface ReceivingFormProps {
-  trackingNumbers: RecordModel[];
-}
 export interface Requestor {
   name: string;
   building: string;
@@ -27,7 +24,7 @@ export interface Requestor {
   coupaPoLines: string;
 }
 
-const ReceivingForm: React.FC<ReceivingFormProps> = ({ trackingNumbers }) => {
+const ReceivingForm: React.FC = () => {
   const modalRef = useRef(null);
   const [modalPrint, setModalPrint] = useState(false);
   const [mysteryModal, setMysteryModal] = useState(false);

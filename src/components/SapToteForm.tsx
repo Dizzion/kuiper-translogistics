@@ -7,11 +7,7 @@ import { Modal, Button, Form, Col, Row } from "react-bootstrap";
 import QRCode from "qrcode";
 import Image from "next/image";
 
-interface SapToteFormProps {
-  handlingUnits: RecordModel[];
-}
-
-const SapToteForm: React.FC<SapToteFormProps> = ({ handlingUnits }) => {
+const SapToteForm: React.FC = () => {
   const modalRef = useRef(null);
   const [printLabel, setPrintLabel] = useState({
     toteId: "",

@@ -5,11 +5,7 @@ import TrackingNumberList from "./TrackingNumberList";
 import { TNCreate, TNDelete, TNGetByTN } from "@/utils/pocketbase";
 import { RecordModel } from "pocketbase";
 
-interface DeliveryFormProps {
-  trackingNumbers: RecordModel[];
-}
-
-const DeliveryForm: React.FC<DeliveryFormProps> = ({ trackingNumbers }) => {
+const DeliveryForm: React.FC = () => {
   const [enteredTrackingNumber, setEnteredTrackingNumber] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [trackingNumberList, setTrackingNumberList] = useState<RecordModel[]>([]);

@@ -30,15 +30,7 @@ import DisplaySapTote from "./SapToteDisplay";
 import QRCode from "qrcode";
 import Image from "next/image";
 
-interface OutboundFormProps {
-  sapTotes: RecordModel[];
-  trackingNumbers: RecordModel[];
-}
-
-const OutboundForm: React.FC<OutboundFormProps> = ({
-  sapTotes,
-  trackingNumbers,
-}) => {
+const OutboundForm: React.FC = () => {
   const modalRef = useRef(null);
   const router = useRouter();
   const [printModal, setPrintModal] = useState(false);
