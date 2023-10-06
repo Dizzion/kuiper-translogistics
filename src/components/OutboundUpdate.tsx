@@ -135,7 +135,7 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
       setTnIds([...tnIds, updatedTn.id]);
     } else if (/^(SAP_)/.test(enteredTracking)) {
       const stIndex = await STGetBySTID(enteredTracking);
-      if (!stIndex) {
+      if (!stIndex.items[0]) {
         setShowAlert(true);
         setEnteredTracking("");
         return;
