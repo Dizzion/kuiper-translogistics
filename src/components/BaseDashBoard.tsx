@@ -37,7 +37,7 @@ const labels = [
   new Date(date.setDate(date.getDate() - 1)).toDateString(),
   new Date(date.setDate(date.getDate() - 1)).toDateString(),
   new Date(date.setDate(date.getDate() - 1)).toDateString(),
-];
+].reverse();
 
 export const data = {
   labels,
