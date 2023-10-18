@@ -64,8 +64,7 @@ const OutboundForm: React.FC = () => {
     }
   }
 
-  const changeTrackingNumberData = async (e: React.FormEvent) => {
-    e.preventDefault();
+  async function handelTrackingNumberEntry () {
     if (stIds.length === 0 && tnIds.length === 0) {
       setStartTime(new Date());
     }
@@ -111,6 +110,11 @@ const OutboundForm: React.FC = () => {
     } else {
       setShowAlert(true);
     }
+  }
+
+  const changeTrackingNumberData = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handelTrackingNumberEntry();
     setEnteredTracking("");
   };
 
@@ -280,11 +284,28 @@ const OutboundForm: React.FC = () => {
     }
   }
 
-  const renderWarning = (props: React.JSX.IntrinsicAttributes & TooltipProps & React.RefAttributes<HTMLDivElement>) => (
+  const renderWarning = (
+    props: React.JSX.IntrinsicAttributes &
+      TooltipProps &
+      React.RefAttributes<HTMLDivElement>
+  ) => (
     <Tooltip id="button-tooltip" {...props}>
       Once Submitted a Container Can't be added to.
     </Tooltip>
-  )
+  );
+
+  function genUniqueId(): string {
+    const dateStr = Date.now().toString(36);
+    const randomStr = Math.random().toString(36).substring(2,8);
+    return `DROP_OFF-${dateStr}${randomStr}`.toUpperCase();
+  }
+
+  async function dropOffTrackingCreate() {
+    const dropOffTN = genUniqueId();
+    setEnteredTracking(dropOffTN);
+    await handelTrackingNumberEntry();
+    setEnteredTracking('');
+  }
 
   return (
     <>
@@ -331,6 +352,9 @@ const OutboundForm: React.FC = () => {
         gap={3}
         style={{ marginTop: "5px", marginBottom: "15px" }}
       >
+        <Button type="button" variant="outline-warning" onClick={dropOffTrackingCreate}>
+          Drop-off TN Creation
+        </Button>
         <Form.Control
           value={reprintId}
           size="sm"
@@ -460,14 +484,18 @@ const OutboundForm: React.FC = () => {
         <Modal.Body>
           <Row>
             <Col>
-            <OverlayTrigger
-            placement="top"
-            delay={{ show: 250, hide: 400}}
-            overlay={renderWarning}
-            >
-              <Button variant="warning" type="button" onClick={submitContainer}>
-                Submit Container
-              </Button>
+              <OverlayTrigger
+                placement="top"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderWarning}
+              >
+                <Button
+                  variant="warning"
+                  type="button"
+                  onClick={submitContainer}
+                >
+                  Submit Container
+                </Button>
               </OverlayTrigger>
             </Col>
             <Col>
