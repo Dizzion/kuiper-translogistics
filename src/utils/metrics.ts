@@ -14,8 +14,8 @@ export const getData = async (): Promise<number[]> => {
         { cache: "no-store" }
       );
       const packages: RecordModel = (await res.json()) as unknown as RecordModel;
-      if (packages.items[0]) {
-        dailyAmount.push(packages.items[0].length);
+      if (packages.totalItems) {
+        dailyAmount.push(packages.totalItems);
         if (i < 1) {
           i++;
         }
