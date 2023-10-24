@@ -120,19 +120,19 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
       setTnIds([...tnIds, createdTn.id]);
     } else if (locationTag === "133" && !/^(SAP_)/.test(enteredTracking)) {
       const tnIndex = await TNGetByTN(enteredTracking);
-      if (!tnIndex) {
+      if (!tnIndex.items[0]) {
         setShowAlert(true);
         setEnteredTracking("");
         return;
       }
       const updateRecord = {
-        TrackingNumber: tnIndex.TrackingNumber,
+        TrackingNumber: tnIndex.items[0].TrackingNumber,
         Outbound133: new Date(),
         aliasOut133: localStorage.getItem("id") as string,
       };
       const updatedTn = await TNUpdate(tnIndex.id, updateRecord);
-      setEnteredTrackingNumbers([...enteredTrackingNumbers, updatedTn]);
-      setTnIds([...tnIds, updatedTn.id]);
+      setEnteredTrackingNumbers([...enteredTrackingNumbers, updatedTn.items[0]]);
+      setTnIds([...tnIds, updatedTn.items[0].id]);
     } else if (/^(SAP_)/.test(enteredTracking)) {
       const stIndex = await STGetBySTID(enteredTracking);
       if (!stIndex.items[0]) {
