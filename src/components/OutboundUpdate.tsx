@@ -130,7 +130,7 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
         Outbound133: new Date(),
         aliasOut133: localStorage.getItem("id") as string,
       };
-      const updatedTn = await TNUpdate(tnIndex.id, updateRecord);
+      const updatedTn = await TNUpdate(tnIndex.items[0].id, updateRecord);
       setEnteredTrackingNumbers([...enteredTrackingNumbers, updatedTn.items[0]]);
       setTnIds([...tnIds, updatedTn.items[0].id]);
     } else if (/^(SAP_)/.test(enteredTracking)) {
@@ -140,8 +140,8 @@ const OutboundUpdate: React.FC<OutboundUpdateProps> = ({ id }) => {
         setEnteredTracking("");
         return;
       }
-      setStIds([...stIds, stIndex.id]);
-      setEnteredSapTotes([...enteredSapTotes, stIndex]);
+      setStIds([...stIds, stIndex.items[0].id]);
+      setEnteredSapTotes([...enteredSapTotes, stIndex.items[0]]);
     } else {
       setShowAlert(true);
     }
